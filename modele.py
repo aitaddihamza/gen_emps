@@ -26,6 +26,24 @@ emplois = {classe: { jour: {creneau: None for creneau in CRENEAUX } for jour in 
 
 # FONCTIONNES 
 
+def get_cours_infos(cours):
+    volume = cours["volume"]
+    tp_seances = cours["tp_seances"]
+    # Calcul du nombre total de séances pour le module
+    seances = math.ceil(volume / 2)
+    seance_par_semaine = math.ceil(seances / TOTAL_SEMAINES)
+    semaines = math.ceil(seances / seance_par_semaine)
+    
+    return seances, semaines, seance_par_semaine, tp_seances
+
+
+def get_tp_infos(cours): 
+    seances, semaines, seance_par_semaine, tp_seances = get_cours_infos(cours)
+    semaine_debut = math.floor(semaines / 2)
+    seance_par_semaine = math.ceil( tp_seances / semaine_debut)
+    semaines = tp_seances / seance_par_semaine 
+    return semaine_debut, semaines, seance_par_semaine 
+
 ###################### Fonctionne pour intialiser les modules/matières ###############################
 # comme paramètre il prend un dict qui représente les infos d'une classe
 def prepare_modules(classe_info):
@@ -33,18 +51,12 @@ def prepare_modules(classe_info):
     modules = {}
     
     for module, details in classe_info.items():
-        volume = details["volume"]
-        tp_seances = details["tp_seances"]
-        
-        # Calcul du nombre total de séances pour le module
-        total_seances = math.ceil(volume / 2)
-        
-        # Calcul du nombre de séances par semaine
-        modules[module] = math.ceil(total_seances / TOTAL_SEMAINES)
+        _, semaines, seance_par_semaine, tp_seances = get_cours_infos(details)
+        modules[module] = seance_par_semaine
         
         # Gestion des séances de TP si elles existent
         if tp_seances > 0:
-            nbr_semaines_tp = math.ceil(math.ceil(total_seances / modules[module]) / 2)
+            nbr_semaines_tp = math.ceil(semaines / 2)
             modules[f"TP {module}"] = math.ceil(tp_seances / nbr_semaines_tp)
     return modules
 
@@ -114,7 +126,7 @@ def reserver_salle():
 # il retourne une tuple (individu, salle, modules) pour l'instant.
 def generer_individu(classe_info):
     # Initialisation de l'individu (emploi du temps)
-    individu = {jour: {creneau: None for creneau in CRENEAUX } for jour in JOURS}
+    individu = {jour: {creneau: [] for creneau in CRENEAUX } for jour in JOURS}
     
     # prepaer les cours et les tps
     # modules = dict => exemple: {"Robotiques médicales": 2, "Math": 1}, 2 et 1 représente le nombre de séances par semaine
@@ -136,28 +148,28 @@ def generer_individu(classe_info):
             n += 2
             m = n // 2
         print(f"le nombre de seances optimisées est {m} ") 
-        exit()
+        # exit()
 
     tp_courtes = {m : classe_info[m[3:]]["tp_seances"] for m, c in petits_modules.items() if m.startswith("TP ")} 
     cours_courtes = {m : math.ceil(classe_info[m]["volume"] / 2) for m, c  in petits_modules.items() if not m.startswith("TP ") and classe_info[m]["volume"] / 2 < TOTAL_SEMAINES }
     # préparer les profs de ce classe et réserver une salle.
-    print(cours_courtes)
-    print(tp_courtes)
-
+    # print(cours_courtes)
+    # print(tp_courtes)
+    #
     # exit()
     profs = prepare_profs(modules)
     salle = reserver_salle()
 
     jour_de_sport, prof_de_sport = trouver_jour_et_prof_de_sport(profs)
     # réserver le sport
-    individu[jour_de_sport]["13:30-15:30"] = {
+    individu[jour_de_sport]["13:30-15:30"].append({
         "prof": prof_de_sport,
         "module": "ESP" 
-    }
-    individu[jour_de_sport]["15:40-17:30"] = {
+    })
+    individu[jour_de_sport]["15:40-17:30"].append({
         "prof": prof_de_sport,
         "module": "ESP" 
-    }
+    })
     # éliminer le sport
     eliminer_sport(profs, modules)
 
@@ -189,10 +201,10 @@ def generer_individu(classe_info):
                 if modules[nom_module] >= 2:
                     if c == "08:30-10:30" or c == "13:30-15:30":
                         c_suivante = "10:40-12:30" if c == "08:30-10:30" else "15:40-17:30"
-                        individu[jour][c_suivante] = {
+                        individu[jour][c_suivante].append({
                             "prof": nom_prof,
                             "module": nom_module
-                        }
+                        })
                         modules[nom_module] -= 1
                         creeaaux_reserves.add(c_suivante)
 
@@ -201,11 +213,11 @@ def generer_individu(classe_info):
             else:
                 nom_prof = ""
                 nom_module = "Pause"
-            individu[jour][c] = {
+            individu[jour][c].append({
                 "prof": nom_prof,
                 "module": nom_module
-            }
-            # update profs
+            })
+            # update profs et ses modules.
             deleted_profs = []
             for p in profs:
                 profs[p]["modules"] = [m for m in profs[p]["modules"] if modules[m] > 0]
@@ -228,54 +240,45 @@ def trouver_semaine_fin(classe, module):
     tp_seances = 0
     if module.startswith("TP"):
         module = module[3:]
-        tp_seances = CLASSES[classe][module]["tp_seances"]
+    cours_seances, cours_semaines, _, _ = get_cours_infos(CLASSES[classe][module])
         
-    volume =CLASSES[classe][module]["volume"]
-
-    # Calcul du nombre total de séances pour le module
-    total_seances = math.ceil(volume / 2)
-    
-    # Calcul du nombre de séances par semaine
-    nbr_seances = math.ceil(total_seances / TOTAL_SEMAINES)
-
-    # total de semaines = semaine de fin s'il s'agit d'un cours
-    nbr_semaines = math.ceil(total_seances / nbr_seances)
     if tp_seances > 0:
-        nbr_semaines = math.ceil(nbr_semaines / 2)
-        nbr_seances_tp = math.ceil(tp_seances / nbr_semaines)
-        nbr_semaines_tp = tp_seances / nbr_seances_tp
-        semaine_fin = nbr_semaines + nbr_semaines_tp
+        semaine_debut, tp_semaines, tp_seance_par_semaine = get_tp_infos(CLASSES[classe][module])
+        semaine_fin = semaine_debut + tp_semaines
         semaine_debut = nbr_semaines + 1
     else:
-        semaine_fin = nbr_semaines
+        semaine_fin = cours_semaines
         semaine_debut = 1
 
     return  semaine_debut , semaine_fin
-    
+
 
 def afficher_individu(individu, classe_name, salle, modules):
     print(modules)
     print("********************************************************")
     print("********************************************************")
-    print(f"******** Emploi de temp de 1GD - salle: salle {salle} ********")
+    print(f"******** Emploi de temp de 2A_GD - salle: salle {salle} ********")
     old_module = ""
     for jour in individu:
         print(jour+": ")
         for c in individu[jour]:
+            # afficher le créeau
             print(end="\t")
-            print(c, end=" - ")
-            print(individu[jour][c]["module"], end=" - ")
-            print(individu[jour][c]["prof"], end = " semaines: ")
-            if old_module != individu[jour][c]["module"]:
-                old_module = ""
-            semaine_debut, semaine_fin = trouver_semaine_fin(classe_name, individu[jour][c]["module"])
-            if math.ceil(semaine_fin) > semaine_fin and old_module != individu[jour][c]["module"]:
-                semaine_fin = math.ceil(semaine_fin) - 1
-                old_module = individu[jour][c]["module"]
-            else:
-                semaine_fin = math.ceil(semaine_fin)
+            print(c+": ")
+            for seance in individu[jour][c]:
+                print(end="\t\t")
+                print(seance["module"], end=" - ")
+                print(seance["prof"], end = " semaines: ")
+                if old_module != seance["module"]:
+                    old_module = ""
+                semaine_debut, semaine_fin = trouver_semaine_fin(classe_name, seance["module"])
+                if math.ceil(semaine_fin) > semaine_fin and old_module != seance["module"]:
+                    semaine_fin = math.ceil(semaine_fin) - 1
+                    old_module = seance["module"]
+                else:
+                    semaine_fin = math.ceil(semaine_fin)
 
-            print(f"S{semaine_debut} - S{semaine_fin}")
+                print(f"S{semaine_debut} - S{semaine_fin}")
         print()
 
 # fonctionne fintness_score pour évaluer un individu
@@ -287,7 +290,7 @@ def fintess_score(individu):
 
         for i in x:
             for j in y:
-                if individu[jour][i]["module"] == individu[jour][j]["module"]:
+                if individu[jour][i][0]["module"] == individu[jour][j][0]["module"]:
                     score -= 1
     return score
 
