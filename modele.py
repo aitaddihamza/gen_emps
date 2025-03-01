@@ -255,28 +255,25 @@ def afficher_individu(individu, classe_name, salle, modules):
     print(modules)
     print("********************************************************")
     print("********************************************************")
-    print(f"******** Emploi de temp de {classe_name}- salle: salle {salle} ********")
+    print(f"******** Emploi de temp de 1GD - salle: salle {salle} ********")
     old_module = ""
     for jour in individu:
         print(jour+": ")
         for c in individu[jour]:
-            # afficher le créeau
             print(end="\t")
-            print(c+": ")
-            for seance in individu[jour][c]:
-                print(end="\t\t")
-                print(seance["module"], end=" - ")
-                print(seance["prof"], end = " semaines: ")
-                if old_module != seance["module"]:
-                    old_module = ""
-                semaine_debut, semaine_fin = trouver_semaine_fin(classe_name, seance["module"])
-                if math.ceil(semaine_fin) > semaine_fin and old_module != seance["module"]:
-                    semaine_fin = math.ceil(semaine_fin) - 1
-                    old_module = seance["module"]
-                else:
-                    semaine_fin = math.ceil(semaine_fin)
+            print(c, end=" - ")
+            print(individu[jour][c]["module"], end=" - ")
+            print(individu[jour][c]["prof"], end = " semaines: ")
+            if old_module != individu[jour][c]["module"]:
+                old_module = ""
+            semaine_debut, semaine_fin = trouver_semaine_fin(classe_name, individu[jour][c]["module"])
+            if math.ceil(semaine_fin) > semaine_fin and old_module != individu[jour][c]["module"]:
+                semaine_fin = math.ceil(semaine_fin) - 1
+                old_module = individu[jour][c]["module"]
+            else:
+                semaine_fin = math.ceil(semaine_fin)
 
-                print(f"S{semaine_debut} - S{semaine_fin}")
+            print(f"S{semaine_debut} - S{semaine_fin}")
         print()
 
 # fonctionne fintness_score pour évaluer un individu
