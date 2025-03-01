@@ -18,8 +18,16 @@ Description:
 CONTRAINTES = {
     "salles_reserves": [],
     "jour_de_sport": [],
-    "non_disponibilites_profs": {} # "P2": ("salle0", "creneau0", "jour0")
+    "profs_max_seances": {},
+    "non_disponibilites_profs": {}
 }
+
+for p, d in PROFESSEURS.items():
+    if d["type"] == "permanent":
+        CONTRAINTES["profs_max_seances"][p] = math.floor(d["max_heures"] / 2) 
+    else:
+        CONTRAINTES["profs_max_seances"][p] = 1
+
 
 # la structure des emplois pour l'instant
 emplois = {classe: { jour: {creneau: None for creneau in CRENEAUX } for jour in JOURS } for classe in CLASSES.keys() }
@@ -121,13 +129,14 @@ def reserver_salle():
     # les salles disponibles 
     salles_disponibles = [ salle for salle in range(NBR_SALLES) if salle not in CONTRAINTES["salles_reserves"]]
     salle = random.choice(salles_disponibles)
+    CONTRAINTES["salles_reserves"].append(salle)
     return salle
 
 ##################### Fonctionne pour générer un individu (emploi du temps) pour une classe ############
 # il retourne une tuple (individu, salle, modules) pour l'instant.
 def generer_individu(classe_info):
     # Initialisation de l'individu (emploi du temps)
-    individu = {jour: {creneau: [] for creneau in CRENEAUX } for jour in JOURS}
+    individu = {jour: {creneau: None for creneau in CRENEAUX } for jour in JOURS}
     
     # prepaer les cours et les tps
     # modules = dict => exemple: {"Robotiques médicales": 2, "Math": 1}, 2 et 1 représente le nombre de séances par semaine
@@ -138,7 +147,6 @@ def generer_individu(classe_info):
     print(total_seances_modules)
         
     profs = prepare_profs(modules)
-    salle = reserver_salle()
 
     jour_de_sport, prof_de_sport = trouver_jour_et_prof_de_sport(profs)
     # réserver le sport
@@ -170,14 +178,17 @@ def generer_individu(classe_info):
                 else:
                     nom_prof = random.choice(list(profs_disponibles.keys()))
                 prof = profs[nom_prof]
-                while jour not in prof["disponibilites"] or prof["count"] <= 0:
-                    nom_prof = random.choice(list(profs.keys()))
+                attempt = 0
+                while (jour not in prof["disponibilites"] or CONTRAINTES["profs_max_seances"][nom_prof] <= 0) and attempt <= 200:
+                    attempt += 1
+                    nom_prof = random.choice(list(profs_disponibles.keys()))
                     prof = profs[nom_prof]
 
                 if prof["type"] == "permanent":
                     prof["count"] -= 1
+                    CONTRAINTES["profs_max_seances"][nom_prof] -= 1
 
-                # CONTRAINTES['non_disponibilites_profs'].setDefault()
+                CONTRAINTES["non_disponibilites_profs"].setdefault(jour, {}).setdefault(c, []).append(nom_prof)
                 # choisir la matière ou bien on peut la nommer module
                 nom_module = random.choice(prof["modules"])
                 if modules[nom_module] >= 2:
@@ -211,7 +222,7 @@ def generer_individu(classe_info):
                     del profs[dp]
                         
 
-    return individu, salle, modules
+    return individu , modules
 
 
     # Affichage des modules et des séances de TP
@@ -277,11 +288,17 @@ def fintess_score(individu):
 
         for i in x:
             for j in y:
-                if individu[jour][i][0]["module"] == individu[jour][j][0]["module"]:
+                if individu[jour][i]["module"] == individu[jour][j]["module"]:
                     score -= 1
     return score
 
-individu, salle, modules = generer_individu(CLASSES["2A_GB"])
+salle = reserver_salle()
+individu, modules = generer_individu(CLASSES["2A_GD"])
+afficher_individu(individu, "2A_GD", salle, modules)
+print(f"score: {fintess_score(individu)}")
+# pour bio
+salle = reserver_salle()
+individu, modules = generer_individu(CLASSES["2A_GB"])
 afficher_individu(individu, "2A_GB", salle, modules)
 print(f"score: {fintess_score(individu)}")
 exit()
