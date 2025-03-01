@@ -145,7 +145,7 @@ def generer_individu(classe_info):
 
     # TOTAL SÉANCES DE MODULES (modules["Français"] => count => nombre des séancs par semaine) 
     total_seances_modules = sum(modules.values())
-    # print(total_seances_modules)
+    print(total_seances_modules)
         
     profs = prepare_profs(modules)
 
@@ -183,7 +183,7 @@ def generer_individu(classe_info):
                     nom_prof = random.choice(list(profs_disponibles.keys()))
                 prof = profs[nom_prof]
                 attempt = 0
-                while (jour not in prof["disponibilites"] or CONTRAINTES["profs_max_seances"][nom_prof] <= 0) and attempt <= 200:
+                while (jour not in prof["disponibilites"] or CONTRAINTES["profs_max_seances"][nom_prof] <= 0) and attempt < 200:
                     attempt += 1
                     nom_prof = random.choice(list(profs_disponibles.keys()))
                     prof = profs[nom_prof]
@@ -202,6 +202,7 @@ def generer_individu(classe_info):
                             "prof": nom_prof,
                             "module": nom_module
                         }
+                        CONTRAINTES["non_disponibilites_profs"].setdefault(jour, {}).setdefault(c_suivante, []).append(nom_prof)
                         modules[nom_module] -= 1
                         creneaux_reserves.add(c_suivante)
 
@@ -285,35 +286,21 @@ def fitness_score(individu):
                     score -= 1
     return score
 
-salle = reserver_salle()
-individu, modules = generer_individu(CLASSES["2A_GD"])
-afficher_individu(individu, "2A_GD", salle, modules)
-print(f"score: {evaluate(modules)}")
+
 # pour bio
-OLD_CONTRAINTES = copy.deepcopy(CONTRAINTES)
-score = -1
-while score < 0:
-    salle = reserver_salle()
-    individu, modules = generer_individu(CLASSES["2A_GB"])
-    score = evaluate(modules)
-    CONTRAINTES = copy.deepcopy(OLD_CONTRAINTES)
-    print(CONTRAINTES["salles_reserves"])
-afficher_individu(individu, "2A_GB", salle, modules)
-print(f"score: {score}")
-
-
-OLD_CONTRAINTES = copy.deepcopy(CONTRAINTES)
-# pour 1anné génie digital
-score = -1
-while score < 0:
-    CONTRAINTES = copy.deepcopy(OLD_CONTRAINTES)
-    salle = reserver_salle()
-    individu, modules = generer_individu(CLASSES["1A_GD"])
-    score = evaluate(modules)
-afficher_individu(individu, "1A_GD", salle, modules)
-print(f"score: {score}")
+for classe in CLASSES:
+    OLD_CONTRAINTES = copy.deepcopy(CONTRAINTES)
+    score = -1
+    while score < 0:
+        CONTRAINTES = copy.deepcopy(OLD_CONTRAINTES)
+        salle = reserver_salle()
+        individu, modules = generer_individu(CLASSES[classe])
+        score = evaluate(modules)
+    afficher_individu(individu, classe, salle, modules)
+    print(f"score: {score}")
 
 exit()
+
 # afficher 10 version d'emploi de temps de 2éme année génie digital et intelligence artificiel en santé
 for v in range(TAILLE_GENERATION):
     individu, salle, modules = generer_individu(CLASSES["2A_GD"])
