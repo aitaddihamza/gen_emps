@@ -16,7 +16,8 @@ Description:
 
 # Exemple:
 CONTRAINTES = {
-    "sallles_reserves": [],
+    "salles_reserves": [],
+    "jour_de_sport": [],
     "non_disponibilites_profs": {} # "P2": ("salle0", "creneau0", "jour0")
 }
 
@@ -118,7 +119,7 @@ def eliminer_sport(profs, classe_modules):
 ###################### Fonctionne pour réserver une salle ###############################
 def reserver_salle():
     # les salles disponibles 
-    salles_disponibles = [ salle for salle in range(NBR_SALLES) if salle not in CONTRAINTES["sallles_reserves"]]
+    salles_disponibles = [ salle for salle in range(NBR_SALLES) if salle not in CONTRAINTES["salles_reserves"]]
     salle = random.choice(salles_disponibles)
     return salle
 
@@ -237,15 +238,18 @@ def generer_individu(classe_info):
 
 # exit()
 def trouver_semaine_fin(classe, module):
-    tp_seances = 0
     if module.startswith("TP"):
         module = module[3:]
-    cours_seances, cours_semaines, _, _ = get_cours_infos(CLASSES[classe][module])
+        cours_seances, cours_semaines, _, tp_seances = get_cours_infos(CLASSES[classe][module])
+    else:
+        cours_seances, cours_semaines, _, _ = get_cours_infos(CLASSES[classe][module])
+        tp_seances = 0
+
         
     if tp_seances > 0:
         semaine_debut, tp_semaines, tp_seance_par_semaine = get_tp_infos(CLASSES[classe][module])
         semaine_fin = semaine_debut + tp_semaines
-        semaine_debut = nbr_semaines + 1
+        semaine_debut = semaine_debut + 1
     else:
         semaine_fin = cours_semaines
         semaine_debut = 1
@@ -257,7 +261,7 @@ def afficher_individu(individu, classe_name, salle, modules):
     print(modules)
     print("********************************************************")
     print("********************************************************")
-    print(f"******** Emploi de temp de 2A_GD - salle: salle {salle} ********")
+    print(f"******** Emploi de temp de {classe_name}- salle: salle {salle} ********")
     old_module = ""
     for jour in individu:
         print(jour+": ")
@@ -294,6 +298,10 @@ def fintess_score(individu):
                     score -= 1
     return score
 
+individu, salle, modules = generer_individu(CLASSES["2A_GD"])
+afficher_individu(individu, "2A_GD", salle, modules)
+print(f"score: {fintess_score(individu)}")
+exit()
 # afficher 10 version d'emploi de temps de 2éme année génie digital et intelligence artificiel en santé
 for v in range(TAILLE_GENERATION):
     individu, salle, modules = generer_individu(CLASSES["2A_GD"])
