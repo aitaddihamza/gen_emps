@@ -135,29 +135,8 @@ def generer_individu(classe_info):
 
     # TOTAL SÉANCES DE MODULES (modules["Français"] => count => nombre des séancs par semaine) 
     total_seances_modules = sum(modules.values())
+    print(total_seances_modules)
         
-    # l'idée est de savoir les modules qu'ils doivent commencer dès la Semaine1 (souvent les modules lourd)
-    # les modules qu'ont un volume horaire qui est petit on peut les considérer comme un seul module mais l'un va commencer après la fin de l'autre tant que leur somme est adapté au semestre.
-    if total_seances_modules > TOTAL_SEANCES_PAR_SEMAINE:
-        petits_modules = {m: count for m, count in modules.items() if count == 1}
-
-        # total_seances_modules - m <= TOTAL_SEANCES_PAR_SEMAINE
-        m = 0 # le nombre de seances
-        n_max = len(petits_modules)
-        n = 0 # nombre de modules
-        while (total_seances_modules - m) > TOTAL_SEANCES_PAR_SEMAINE and n_max >= n:
-            n += 2
-            m = n // 2
-        print(f"le nombre de seances optimisées est {m} ") 
-        # exit()
-
-    tp_courtes = {m : classe_info[m[3:]]["tp_seances"] for m, c in petits_modules.items() if m.startswith("TP ")} 
-    cours_courtes = {m : math.ceil(classe_info[m]["volume"] / 2) for m, c  in petits_modules.items() if not m.startswith("TP ") and classe_info[m]["volume"] / 2 < TOTAL_SEMAINES }
-    # préparer les profs de ce classe et réserver une salle.
-    # print(cours_courtes)
-    # print(tp_courtes)
-    #
-    # exit()
     profs = prepare_profs(modules)
     salle = reserver_salle()
 
@@ -181,14 +160,15 @@ def generer_individu(classe_info):
                 continue
             if jour == jour_de_sport and c == "13:30-15:30":
                 break
-            if len(profs) > 0:
+            profs_disponibles = {p:d for p, d in profs.items() if p not in CONTRAINTES['non_disponibilites_profs'].get(jour, {}).get(c, [])}
+            if len(profs_disponibles) > 0:
                 # la priorité est de profs vacataires 
-                profs_vacataires = [p for p, d in profs.items() if jour in d["disponibilites"] and d["type"] == "vacataire"]
+                profs_vacataires = [p for p, d in profs_disponibles.items() if jour in d["disponibilites"] and d["type"] == "vacataire"]
                 # si on a des profs vacataires disponible ce jour on va les prioriser
                 if len(profs_vacataires) > 0:
                     nom_prof = random.choice(profs_vacataires)
                 else:
-                    nom_prof = random.choice(list(profs.keys()))
+                    nom_prof = random.choice(list(profs_disponibles.keys()))
                 prof = profs[nom_prof]
                 while jour not in prof["disponibilites"] or prof["count"] <= 0:
                     nom_prof = random.choice(list(profs.keys()))
@@ -197,6 +177,7 @@ def generer_individu(classe_info):
                 if prof["type"] == "permanent":
                     prof["count"] -= 1
 
+                # CONTRAINTES['non_disponibilites_profs'].setDefault()
                 # choisir la matière ou bien on peut la nommer module
                 nom_module = random.choice(prof["modules"])
                 if modules[nom_module] >= 2:
@@ -241,6 +222,8 @@ def trouver_semaine_fin(classe, module):
     if module.startswith("TP"):
         module = module[3:]
         cours_seances, cours_semaines, _, tp_seances = get_cours_infos(CLASSES[classe][module])
+    elif module == "Pause":
+        return 1, 14
     else:
         cours_seances, cours_semaines, _, _ = get_cours_infos(CLASSES[classe][module])
         tp_seances = 0
@@ -298,8 +281,8 @@ def fintess_score(individu):
                     score -= 1
     return score
 
-individu, salle, modules = generer_individu(CLASSES["2A_GD"])
-afficher_individu(individu, "2A_GD", salle, modules)
+individu, salle, modules = generer_individu(CLASSES["2A_GB"])
+afficher_individu(individu, "2A_GB", salle, modules)
 print(f"score: {fintess_score(individu)}")
 exit()
 # afficher 10 version d'emploi de temps de 2éme année génie digital et intelligence artificiel en santé
