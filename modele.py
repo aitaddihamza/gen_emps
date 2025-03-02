@@ -287,11 +287,12 @@ def fitness_score(individu):
     return score
 
 
-# pour bio
+iter = 0
 for classe in CLASSES:
     OLD_CONTRAINTES = copy.deepcopy(CONTRAINTES)
     score = -1
     while score < 0:
+        iter += 1
         CONTRAINTES = copy.deepcopy(OLD_CONTRAINTES)
         salle = reserver_salle()
         individu, modules = generer_individu(CLASSES[classe])
@@ -299,6 +300,7 @@ for classe in CLASSES:
     afficher_individu(individu, classe, salle, modules)
     print(f"score: {score}")
 
+print(f" this took {iter} iterations ")
 exit()
 
 # afficher 10 version d'emploi de temps de 2éme année génie digital et intelligence artificiel en santé
