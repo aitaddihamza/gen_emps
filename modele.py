@@ -32,7 +32,7 @@ for p, d in PROFESSEURS.items():
 
 
 # la structure des emplois pour l'instant
-emplois = {classe: { jour: {creneau: None for creneau in CRENEAUX } for jour in JOURS } for classe in CLASSES.keys() }
+emplois = {classe: { jour: {creneau: [] for creneau in CRENEAUX } for jour in JOURS } for classe in CLASSES.keys() }
 
 
 # FONCTIONNES 
@@ -134,11 +134,46 @@ def reserver_salle():
     CONTRAINTES["salles_reserves"].append(salle)
     return salle
 
+def affecter_seance(classe_name, individu, jour, c, infos):
+    semaine_debut, semaine_fin = trouver_semaines(classe_name, infos["nom_module"])
+    individu[jour][c].append({
+        "prof": infos["nom_prof"],
+        "module": infos["nom_module"],
+        "semaine_debut": semaine_debut,
+        "semaine_fin": semaine_fin
+    })
+
+def get_shared_modules(classe_name, tps):
+    if not tps or len(tps) < 2:
+        print("On a pas assez des tps ! ")
+    tps_partages = set()
+    l, r = 0, 1
+    while r < len(tps) or l < len(tps):
+        if tps[r] in tps_partages:
+            r += 1
+        else:
+            sf1 = trouver_semaines(classe_name, tps[l])[1]
+            sd2, sf2 = trouver_semaines(classe_name, tps[r])
+            if sf1 + sf2 - sd2 + 1 <= TOTAL_SEMAINES:
+                tps_partages.add(tps[l])
+                tps_partages.add(tps[r])
+                while tps[l] in tps_partages and l < len(tps):
+                    l += 1
+                    r = l+1
+            else:
+                break
+        if r >= len(tps):
+                l += 1 
+                r = l + 1
+        cours_partages = set()
+        return cours_partages, tps_partages
+
 ##################### Fonctionne pour générer un individu (emploi du temps) pour une classe ############
 # il retourne une tuple (individu, salle, modules) pour l'instant.
-def generer_individu(classe_info):
+def generer_individu(classe_name):
+    classe_info = CLASSES[classe_name]
     # Initialisation de l'individu (emploi du temps)
-    individu = {jour: {creneau: None for creneau in CRENEAUX } for jour in JOURS}
+    individu = {jour: {creneau: [] for creneau in CRENEAUX } for jour in JOURS}
     
     # Préparer les cours et les tps
     modules = prepare_modules(classe_info)
@@ -146,7 +181,19 @@ def generer_individu(classe_info):
     # TOTAL SÉANCES DE MODULES (modules["Français"] => count => nombre des séancs par semaine) 
     total_seances_modules = sum(modules.values())
     print(total_seances_modules)
-        
+
+    r = total_seances_modules - 20
+    if r > 0:
+        tps = [tp for tp in modules if tp.startswith("TP ")]
+        tps = sorted(tps, key=lambda tp: trouver_semaines(classe_name, tp)[1])
+
+        _, tps_partages = get_shared_modules(classe_name, tps)
+        for tp in tps: print(f"{tp}: {trouver_semaines(classe_name, tp)}", end=" ")
+        print()
+        for tp in tps_partages: print(f"{tp}: {trouver_semaines(classe_name, tp)}", end=" ")
+        exit()
+    
+
     profs = prepare_profs(modules)
 
     CONTRAINTES["salles_reserves"].append(salle)
@@ -154,14 +201,9 @@ def generer_individu(classe_info):
     jour_de_sport, prof_de_sport = trouver_jour_et_prof_de_sport(profs)
     CONTRAINTES["jour_de_sport"][jour_de_sport] += 1
     # réserver le sport
-    individu[jour_de_sport]["13:30-15:30"] = {
-        "prof": prof_de_sport,
-        "module": "ESP" 
-    }
-    individu[jour_de_sport]["15:40-17:30"] = {
-        "prof": prof_de_sport,
-        "module": "ESP" 
-    }
+    semaine_debut, semaine_fin = trouver_semaines(classe_name, "ESP")
+    affecter_seance(classe_name, individu, jour_de_sport, "13:30-15:30", {"nom_prof": prof_de_sport, "nom_module": "ESP"})
+    affecter_seance(classe_name, individu,  jour_de_sport, "15:40-17:30", {"nom_prof": prof_de_sport, "nom_module": "ESP"})
     # éliminer le sport
     eliminer_sport(profs, modules)
 
@@ -198,10 +240,7 @@ def generer_individu(classe_info):
                 if modules[nom_module] >= 2:
                     if c == "08:30-10:30" or c == "13:30-15:30":
                         c_suivante = "10:40-12:30" if c == "08:30-10:30" else "15:40-17:30"
-                        individu[jour][c_suivante] = {
-                            "prof": nom_prof,
-                            "module": nom_module
-                        }
+                        affecter_seance(classe_name, individu, jour, c_suivante, {"nom_prof": nom_prof, "nom_module": nom_module})
                         CONTRAINTES["non_disponibilites_profs"].setdefault(jour, {}).setdefault(c_suivante, []).append(nom_prof)
                         modules[nom_module] -= 1
                         creneaux_reserves.add(c_suivante)
@@ -211,10 +250,7 @@ def generer_individu(classe_info):
             else:
                 nom_prof = ""
                 nom_module = "Pause"
-            individu[jour][c] = {
-                "prof": nom_prof,
-                "module": nom_module
-            }
+            affecter_seance(classe_name, individu, jour, c, {"nom_prof": nom_prof, "nom_module": nom_module})
             # update profs
             deleted_profs = []
             for p in profs:
@@ -228,12 +264,12 @@ def generer_individu(classe_info):
 
     return individu , modules
 
-def trouver_semaine_fin(classe, module):
+def trouver_semaines(classe, module):
     if module.startswith("TP"):
         module = module[3:]
         cours_seances, cours_semaines, _, tp_seances = get_cours_infos(CLASSES[classe][module])
     elif module == "Pause":
-        return 1, 14
+        return 1, TOTAL_SEMAINES
     else:
         cours_seances, cours_semaines, _, _ = get_cours_infos(CLASSES[classe][module])
         tp_seances = 0
@@ -257,13 +293,12 @@ def afficher_individu(individu, classe_name, salle, modules):
     print(f"******** Emploi de temps de {classe_name} - salle: salle {salle} ********")
     for jour in individu:
         print(jour + ": ")
-        for c in individu[jour]:
+        for c, v in individu[jour].items():
             print(end="\t")
             print(c, end=" - ")
-            print(individu[jour][c]["module"], end=" - ")
-            print(individu[jour][c]["prof"], end = " semaines: ")
-            semaine_debut, semaine_fin = trouver_semaine_fin(classe_name, individu[jour][c]["module"])
-            print(f"S{semaine_debut} - S{semaine_fin}")
+            print(v["module"], end=" - ")
+            print(v["prof"], end = " semaines: ")
+            print(f"S{v['semaine_debut']}-S{v['semaine_fin']}")
         print()
 
 # fonctionne pour l'évaluation d'emploi de temps
@@ -295,47 +330,12 @@ for classe in CLASSES:
         iter += 1
         CONTRAINTES = copy.deepcopy(OLD_CONTRAINTES)
         salle = reserver_salle()
-        individu, modules = generer_individu(CLASSES[classe])
+        individu, modules = generer_individu(classe)
         score = evaluate(modules)
     afficher_individu(individu, classe, salle, modules)
     print(f"score: {score}")
 
 print(f" this took {iter} iterations ")
-exit()
-
-# afficher 10 version d'emploi de temps de 2éme année génie digital et intelligence artificiel en santé
-for v in range(TAILLE_GENERATION):
-    individu, salle, modules = generer_individu(CLASSES["2A_GD"])
-    afficher_individu(individu, "2A_GD", salle, modules)
-    print(f"Score de la verison:{v+1} = {fitness_score(individu)}")
-exit()
-scores = []
-generation = []
-for _ in range(TAILLE_GENERATION):
-    individu, salle, modules = generer_individu(CLASSES["2A_GD"])
-    # afficher_individu(individu, "2A_GD", salle, modules)
-    score = fitness_score(individu)
-    generation.append((individu, salle, modules))
-    scores.append(score)
-
-max_score = max(scores)
-individu, salle, module = generation[scores.index(max_score)]
-afficher_individu(individu, "2A_GB", salle, modules)
-print(f"Max score: {max_score}")
-exit()
-for classe in CLASSES:
-    scores = []
-    generation = []
-    for _ in range(TAILLE_GENERATION):
-        individu, salle, modules = generer_individu(CLASSES[classe])
-        score = fintess_score(individu)
-        generation.append((individu, salle, modules))
-        scores.append(score)
-
-    max_score = max(scores)
-    individu, salle, module = generation[scores.index(max_score)]
-    afficher_individu(individu, classe, salle, modules)
-    print(f"Max score: {max_score}")
 exit()
 
 

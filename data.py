@@ -9,15 +9,15 @@ JOURS = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"]
 # les classes
 CLASSES = {
     "2A_GD": {
-        "Bases de Traitement d'images médicales": {"volume": 28, "tp_seances": 5},
+        "Bases de Traitement d'images médicales": {"volume": 24, "tp_seances": 5},
         "Mini projet de Traitement d'image": {"volume": 28, "tp_seances": 0},
-        "Robotiques médicales": {"volume": 28, "tp_seances": 2},
+        "Robotiques médicales": {"volume": 24, "tp_seances": 5},
         "Gestion de projet": {"volume": 28, "tp_seances": 0},
         "Réalisation": {"volume": 28, "tp_seances": 0},
-        "Organisation hospitalière": {"volume": 28, "tp_seances": 0},
+        "Organisation hospitalière": {"volume": 56, "tp_seances": 0},
         "Bioinformatique": {"volume": 56, "tp_seances": 0},
         "Bases de données Avancées": {"volume": 56, "tp_seances": 0},
-        "Machine learning": {"volume": 56, "tp_seances": 5},
+        "Machine learning": {"volume": 48, "tp_seances": 2},
         "Economie de santé": {"volume": 28, "tp_seances": 0},
         "ESP": {"volume": 48, "tp_seances": 0},
         "Français": {"volume": 24, "tp_seances": 0},
