@@ -9,6 +9,7 @@ TOTAL_SEANCES_PAR_SEMAINE = 20
 # les salles
 # salle0 -> salle5
 NBR_SALLES = 6
+SALLES_TP = ["TP1", "TP2"]
 
 # variables de paramétrage pour l'algorithme génétique
 NBR_GENERATION = 10
