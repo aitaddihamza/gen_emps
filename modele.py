@@ -290,6 +290,8 @@ def afficher_individu(individu, classe_name, salle, modules):
                 print(seance["prof"], end = " semaines: ")
                 semaine_debut, semaine_fin = trouver_semaines(classe_name, seance["module"])
                 print(f"S{semaine_debut} - S{semaine_fin}")
+            else:
+                print()
         print()
 
 # fonctionne pour l'évaluation d'emploi de temps
@@ -327,102 +329,4 @@ for classe in CLASSES:
     print(f"score: {score}")
 print(f"Total iterations: {iter}")
 exit()
-
-for classe in CLASSES:
-    scores = []
-    generation = []
-    for _ in range(TAILLE_GENERATION):
-        individu, salle, modules = generer_individu(CLASSES[classe])
-        score = fintess_score(individu)
-        generation.append((individu, salle, modules))
-        scores.append(score)
-
-    max_score = max(scores)
-    individu, salle, module = generation[scores.index(max_score)]
-    afficher_individu(individu, classe, salle, modules)
-    print(f"Max score: {max_score}")
-exit()
-
-
-def selection(generation):
-    pass
-
-# fonctionne pour générer l'emploi de temps par classe
-def generer_emploi(classe):
-    # algorithme génétique = générer la pop initiale => évaluation => sélection => croisement(30%) => mutation(10%)
-    # =>  remplacer l'ancienne génération par la nouvelle recommencer par l'évaluation jusqu'à la génération NBR_GENERATION - 1
-
-    # Étape 0: générer la population/génération initiale 
-    generation = [] # Génération 0 de taille TAILLE_GENERATION
-
-    for i in range(TAILLE_GENERATION):
-        emploi = generer_individu(classe)
-        generation.append(emploi)
-
-    for i in range(NBR_GENERATION):
-        # Étape 1: évaluation de chaque individu via la fonctionne fitness_score(individu)
-        # Étape 2: sélectionner demi génération qui on le plus haut score
-        meilleurs_individus = selection(generation) 
-        enfants = []
-        # croisment si la prob dépasse ou égale 30%
-        # mutation si la prob dépasse ou égale 10%  
-        # nouvelle génération = meilleurs_individus + enfants
-        # remplacer l'ancienne génération par la nouvelle
-        generation = meilleurs_individus + enfants
-    meilleur_emploi = sorted(generation[0], reverse=True) # qu'a le plus haut score 
-    # Mettre à jour CONTRAINTES
-
-
-# fonctionne pour générer les emplois pour chaque classe
-for classe in CLASSES.keys():
-    emplois[classe] = generer_emploi(classe)
-
-
-# fonctionne pour affiche les emplois 
-def afficher_emplois():
-    pass
-    # Exemple d'affichage d'un emploi 
-    """ 
-    ********************************************************
-    ******** Emploi de temp de 1GD - salle: salle 5 ********
-    Lundi: 
-        créneau1:
-            Programmation - prof A - S1-S14
-            TP Programmation - Doct 2 - S7-S10
-        créneau2: Programmation - prof A - S1-S14
-        créneau3: Base de données - prof A - S1-S14
-        créneau4: Pause
-    Mardi: 
-        créneau1: Statistiques - prof A - S1-S14
-        créneau2: Pause
-        créneau3: 
-            Réseaux - prof B - S1-S14
-            TP Réseaux - Doct 3 - S7-S12
-        créneau4: Réseaux - prof B - S1-S14
-    ...
-    Vendredi:
-        créneau1: Français - prof C - S1-S14
-        créneau2: Biologie - prof B - S1-S14
-        créneau3: Base de données - prof A - S1-S14
-        créneau4: Pause
-    ********************************************************
-    """
-
-    
-
-# Problèmes: 
-# Comment planifier les séances de tps ?
-
-# les tps doivent commencer après la moité de cours théorique
-# Exemple: Cloud Computing - Prof A - S1-S14  => donc le tp commence après: S7 jusqu'à le reste.
-# mais il faut déterminer le nombre de séances de tps par semaine, comment ? 
-# floor(14 semaines / 2) = 7 semaines, et par exemple le tp a 9 séances => 9séances / 7 semaines = floor(1,..) = 2séance par semaine => 9séances / 2séancs par semaine = floor(4,5) = 5semaines
-# donc le tp de coloud Computing Computing commence de la semaine S7 jusqu'à la semaine S(7+5=12).
-# Mais comment la planifier dans l'emploi sachant qu'il respecte les contraintes ? 
-
-# comment ne pas avoir le sport dans le matin ?
-# comment quelque chose comme: Réseaux 10:30-12:30 et Réseaux 13:30 - 15:30 ?
-# comment ne pas déapasser le nombre de séances par semaine (20 séances) ? comment bien répartir les cours et les tps dans la semaines ?
-# comment ajouter les intervalles des seamines pour sépcifier la semaine de début d'un tel module et la semaine de fin, exemple: Organisation hospitalière S2-S14 
-# le sport ESP
 
