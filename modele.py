@@ -114,16 +114,18 @@ def reserver_salle_tp(jour, c):
     # les salles disponibles 
     salles_disponibles = [ salle for salle in SALLES_TP if salle not in CONTRAINTES["salles_tps"].get(jour, {}).get(c, set()) ]
     if not salles_disponibles:
-        raise Exception("y a pas asses des salles de tps disponibles")
+        raise Exception("y a pas assez des salles de tps disponibles")
     salle = random.choice(salles_disponibles)
     CONTRAINTES["salles_tps"].setdefault(jour, {}).setdefault(c, set()).add(salle)
     return salle
 
 def reserver_salle():
     # les salles disponibles 
-    salles_disponibles = [ salle for salle in range(NBR_SALLES) if salle not in CONTRAINTES["salles_reserves"]]
+    salles_disponibles = [salle for salle in range(NBR_SALLES) if salle not in CONTRAINTES["salles_reserves"]]
+    if len(salles_disponibles) == 0:
+        raise Exception("y a pas assez des salles disponibles")
     salle = random.choice(salles_disponibles)
-    CONTRAINTES["salles_reserves"].append(salle + 1)
+    CONTRAINTES["salles_reserves"].append(salle)
     return salle
 
 def affecter_seance(classe_name, individu, jour, c, infos, modules):
@@ -137,56 +139,140 @@ def affecter_seance(classe_name, individu, jour, c, infos, modules):
     })
 
 
-def affecter_seance_partner(classe_name, individu, jour, c, infos, modules, tps_partages):
-    sd1, sf1 = trouver_semaines(classe_name, infos["nom_module"], modules)
-    sd2, sf2 = trouver_semaines(classe_name, tps_partages[infos["nom_module"]], modules)
-    individu[jour][c].append({
-        "prof": infos["nom_prof"],
-        "salle": infos["salle"],
-        "module": infos["nom_module"],
-        "semaine_debut": sd1,
-        "semaine_fin": sf1
-    })
-    individu[jour][c].append({
-        "prof": infos["nom_prof"],
-        "salle": infos["salle"],
-        "module": tps_partages[infos["nom_module"]],
-        "semaine_debut": sf1 + 1,
-        "semaine_fin": sf1 + sf2 - sd2 + 1
-    })
+def est_ce_que_on_regrouper(classe_name, modules, group, newMember):
+    sd = trouver_semaines(classe_name, group[0], modules)[0]
+    total_sm = 0
+    for m in group:
+        total_sm += trouver_semaines(classe_name, m, modules)[1] - trouver_semaines(classe_name, m, modules)[0]
+    if len(group) > 1:
+        total_sm += 1
+    sf = sd + total_sm 
+    sm = trouver_semaines(classe_name, newMember, modules)[1] - trouver_semaines(classe_name, newMember, modules)[0] + 1
+    if sf + sm <= 14:
+        return True
+    
+    return False    
 
 def get_shared_modules(classe_name, modules):
-    tps_partages = {}
-    tps = [tp for tp in modules if tp.startswith("TP ")]
-    tps = sorted(tps, key=lambda tp: trouver_semaines(classe_name, tp, modules)[1])
-    if not tps or len(tps) < 2:
-        print("On a pas assez des tps ! ")
-
-    tps_partages = dict()
-    cours_partages = dict()
-    l, r = 0, 1
-
-    while r < len(tps) and l < len(tps):
-        if tps[r] in tps_partages:
-            r += 1
+    tps_partages = []
+    
+    # les tps à une seul seance:
+    tps1 = sorted([m for m in modules.keys() if m.startswith("TP") and modules[m] == 1], key=lambda m: trouver_semaines(classe_name, m, modules)[0])
+    # print(f"Les tps à une seul seances: {tps1}")
+    if not tps1 or len(tps1) < 2:
+        raise Exception("Il n'y a pas assez des tps à regrouper !")
+    i, j = 0, 1
+    group = list()
+    group.append(tps1[i])
+    while i < len(tps1) and j < len(tps1):
+        if est_ce_que_on_regrouper(classe_name, modules, group, tps1[j]):
+            group.append(tps1[j])
+            tps1.remove(tps1[j])
         else:
-            _, sf1 = trouver_semaines(classe_name, tps[l], modules)
-            sd2, sf2 = trouver_semaines(classe_name, tps[r], modules)
-            if sf1 + sf2 - sd2 + 1 <= TOTAL_SEMAINES:
-                tps_partages[tps[l]] = tps[r]
-                tps_partages[tps[r]] = tps[l]
-                while tps[l] in tps_partages and l < len(tps):
-                    l += 1
-                    r = l+1
+            j+=1
+        if j >= len(tps1):
+            if len(group) >= 2:
+                tps1.remove(tps1[i])
+                tps_partages.append(group) 
             else:
-                break
-        if r >= len(tps):
-                l += 1 
-                r = l + 1
-    return cours_partages, tps_partages
+                i += 1
+            j = i + 1
+            group = list()
+            if len(tps1) > 1:
+                group.append(tps1[i])
 
-##################### Fonctionne pour générer un individu (emploi du temps) pour une classe ############
-# il retourne une tuple (individu, salle, modules) pour l'instant.
+            
+    # les tps à une deux seance:
+    # tps2 = sorted([m for m in modules if m.startswith("TP ") and module[m] == 2], key=lambda m: trouver_semaines(m)[0])
+    
+    # print(f"Les tps restants : {tps1}")
+    return tps_partages
+    
+
+
+def is_module_partage(modules_partages, module_name):
+    for g in modules_partages:
+        for m in g:
+            if m == module_name:
+                return g    
+
+    return None
+
+
+def update_prof_dispo(nom_prof, jour, c):
+    if PROFESSEURS[nom_prof]["type"] == "permanent":
+        CONTRAINTES["profs_max_seances"][nom_prof] -= 1
+
+    CONTRAINTES["non_disponibilites_profs"].setdefault(jour, {}).setdefault(c, []).append(nom_prof)
+
+def affecter_groupe_seances(classe_name, individu, jour, c, infos, modules, groupe, groupe_profs, modules_fix):
+    sd, sf = trouver_semaines(classe_name, groupe[0], modules_fix)
+    update_prof_dispo(groupe_profs[0], jour, c)
+    individu[jour][c].append({
+        "prof": groupe_profs[0],
+        "salle": infos["salle"],
+        "module": groupe[0],
+        "semaine_debut": sd,
+        "semaine_fin": sf
+    })
+    modules[groupe[0]] -= 1
+    for i in range(1, len(groupe)):
+        sf += 1
+        sd = sf 
+        sf = sf + trouver_semaines(classe_name, groupe[i], modules_fix)[1] - trouver_semaines(classe_name, groupe[i], modules_fix)[0]
+        individu[jour][c].append({
+            "prof": groupe_profs[i],
+            "salle": infos["salle"],
+            "module": groupe[i],
+            "semaine_debut": sd,
+            "semaine_fin": sf
+        })
+        update_prof_dispo(groupe_profs[i], jour, c)
+        modules[groupe[i]] -= 1
+
+
+
+def choisir_prof(names_of_profs_disponibles, profs, jour, c):
+    # la priorité est de profs vacataires 
+    profs_vacataires = [p for p, d in names_of_profs_disponibles.items() if jour in d["disponibilites"] and d["type"] == "vacataire"]
+    # si on a des profs vacataires disponible ce jour on va les prioriser
+    if len(profs_vacataires) > 0:
+        nom_prof = random.choice(profs_vacataires)
+    else:
+        nom_prof = random.choice(list(names_of_profs_disponibles.keys()))
+    prof = profs[nom_prof]
+    attempt = 0
+    while (jour not in prof["disponibilites"] or CONTRAINTES["profs_max_seances"][nom_prof] <= 0) and attempt < 200:
+        attempt += 1
+        nom_prof = random.choice(list(names_of_profs_disponibles.keys()))
+        prof = profs[nom_prof]
+    
+    update_prof_dispo(nom_prof, jour, c)
+
+    return nom_prof, prof
+
+def get_profs_of_other_moduels(profs_disponibles, profs, res):
+    result = []
+    if not res:
+        return []
+    if len(res) <= 1:
+        return res
+    for m_partage in res:
+        profs_result = []
+        for p in profs_disponibles:
+            p_modules = profs[p]["modules"]
+            for p_m in p_modules:
+                if p_m == m_partage:
+                    profs_result.append(p)
+                    break
+        result.append(profs_result)
+    profs_partages = []
+    for pfs in result:
+        if len(pfs) > 0:
+            profs_partages.append(random.choice(pfs))
+    return profs_partages
+
+
 def generer_individu(classe_name):
     classe_info = CLASSES[classe_name]
     # Initialisation de l'individu (emploi du temps)
@@ -199,11 +285,9 @@ def generer_individu(classe_name):
     total_seances_modules = sum(modules.values())
     print(total_seances_modules)
     
+    tps_partages = []
     if total_seances_modules - 20 > 0: 
-        _, tps_partages = get_shared_modules(classe_name, modules) 
-        if not tps_partages:
-            modules = {m: 2 if m.startswith("TP ") else c for m, c in modules.items() } 
-            _, tps_partages = get_shared_modules(classe_name, modules)
+        tps_partages = get_shared_modules(classe_name, modules) 
 
     modules_fix = copy.deepcopy(modules)
     profs = prepare_profs(modules)
@@ -229,27 +313,35 @@ def generer_individu(classe_name):
                 break
             profs_disponibles = {p:d for p, d in profs.items() if p not in CONTRAINTES['non_disponibilites_profs'].get(jour, {}).get(c, [])}
             if len(profs_disponibles) > 0:
-                # la priorité est de profs vacataires 
-                profs_vacataires = [p for p, d in profs_disponibles.items() if jour in d["disponibilites"] and d["type"] == "vacataire"]
-                # si on a des profs vacataires disponible ce jour on va les prioriser
-                if len(profs_vacataires) > 0:
-                    nom_prof = random.choice(profs_vacataires)
-                else:
-                    nom_prof = random.choice(list(profs_disponibles.keys()))
-                prof = profs[nom_prof]
-                attempt = 0
-                while (jour not in prof["disponibilites"] or CONTRAINTES["profs_max_seances"][nom_prof] <= 0) and attempt < 200:
-                    attempt += 1
-                    nom_prof = random.choice(list(profs_disponibles.keys()))
-                    prof = profs[nom_prof]
-
-                if prof["type"] == "permanent":
-                    prof["count"] -= 1
-                    CONTRAINTES["profs_max_seances"][nom_prof] -= 1
-
-                CONTRAINTES["non_disponibilites_profs"].setdefault(jour, {}).setdefault(c, []).append(nom_prof)
-                # choisir la matière ou bien on peut la nommer module
+                # 1. choisir un professeur
+                nom_prof, prof = choisir_prof(profs_disponibles, profs, jour, c)
+                # 2. choisir le module
                 nom_module = random.choice(prof["modules"])
+                groupe = is_module_partage(tps_partages, nom_module)
+                iter = 0
+                while groupe and iter <= 200:
+                    print(iter)
+                    iter += 1
+                    print(nom_module)
+                    print(groupe)
+                    groupe_profs = get_profs_of_other_moduels(profs_disponibles, profs, groupe)
+                    c1 = 0
+                    if len(prof["modules"]) > 1:
+                        while groupe and len(groupe_profs) != len(groupe) and c1 <= 20:
+                                c1 += 1
+                                nom_module = random.choice(prof["modules"])
+                                groupe = is_module_partage(tps_partages, nom_module)
+                                groupe_profs = get_profs_of_other_moduels(profs_disponibles, profs, groupe)
+
+                    if groupe and len(groupe_profs) != len(groupe) :
+                        nom_prof, prof = choisir_prof(profs_disponibles, profs, jour, c)
+                        nom_module = random.choice(prof["modules"])
+                        groupe = is_module_partage(tps_partages, nom_module)
+                        groupe_profs = get_profs_of_other_moduels(profs_disponibles, profs, groupe)
+                    else:
+                        break
+                    print(groupe_profs)
+
                 if modules[nom_module] >= 2:
                     if c == "08:30-10:30" or c == "13:30-15:30":
                         c_suivante = "10:40-12:30" if c == "08:30-10:30" else "15:40-17:30"
@@ -257,11 +349,9 @@ def generer_individu(classe_name):
                         if nom_module.startswith("TP "):
                             salle = reserver_salle_tp(jour, c_suivante)
                         else:
-                            salle = salle_fixe
-                        if nom_module in tps_partages:
-                            affecter_seance_partner(classe_name, individu, jour, c_suivante, {"nom_prof": nom_prof, "nom_module": nom_module, "salle": salle_fixe}, modules_fix, tps_partages)
-                            modules[tps_partages[nom_module]] -= 1
-                            modules[nom_module] -= 1
+                            salle = None
+                        if groupe:
+                            affecter_groupe_seances(classe_name, individu, jour, c_suivante, {"nom_prof": nom_prof, "salle": salle}, modules, groupe, groupe_profs, modules_fix)
                         else:
                             affecter_seance(classe_name, individu, jour, c_suivante, {"nom_prof": nom_prof, "nom_module": nom_module, "salle": salle}, modules_fix)
                             modules[nom_module] -= 1
@@ -276,11 +366,10 @@ def generer_individu(classe_name):
             if nom_module.startswith("TP "):
                 salle = reserver_salle_tp(jour, c)
             else:
-                salle = salle_fixe
+                salle = None
 
-            if nom_module in tps_partages:
-                affecter_seance_partner(classe_name, individu, jour, c, {"nom_prof": nom_prof, "nom_module": nom_module, "salle": salle}, modules_fix, tps_partages)
-                modules[tps_partages[nom_module]] -= 1
+            if groupe:
+                affecter_groupe_seances(classe_name, individu, jour, c, {"nom_prof": nom_prof, "salle": salle}, modules, groupe, groupe_profs, modules_fix)
             else:
                 affecter_seance(classe_name, individu, jour, c, {"nom_prof": nom_prof, "nom_module": nom_module, "salle": salle}, modules_fix)
             # update profs
@@ -321,10 +410,9 @@ def trouver_semaines(classe, module, modules):
 
 def afficher_individu(individu, classe_name, salle, modules):
     # print(modules)
-    print(CONTRAINTES["salles_tps"])
     print("********************************************************")
     print("********************************************************")
-    print(f"******** Emploi de temps de {classe_name} - salle: salle {salle} ********")
+    print(f"******** Emploi de temps de {classe_name} - salle: salle {salle+1} ********")
     for jour in individu:
         print(jour + ": ")
         for c in individu[jour]:
@@ -335,8 +423,9 @@ def afficher_individu(individu, classe_name, salle, modules):
                 print(end="\t\t")
                 print(seance["module"], end=" - ") 
                 if seance["module"] != "ESP":
-                    print(end="salle: ")
-                    print(seance["salle"], end="- ")
+                    if seance["salle"]:
+                        print(end="salle: ")
+                        print(seance["salle"], end="- ")
                 print(seance["prof"], end=" semaines: ")
                 print(f"S{seance['semaine_debut']} - S{seance['semaine_fin']}")
         print()
@@ -362,15 +451,17 @@ def fitness_score(individu):
     return score
 
 
-individu, salle, modules = generer_individu("2A_GB")
-score = evaluate(modules)
-afficher_individu(individu, "2A_GD", salle, modules)
-print(f"score: {score}")
-individu, salle, modules = generer_individu("2A_GB")
-score = evaluate(modules)
-afficher_individu(individu, "2A_GB", salle, modules)
-print(f"score: {score}")
-exit()
+# Génie Digital et IA en santé
+# individu, salle, modules = generer_individu("2A_GD")
+# score = evaluate(modules)
+# afficher_individu(individu, "2A_GD", salle, modules)
+# print(f"score: {score}")
+# # Génie Biomédicale
+# individu, salle, modules = generer_individu("2A_GB")
+# score = evaluate(modules)
+# afficher_individu(individu, "2A_GB", salle, modules)
+# print(f"score: {score}")
+# exit()
 iter = 0
 for classe in CLASSES:
     OLD_CONTRAINTES = copy.deepcopy(CONTRAINTES)
@@ -378,8 +469,7 @@ for classe in CLASSES:
     while score < 0:
         iter += 1
         CONTRAINTES = copy.deepcopy(OLD_CONTRAINTES)
-        salle = reserver_salle()
-        individu, modules = generer_individu(classe)
+        individu, salle, modules = generer_individu(classe)
         score = evaluate(modules)
     afficher_individu(individu, classe, salle, modules)
     print(f"score: {score}")
