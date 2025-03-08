@@ -199,9 +199,7 @@ def generer_individu(classe_name):
     total_seances_modules = sum(modules.values())
     print(total_seances_modules)
     
-    r = total_seances_modules - 20
-    tps_partages = {}
-    if r > 0: 
+    if total_seances_modules - 20 > 0: 
         _, tps_partages = get_shared_modules(classe_name, modules) 
         if not tps_partages:
             modules = {m: 2 if m.startswith("TP ") else c for m, c in modules.items() } 
@@ -322,7 +320,7 @@ def trouver_semaines(classe, module, modules):
 
 
 def afficher_individu(individu, classe_name, salle, modules):
-    print(modules)
+    # print(modules)
     print(CONTRAINTES["salles_tps"])
     print("********************************************************")
     print("********************************************************")
