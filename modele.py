@@ -154,38 +154,54 @@ def est_ce_que_on_regrouper(classe_name, modules, group, newMember):
     return False    
 
 def get_shared_modules(classe_name, modules):
+    """
+    Regroupe les TP partageables pour une classe donnée.
+
+    Args:
+        classe_name (str): Le nom de la classe.
+        modules (dict): Un dictionnaire des modules avec leur nombre de séances.
+
+    Returns:
+        list: Une liste de groupes de TP partageables.
+    """
     tps_partages = []
-    
-    # les tps à une seul seance:
-    tps1 = sorted([m for m in modules.keys() if m.startswith("TP") and modules[m] == 1], key=lambda m: trouver_semaines(classe_name, m, modules)[0])
-    # print(f"Les tps à une seul seances: {tps1}")
-    if not tps1 or len(tps1) < 2:
-        raise Exception("Il n'y a pas assez des tps à regrouper !")
-    i, j = 0, 1
-    group = list()
-    group.append(tps1[i])
-    while i < len(tps1) and j < len(tps1):
-        if est_ce_que_on_regrouper(classe_name, modules, group, tps1[j]):
-            group.append(tps1[j])
-            tps1.remove(tps1[j])
-        else:
-            j+=1
-        if j >= len(tps1):
-            if len(group) >= 2:
-                tps1.remove(tps1[i])
-                tps_partages.append(group) 
+
+    # Filtrer les TP à une seule séance
+    tps1 = [m for m in modules.keys() if modules[m] == 1]
+    if len(tps1) < 2:
+        raise Exception("Il n'y a pas assez de TP à regrouper !")
+
+    # Trier les TP par leur première semaine
+    tps1.sort(key=lambda m: trouver_semaines(classe_name, m, modules)[0])
+
+    i = 0
+    while i < len(tps1):
+        group = [tps1[i]]  # Commencer un nouveau groupe avec le TP actuel
+        j = i + 1
+
+        while j < len(tps1):
+            if est_ce_que_on_regrouper(classe_name, modules, group, tps1[j]):
+                group.append(tps1[j])  # Ajouter le TP au groupe
+                tps1.pop(j)  # Retirer le TP de la liste
             else:
-                i += 1
-            j = i + 1
-            group = list()
-            if len(tps1) > 1:
-                group.append(tps1[i])
+                j += 1  # Passer au TP suivant
+
+        if len(group) >= 2:
+            tps_partages.append(group)  # Ajouter le groupe à la liste des TP partageables
+            tps1.pop(i)  # Retirer le TP de départ de la liste
+        else:
+            i += 1  # Passer au TP suivant si le groupe est trop petit
+
+    print(f"Les TP restants : {tps1}")
+    print(f"Les TP partageables : {tps_partages}")
+    return tps_partages
 
             
     # les tps à une deux seance:
     # tps2 = sorted([m for m in modules if m.startswith("TP ") and module[m] == 2], key=lambda m: trouver_semaines(m)[0])
     
-    # print(f"Les tps restants : {tps1}")
+    print(f"Les tps restants : {tps1}")
+    print(tps_partages)
     return tps_partages
     
 
@@ -456,6 +472,7 @@ def fitness_score(individu):
 # score = evaluate(modules)
 # afficher_individu(individu, "2A_GD", salle, modules)
 # print(f"score: {score}")
+# exit()
 # # Génie Biomédicale
 # individu, salle, modules = generer_individu("2A_GB")
 # score = evaluate(modules)
