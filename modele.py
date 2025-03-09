@@ -50,8 +50,9 @@ def prepare_modules(classe_info):
         
         # Gestion des séances de TP si elles existent
         if tp_seances > 0:
-            nbr_semaines_tp = math.ceil(semaines / 2)
-            modules[f"TP {module}"] = math.ceil(tp_seances / nbr_semaines_tp)
+            # nbr_semaines_tp = math.ceil(semaines / 2)
+            # modules[f"TP {module}"] = math.ceil(tp_seances / nbr_semaines_tp)
+            modules[f"TP {module}"] = 1
     return modules
 
 ###################### Fonctionne pour intiali# "jour": {"8:30-10-30": "salle1"}ser les profs ###############################
@@ -167,42 +168,42 @@ def get_shared_modules(classe_name, modules):
     tps_partages = []
 
     # Filtrer les TP à une seule séance
-    tps1 = [m for m in modules.keys() if modules[m] == 1]
-    if len(tps1) < 2:
-        raise Exception("Il n'y a pas assez de TP à regrouper !")
+    tps1 = [m for m in modules.keys() if modules[m] == 1 and "TP " in m]
+    tps2 = [m for m in modules.keys() if modules[m] == 2 and "TP " in m]
+    tps_cours = [tps1] + [tps2]
+    for category in tps_cours: 
+        if len(category) < 2:
+            continue
+            # raise Exception("Il n'y a pas assez de TP à regrouper !")
 
-    # Trier les TP par leur première semaine
-    tps1.sort(key=lambda m: trouver_semaines(classe_name, m, modules)[0])
+        # Trier les TP par leur première semaine
+        category.sort(key=lambda m: trouver_semaines(classe_name, m, modules)[0])
 
-    i = 0
-    while i < len(tps1):
-        group = [tps1[i]]  # Commencer un nouveau groupe avec le TP actuel
-        j = i + 1
+        i = 0
+        while i < len(category):
+            group = [category[i]]  # Commencer un nouveau groupe avec le TP actuel
+            j = i + 1
 
-        while j < len(tps1):
-            if est_ce_que_on_regrouper(classe_name, modules, group, tps1[j]):
-                group.append(tps1[j])  # Ajouter le TP au groupe
-                tps1.pop(j)  # Retirer le TP de la liste
+            while j < len(category):
+                if est_ce_que_on_regrouper(classe_name, modules, group, category[j]):
+                    group.append(category[j])  # Ajouter le TP au groupe
+                    category.pop(j)  # Retirer le TP de la liste
+                else:
+                    j += 1  # Passer au TP suivant
+
+            if len(group) >= 2:
+                tps_partages.append(group)  # Ajouter le groupe à la liste des TP partageables
+                category.pop(i)  # Retirer le TP de départ de la liste
             else:
-                j += 1  # Passer au TP suivant
+                i += 1  # Passer au TP suivant si le groupe est trop petit
 
-        if len(group) >= 2:
-            tps_partages.append(group)  # Ajouter le groupe à la liste des TP partageables
-            tps1.pop(i)  # Retirer le TP de départ de la liste
-        else:
-            i += 1  # Passer au TP suivant si le groupe est trop petit
-
-    print(f"Les TP restants : {tps1}")
+    if sum(modules.values()) - len(tps_partages) - 1 > 20:
+        modules = {m: 2 if "TP " in m and c == 1 and (trouver_semaines(classe_name, m, modules)[1] - trouver_semaines(classe_name, m, modules)[0] + 1)  % 2 == 0 else c for m, c in modules.items()}
+        return get_shared_modules(classe_name, modules)
     print(f"Les TP partageables : {tps_partages}")
-    return tps_partages
 
-            
-    # les tps à une deux seance:
-    # tps2 = sorted([m for m in modules if m.startswith("TP ") and module[m] == 2], key=lambda m: trouver_semaines(m)[0])
+    return tps_partages, modules
     
-    print(f"Les tps restants : {tps1}")
-    print(tps_partages)
-    return tps_partages
     
 
 
@@ -289,117 +290,7 @@ def get_profs_of_other_moduels(profs_disponibles, profs, res):
     return profs_partages
 
 
-def generer_individu(classe_name):
-    classe_info = CLASSES[classe_name]
-    # Initialisation de l'individu (emploi du temps)
-    individu = {jour: {creneau: [] for creneau in CRENEAUX } for jour in JOURS}
-    
-    # Préparer les cours et les tps
-    modules = prepare_modules(classe_info)
 
-    # TOTAL SÉANCES DE MODULES (modules["Français"] => count => nombre des séancs par semaine) 
-    total_seances_modules = sum(modules.values())
-    print(total_seances_modules)
-    
-    tps_partages = []
-    if total_seances_modules - 20 > 0: 
-        tps_partages = get_shared_modules(classe_name, modules) 
-
-    modules_fix = copy.deepcopy(modules)
-    profs = prepare_profs(modules)
-
-    salle = reserver_salle()
-    salle_fixe = salle
-
-    jour_de_sport, prof_de_sport = trouver_jour_et_prof_de_sport(profs)
-    CONTRAINTES["jour_de_sport"][jour_de_sport] += 1
-    # réserver le sport
-    semaine_debut, semaine_fin = trouver_semaines(classe_name, "ESP", modules_fix)
-    affecter_seance(classe_name, individu, jour_de_sport, "13:30-15:30", {"nom_prof": prof_de_sport, "salle": salle_fixe,  "nom_module": "ESP"}, modules_fix)
-    affecter_seance(classe_name, individu,  jour_de_sport, "15:40-17:30", {"nom_prof": prof_de_sport, "salle": salle_fixe, "nom_module": "ESP"}, modules_fix)
-    # éliminer le sport
-    eliminer_sport(profs, modules)
-
-    for jour in JOURS:
-        creneaux_reserves = set()
-        for c in CRENEAUX:
-            if c in creneaux_reserves:
-                continue
-            if jour == jour_de_sport and c == "13:30-15:30":
-                break
-            profs_disponibles = {p:d for p, d in profs.items() if p not in CONTRAINTES['non_disponibilites_profs'].get(jour, {}).get(c, [])}
-            if len(profs_disponibles) > 0:
-                # 1. choisir un professeur
-                nom_prof, prof = choisir_prof(profs_disponibles, profs, jour, c)
-                # 2. choisir le module
-                nom_module = random.choice(prof["modules"])
-                groupe = is_module_partage(tps_partages, nom_module)
-                iter = 0
-                while groupe and iter <= 200:
-                    print(iter)
-                    iter += 1
-                    print(nom_module)
-                    print(groupe)
-                    groupe_profs = get_profs_of_other_moduels(profs_disponibles, profs, groupe)
-                    c1 = 0
-                    if len(prof["modules"]) > 1:
-                        while groupe and len(groupe_profs) != len(groupe) and c1 <= 20:
-                                c1 += 1
-                                nom_module = random.choice(prof["modules"])
-                                groupe = is_module_partage(tps_partages, nom_module)
-                                groupe_profs = get_profs_of_other_moduels(profs_disponibles, profs, groupe)
-
-                    if groupe and len(groupe_profs) != len(groupe) :
-                        nom_prof, prof = choisir_prof(profs_disponibles, profs, jour, c)
-                        nom_module = random.choice(prof["modules"])
-                        groupe = is_module_partage(tps_partages, nom_module)
-                        groupe_profs = get_profs_of_other_moduels(profs_disponibles, profs, groupe)
-                    else:
-                        break
-                    print(groupe_profs)
-
-                if modules[nom_module] >= 2:
-                    if c == "08:30-10:30" or c == "13:30-15:30":
-                        c_suivante = "10:40-12:30" if c == "08:30-10:30" else "15:40-17:30"
-                        # si c'est un seance de tp on doit réserver une salle de tp.
-                        if nom_module.startswith("TP "):
-                            salle = reserver_salle_tp(jour, c_suivante)
-                        else:
-                            salle = None
-                        if groupe:
-                            affecter_groupe_seances(classe_name, individu, jour, c_suivante, {"nom_prof": nom_prof, "salle": salle}, modules, groupe, groupe_profs, modules_fix)
-                        else:
-                            affecter_seance(classe_name, individu, jour, c_suivante, {"nom_prof": nom_prof, "nom_module": nom_module, "salle": salle}, modules_fix)
-                            modules[nom_module] -= 1
-                        CONTRAINTES["non_disponibilites_profs"].setdefault(jour, {}).setdefault(c_suivante, []).append(nom_prof)
-                        creneaux_reserves.add(c_suivante)
-
-                modules[nom_module] -= 1
-            else:
-                nom_prof = ""
-                nom_module = "Pause"
-
-            if nom_module.startswith("TP "):
-                salle = reserver_salle_tp(jour, c)
-            else:
-                salle = None
-
-            if groupe:
-                affecter_groupe_seances(classe_name, individu, jour, c, {"nom_prof": nom_prof, "salle": salle}, modules, groupe, groupe_profs, modules_fix)
-            else:
-                affecter_seance(classe_name, individu, jour, c, {"nom_prof": nom_prof, "nom_module": nom_module, "salle": salle}, modules_fix)
-            # update profs
-            deleted_profs = []
-            for p in profs:
-                profs[p]["modules"] = [m for m in profs[p]["modules"] if modules[m] > 0]
-                if len(profs[p]["modules"]) == 0:
-                    deleted_profs.append(p)
-
-            if len(deleted_profs) > 0:
-                for dp in deleted_profs:
-                    del profs[dp]
-
-    return individu, salle_fixe, modules
 
 def trouver_semaines(classe, module, modules):
     if module.startswith("TP"):
@@ -413,8 +304,9 @@ def trouver_semaines(classe, module, modules):
 
     if tp_seances > 0:
         semaine_debut = math.floor(cours_semaines / 2)
-        tp_seance_par_semaine = modules["TP " + module]
-        tp_semaines = math.ceil(tp_seances / tp_seance_par_semaine)
+        if semaine_debut <= tp_seances:
+            semaine_debut = tp_seances - semaine_debut
+        tp_semaines = math.ceil(tp_seances / modules["TP " + module])
         semaine_fin = semaine_debut + tp_semaines
         semaine_debut = semaine_debut + 1
     else:
@@ -422,6 +314,149 @@ def trouver_semaines(classe, module, modules):
         semaine_debut = 1
 
     return  semaine_debut , semaine_fin
+
+
+def generer_individu(classe_name):
+    classe_info = CLASSES[classe_name]
+    # Initialisation de l'individu (emploi du temps)
+    individu = {jour: {creneau: [] for creneau in CRENEAUX} for jour in JOURS}
+
+    # Préparer les cours et les tps
+    modules = prepare_modules(classe_info)
+
+    # TOTAL SÉANCES DE MODULES (modules["Français"] => count => nombre des séances par semaine)
+    total_seances_modules = sum(modules.values())
+    print(total_seances_modules)
+
+    tps_partages = []
+    if total_seances_modules - 20 > 0:
+        tps_partages, new_modules  = get_shared_modules(classe_name, modules)
+        modules = new_modules
+    modules_fix = copy.deepcopy(modules)
+    profs = prepare_profs(modules)
+
+    salle = reserver_salle()
+    salle_fixe = salle
+
+    # Planifier le sport
+    jour_de_sport, prof_de_sport = trouver_jour_et_prof_de_sport(profs)
+    CONTRAINTES["jour_de_sport"][jour_de_sport] += 1
+    semaine_debut, semaine_fin = trouver_semaines(classe_name, "ESP", modules_fix)
+    affecter_seance(classe_name, individu, jour_de_sport, "13:30-15:30",
+                    {"nom_prof": prof_de_sport, "salle": salle_fixe, "nom_module": "ESP"}, modules_fix)
+    affecter_seance(classe_name, individu, jour_de_sport, "15:40-17:30",
+                    {"nom_prof": prof_de_sport, "salle": salle_fixe, "nom_module": "ESP"}, modules_fix)
+    eliminer_sport(profs, modules)
+
+    # Identifier les modules avec deux séances ou plus
+    modules_deux_seances = {m: c for m, c in modules.items() if c >= 2}
+
+    # Planifier les modules à deux séances en premier
+    for jour in JOURS:
+        creneaux_reserves = set()
+        for c in CRENEAUX:
+            if c in creneaux_reserves:
+                continue
+            if jour == jour_de_sport and c == "13:30-15:30":
+                break
+
+            profs_disponibles = {p: d for p, d in profs.items() if
+                                 p not in CONTRAINTES['non_disponibilites_profs'].get(jour, {}).get(c, [])}
+            if len(profs_disponibles) > 0:
+                # 1. Choisir un professeur
+                nom_prof, prof = choisir_prof(profs_disponibles, profs, jour, c)
+
+                # 2. Choisir un module (prioriser les modules à deux séances)
+                if modules_deux_seances:
+                    nom_module = random.choice(list(modules_deux_seances.keys()))
+                else:
+                    nom_module = random.choice(prof["modules"])
+
+                groupe = is_module_partage(tps_partages, nom_module)
+                iter = 0
+                while groupe and iter <= 200:
+                    iter += 1
+                    groupe_profs = get_profs_of_other_moduels(profs_disponibles, profs, groupe)
+                    c1 = 0
+                    if len(prof["modules"]) > 1:
+                        while groupe and len(groupe_profs) != len(groupe) and c1 <= 20:
+                            c1 += 1
+                            nom_module = random.choice(prof["modules"])
+                            groupe = is_module_partage(tps_partages, nom_module)
+                            groupe_profs = get_profs_of_other_moduels(profs_disponibles, profs, groupe)
+
+                    if groupe and len(groupe_profs) != len(groupe):
+                        nom_prof, prof = choisir_prof(profs_disponibles, profs, jour, c)
+                        nom_module = random.choice(prof["modules"])
+                        groupe = is_module_partage(tps_partages, nom_module)
+                        groupe_profs = get_profs_of_other_moduels(profs_disponibles, profs, groupe)
+                    else:
+                        break
+
+                # Si le module a deux séances ou plus, vérifier les créneaux consécutifs
+                if modules[nom_module] >= 2:
+                    if c == "08:30-10:30" or c == "13:30-15:30":
+                        c_suivante = "10:40-12:30" if c == "08:30-10:30" else "15:40-17:30"
+
+                        # Vérifier si le créneau suivant est disponible
+                        if c_suivante not in creneaux_reserves:
+                            # Si c'est un TP, réserver une salle de TP
+                            if nom_module.startswith("TP "):
+                                salle = reserver_salle_tp(jour, c_suivante)
+                            else:
+                                salle = None
+
+                            # Affecter les séances consécutives
+                            if groupe:
+                                affecter_groupe_seances(classe_name, individu, jour, c_suivante,
+                                                        {"nom_prof": nom_prof, "salle": salle}, modules, groupe,
+                                                        groupe_profs, modules_fix)
+                            else:
+                                affecter_seance(classe_name, individu, jour, c_suivante,
+                                                {"nom_prof": nom_prof, "nom_module": nom_module, "salle": salle},
+                                                modules_fix)
+                                modules[nom_module] -= 1
+
+                            # Réserver le créneau suivant
+                            CONTRAINTES["non_disponibilites_profs"].setdefault(jour, {}).setdefault(c_suivante, []).append(
+                                nom_prof)
+                            creneaux_reserves.add(c_suivante)
+
+                # Mettre à jour le nombre de séances restantes pour le module
+                modules[nom_module] -= 1
+                if nom_module in modules_deux_seances:
+                    if modules[nom_module] < 2:
+                        del modules_deux_seances[nom_module]
+
+            else:
+                nom_prof = ""
+                nom_module = "Pause"
+
+            # Affecter la séance actuelle
+            if nom_module.startswith("TP "):
+                salle = reserver_salle_tp(jour, c)
+            else:
+                salle = None
+
+            if groupe:
+                affecter_groupe_seances(classe_name, individu, jour, c, {"nom_prof": nom_prof, "salle": salle}, modules,
+                                        groupe, groupe_profs, modules_fix)
+            else:
+                affecter_seance(classe_name, individu, jour, c,
+                                {"nom_prof": nom_prof, "nom_module": nom_module, "salle": salle}, modules_fix)
+
+            # Mettre à jour les professeurs
+            deleted_profs = []
+            for p in profs:
+                profs[p]["modules"] = [m for m in profs[p]["modules"] if modules[m] > 0]
+                if len(profs[p]["modules"]) == 0:
+                    deleted_profs.append(p)
+
+            if len(deleted_profs) > 0:
+                for dp in deleted_profs:
+                    del profs[dp]
+
+    return individu, salle_fixe, modules
 
 
 def afficher_individu(individu, classe_name, salle, modules):
@@ -483,7 +518,7 @@ iter = 0
 for classe in CLASSES:
     OLD_CONTRAINTES = copy.deepcopy(CONTRAINTES)
     score = -1
-    while score < 0:
+    while score < 0 and iter < 30:
         iter += 1
         CONTRAINTES = copy.deepcopy(OLD_CONTRAINTES)
         individu, salle, modules = generer_individu(classe)
