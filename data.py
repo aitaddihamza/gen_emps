@@ -9,22 +9,22 @@ JOURS = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"]
 # les classes
 CLASSES = {
     "2A_GD": {
-        "Bases de Traitement d'images médicales": {"volume": 28, "tp_seances": 4},
-        "Mini projet de Traitement d'image": {"volume": 28, "tp_seances": 2},
+        "Bases de Traitement d'images médicales": {"volume": 28, "tp_seances": 8},
+        "Mini projet de Traitement d'image": {"volume": 28, "tp_seances": 4},
         "Robotiques médicales": {"volume": 24, "tp_seances": 2},
         "Gestion de projet": {"volume": 28, "tp_seances": 0},
         "Réalisation": {"volume": 28, "tp_seances": 0},
         "Organisation hospitalière": {"volume": 56, "tp_seances": 0},
         "Bioinformatique": {"volume": 56, "tp_seances": 0},
-        "Bases de données Avancées": {"volume": 56, "tp_seances": 2},
-        "Machine learning": {"volume": 48, "tp_seances": 2},
+        "Bases de données Avancées": {"volume": 56, "tp_seances": 4},
+        "Machine learning": {"volume": 48, "tp_seances": 4},
         "Economie de santé": {"volume": 28, "tp_seances": 0},
         "ESP": {"volume": 48, "tp_seances": 0},
         "Français": {"volume": 24, "tp_seances": 0},
         "Anglais": {"volume": 24, "tp_seances": 0}
     },
     "2A_GB": {
-        "Imagerie Médicale": {"volume": 28, "tp_seances": 5},
+        "Imagerie Médicale": {"volume": 28, "tp_seances": 4},
         "Bases de Traitement d'images médicales": {"volume": 28, "tp_seances": 4},
         "Mini projet de Traitement d'image": {"volume": 28, "tp_seances": 0},
         "Biostatistiques": {"volume": 28, "tp_seances": 0},
@@ -41,7 +41,7 @@ CLASSES = {
     },
     "1A_GB": {
         "Radioactivité": {"volume": 24, "tp_seances": 0},
-        "Traitement de signal": {"volume": 24, "tp_seances": 5},
+        "Traitement de signal": {"volume": 24, "tp_seances": 4},
         "Recherche opérationnelle": {"volume": 48, "tp_seances": 4},
         "Bases de données": {"volume": 24, "tp_seances": 0},
         "Droit": {"volume": 24, "tp_seances": 0},
@@ -58,7 +58,7 @@ CLASSES = {
     },
     "1A_GD": {
         "Radioactivité": {"volume": 24, "tp_seances": 0},
-        "Traitement de signal": {"volume": 24, "tp_seances": 5},
+        "Traitement de signal": {"volume": 24, "tp_seances": 8},
         "Recherche opérationnelle": {"volume": 48, "tp_seances": 4},
         "Bases de données": {"volume": 24, "tp_seances": 0},
         "Droit": {"volume": 24, "tp_seances": 0},

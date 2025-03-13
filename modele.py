@@ -155,55 +155,51 @@ def est_ce_que_on_regrouper(classe_name, modules, group, newMember):
     return False    
 
 def get_shared_modules(classe_name, modules):
-    """
-    Regroupe les TP partageables pour une classe donnée.
-
-    Args:
-        classe_name (str): Le nom de la classe.
-        modules (dict): Un dictionnaire des modules avec leur nombre de séances.
-
-    Returns:
-        list: Une liste de groupes de TP partageables.
-    """
     tps_partages = []
 
     # Filtrer les TP à une seule séance
-    tps1 = [m for m in modules.keys() if modules[m] == 1 and "TP " in m]
+    total_seances_modules = sum(modules.values())
+    modules = {m: 2 if c == 1 and "TP " in m and (trouver_semaines(classe_name, m, modules)[1] - trouver_semaines(classe_name, m, modules)[0] + 1) % 2 == 0 else c for m, c in modules.items()}
     tps2 = [m for m in modules.keys() if modules[m] == 2 and "TP " in m]
+    # tps2 = []
+    tps1 = [m for m in modules.keys() if modules[m] == 1]
     tps_cours = [tps1] + [tps2]
-    for category in tps_cours: 
-        if len(category) < 2:
-            continue
+    for ctg in tps_cours:
+        if len(ctg) < 2:
             # raise Exception("Il n'y a pas assez de TP à regrouper !")
+            continue
 
         # Trier les TP par leur première semaine
-        category.sort(key=lambda m: trouver_semaines(classe_name, m, modules)[0])
+        ctg.sort(key=lambda m: trouver_semaines(classe_name, m, modules)[0])
 
         i = 0
-        while i < len(category):
-            group = [category[i]]  # Commencer un nouveau groupe avec le TP actuel
+        while i < len(ctg):
+            group = [ctg[i]]  # Commencer un nouveau groupe avec le ctg actuel
             j = i + 1
 
-            while j < len(category):
-                if est_ce_que_on_regrouper(classe_name, modules, group, category[j]):
-                    group.append(category[j])  # Ajouter le TP au groupe
-                    category.pop(j)  # Retirer le TP de la liste
+            while j < len(ctg):
+                if est_ce_que_on_regrouper(classe_name, modules, group, ctg[j]):
+                    group.append(ctg[j])  # Ajouter le ctg au groupe
+                    ctg.pop(j)  # Retirer le ctg de la liste
                 else:
-                    j += 1  # Passer au TP suivant
+                    j += 1  # Passer au ctg suivant
 
             if len(group) >= 2:
-                tps_partages.append(group)  # Ajouter le groupe à la liste des TP partageables
-                category.pop(i)  # Retirer le TP de départ de la liste
+                tps_partages.append(group)  # Ajouter le groupe à la liste des ctg partageables
+                ctg.pop(i)  # Retirer le ctg de départ de la liste
             else:
-                i += 1  # Passer au TP suivant si le groupe est trop petit
+                i += 1  # Passer au ctg suivant si le groupe est trop petit
 
-    if sum(modules.values()) - len(tps_partages) - 1 > 20:
-        modules = {m: 2 if "TP " in m and c == 1 and (trouver_semaines(classe_name, m, modules)[1] - trouver_semaines(classe_name, m, modules)[0] + 1)  % 2 == 0 else c for m, c in modules.items()}
-        return get_shared_modules(classe_name, modules)
+    seances_optimises = sum(len(groupe) - 1 if modules[groupe[0]] == 1 else len(groupe) - 2 for groupe in tps_partages)  
+    print(f"nombre des seances optimisés: {seances_optimises}")
+    rest = total_seances_modules - seances_optimises
+    print(f"The rest is: {rest}")
+    if rest > 20:
+        print(f"the rest is : {rest}")
+        # raise Exception("You have to regroupe some stuff here")
     print(f"Les TP partageables : {tps_partages}")
 
     return tps_partages, modules
-    
     
 
 
@@ -225,18 +221,31 @@ def update_prof_dispo(nom_prof, jour, c):
 def affecter_groupe_seances(classe_name, individu, jour, c, infos, modules, groupe, groupe_profs, modules_fix):
     sd, sf = trouver_semaines(classe_name, groupe[0], modules_fix)
     update_prof_dispo(groupe_profs[0], jour, c)
-    individu[jour][c].append({
+    if "TP " in groupe[0]:
+        if not infos["salle"]:
+            infos["salle"] = reserver_salle_tp(jour, c)
+
+    seance = {
         "prof": groupe_profs[0],
-        "salle": infos["salle"],
+        "salle": infos["salle"] if "TP " in groupe[0] else None,
         "module": groupe[0],
+        "salle": infos["salle"],
         "semaine_debut": sd,
         "semaine_fin": sf
-    })
+    }
+    individu[jour][c].append(seance)
     modules[groupe[0]] -= 1
+    # pour garantir que tous les tps se déroule dans la même salle TP.
+    once = 0
     for i in range(1, len(groupe)):
         sf += 1
         sd = sf 
         sf = sf + trouver_semaines(classe_name, groupe[i], modules_fix)[1] - trouver_semaines(classe_name, groupe[i], modules_fix)[0]
+        if once == 0:
+            if "TP " in groupe[i]:
+                if not infos["salle"]:
+                    infos["salle"] = reserver_salle_tp(jour, c)
+            once = 1
         individu[jour][c].append({
             "prof": groupe_profs[i],
             "salle": infos["salle"],
@@ -287,6 +296,7 @@ def get_profs_of_other_moduels(profs_disponibles, profs, res):
     for pfs in result:
         if len(pfs) > 0:
             profs_partages.append(random.choice(pfs))
+
     return profs_partages
 
 
@@ -303,7 +313,7 @@ def trouver_semaines(classe, module, modules):
         tp_seances = 0
 
     if tp_seances > 0:
-        semaine_debut = math.floor(cours_semaines / 2)
+        semaine_debut = math.floor(cours_semaines / 4)
         if semaine_debut <= tp_seances:
             semaine_debut = tp_seances - semaine_debut
         tp_semaines = math.ceil(tp_seances / modules["TP " + module])
@@ -348,9 +358,6 @@ def generer_individu(classe_name):
                     {"nom_prof": prof_de_sport, "salle": salle_fixe, "nom_module": "ESP"}, modules_fix)
     eliminer_sport(profs, modules)
 
-    # Identifier les modules avec deux séances ou plus
-    modules_deux_seances = {m: c for m, c in modules.items() if c >= 2}
-
     # Planifier les modules à deux séances en premier
     for jour in JOURS:
         creneaux_reserves = set()
@@ -365,10 +372,11 @@ def generer_individu(classe_name):
             if len(profs_disponibles) > 0:
                 # 1. Choisir un professeur
                 nom_prof, prof = choisir_prof(profs_disponibles, profs, jour, c)
-
+                # Identifier les modules avec deux séances ou plus
+                modules_deux_seances = [m for m in prof["modules"] if modules[m] >= 2]
                 # 2. Choisir un module (prioriser les modules à deux séances)
                 if modules_deux_seances:
-                    nom_module = random.choice(list(modules_deux_seances.keys()))
+                    nom_module = random.choice(modules_deux_seances)
                 else:
                     nom_module = random.choice(prof["modules"])
 
@@ -423,10 +431,8 @@ def generer_individu(classe_name):
                             creneaux_reserves.add(c_suivante)
 
                 # Mettre à jour le nombre de séances restantes pour le module
-                modules[nom_module] -= 1
-                if nom_module in modules_deux_seances:
-                    if modules[nom_module] < 2:
-                        del modules_deux_seances[nom_module]
+                if not groupe:
+                    modules[nom_module] -= 1
 
             else:
                 nom_prof = ""
@@ -460,7 +466,7 @@ def generer_individu(classe_name):
 
 
 def afficher_individu(individu, classe_name, salle, modules):
-    # print(modules)
+    print(modules)
     print("********************************************************")
     print("********************************************************")
     print(f"******** Emploi de temps de {classe_name} - salle: salle {salle+1} ********")
@@ -503,15 +509,15 @@ def fitness_score(individu):
 
 
 # Génie Digital et IA en santé
-# individu, salle, modules = generer_individu("2A_GD")
+# individu, salle, modules = generer_individu("1A_EE")
 # score = evaluate(modules)
-# afficher_individu(individu, "2A_GD", salle, modules)
+# afficher_individu(individu, "1A_EE", salle, modules)
 # print(f"score: {score}")
 # exit()
 # # Génie Biomédicale
-# individu, salle, modules = generer_individu("2A_GB")
+# individu, salle, modules = generer_individu("2A_GD")
 # score = evaluate(modules)
-# afficher_individu(individu, "2A_GB", salle, modules)
+# afficher_individu(individu, "2A_GD", salle, modules)
 # print(f"score: {score}")
 # exit()
 iter = 0
