@@ -2,9 +2,19 @@ import math
 import random
 import time
 from constants import *
-from data import *
+# from data import *
 from collections import defaultdict
 import copy
+import json
+
+# charger les données à partir le fichier data.json
+with open('DATA.json', 'r', encoding='utf-8') as f:
+    data = json.load(f)
+
+CRENEAUX = data["CRENEAUX"]
+JOURS = data["JOURS"]
+CLASSES = data["CLASSES"]
+PROFESSEURS = data["PROFESSEURS"]
 
 
 CONTRAINTES = {
@@ -109,6 +119,8 @@ def eliminer_sport(profs, classe_modules):
     profs_de_sport = [p for p, d in profs.items() if "ESP" in d["modules"]]
     for prof in profs_de_sport:
         del profs[prof]
+        CONTRAINTES["profs_max_seances"][prof] -= 1
+
 
 ###################### Fonctionne pour réserver une salle ###############################
 def reserver_salle_tp(jour, c):
@@ -149,21 +161,13 @@ def est_ce_que_on_regrouper(classe_name, modules, group, newMember):
         total_sm += 1
     sf = sd + total_sm 
     sm = trouver_semaines(classe_name, newMember, modules)[1] - trouver_semaines(classe_name, newMember, modules)[0] + 1
-    if sf + sm <= 14:
+    if sf + sm <= TOTAL_SEMAINES:
         return True
     
     return False    
 
-def get_shared_modules(classe_name, modules):
+def regrouper(classe_name, modules, tps_cours):
     tps_partages = []
-
-    # Filtrer les TP à une seule séance
-    total_seances_modules = sum(modules.values())
-    modules = {m: 2 if c == 1 and "TP " in m and (trouver_semaines(classe_name, m, modules)[1] - trouver_semaines(classe_name, m, modules)[0] + 1) % 2 == 0 else c for m, c in modules.items()}
-    tps2 = [m for m in modules.keys() if modules[m] == 2 and "TP " in m]
-    # tps2 = []
-    tps1 = [m for m in modules.keys() if modules[m] == 1]
-    tps_cours = [tps1] + [tps2]
     for ctg in tps_cours:
         if len(ctg) < 2:
             # raise Exception("Il n'y a pas assez de TP à regrouper !")
@@ -189,16 +193,29 @@ def get_shared_modules(classe_name, modules):
                 ctg.pop(i)  # Retirer le ctg de départ de la liste
             else:
                 i += 1  # Passer au ctg suivant si le groupe est trop petit
+    return tps_partages
 
-    seances_optimises = sum(len(groupe) - 1 if modules[groupe[0]] == 1 else len(groupe) - 2 for groupe in tps_partages)  
+def get_shared_modules(classe_name, modules):
+    
+    tps_cours = [[m for m in modules.keys() if modules[m] == 1]]
+    tps_partages = regrouper(classe_name, modules, tps_cours)
+    seances_optimises = sum(len(groupe) - 1 for groupe in tps_partages)  
     print(f"nombre des seances optimisés: {seances_optimises}")
+    total_seances_modules = sum(modules.values())
     rest = total_seances_modules - seances_optimises
     print(f"The rest is: {rest}")
     if rest > 20:
-        print(f"the rest is : {rest}")
-        # raise Exception("You have to regroupe some stuff here")
+        # Filtrer les TP à une seule séance
+        modules = {m: 2 if c == 1 and "TP " in m and (trouver_semaines(classe_name, m, modules)[1] - trouver_semaines(classe_name, m, modules)[0] + 1) % 2 == 0 else c for m, c in modules.items()}
+        tps2 = [m for m in modules.keys() if modules[m] == 2 and "TP " in m]
+        # tps2 = []
+        tps1 = [m for m in modules.keys() if modules[m] == 1]
+        
+        tps_cours = [tps1] + [tps2]
+        tps_partages = regrouper(classe_name, modules, tps_cours)
+        seances_optimises = sum(len(groupe) - 1 if modules[groupe[0]] == 1 else len(groupe) - 2 for groupe in tps_partages)  
+        print(f"The rest is: {rest}")
     print(f"Les TP partageables : {tps_partages}")
-
     return tps_partages, modules
     
 
@@ -265,12 +282,14 @@ def choisir_prof(names_of_profs_disponibles, profs, jour, c):
     if len(profs_vacataires) > 0:
         nom_prof = random.choice(profs_vacataires)
     else:
-        nom_prof = random.choice(list(names_of_profs_disponibles.keys()))
+        sorted_profs = sorted(names_of_profs_disponibles.items(), key=lambda p: CONTRAINTES["profs_max_seances"][p[0]], reverse=True)
+        nom_prof = random.choice([p[0] for p in sorted_profs])
     prof = profs[nom_prof]
     attempt = 0
     while (jour not in prof["disponibilites"] or CONTRAINTES["profs_max_seances"][nom_prof] <= 0) and attempt < 200:
         attempt += 1
-        nom_prof = random.choice(list(names_of_profs_disponibles.keys()))
+        sorted_profs = sorted(names_of_profs_disponibles.items(), key=lambda p: CONTRAINTES["profs_max_seances"][p[0]], reverse=True)
+        nom_prof = random.choice([p[0] for p in sorted_profs])
         prof = profs[nom_prof]
     
     update_prof_dispo(nom_prof, jour, c)
@@ -494,6 +513,7 @@ def evaluate(modules):
         if c > 0:
             score -= 1
     return score
+# je dois ajouter une fonctionne pour évaualtioin de l'emploi de temps en termes d'équilibre de charges pour les profs de même matières.
 # fonctionne fintness_score pour évaluer un individu
 def fitness_score(individu):
     score = 0
@@ -521,6 +541,7 @@ def fitness_score(individu):
 # print(f"score: {score}")
 # exit()
 iter = 0
+result = dict()
 for classe in CLASSES:
     OLD_CONTRAINTES = copy.deepcopy(CONTRAINTES)
     score = -1
@@ -528,9 +549,22 @@ for classe in CLASSES:
         iter += 1
         CONTRAINTES = copy.deepcopy(OLD_CONTRAINTES)
         individu, salle, modules = generer_individu(classe)
+        result[classe] = individu
         score = evaluate(modules)
     afficher_individu(individu, classe, salle, modules)
     print(f"score: {score}")
 
 print(f" this took {iter} iterations ")
-exit()
+
+for p, r in CONTRAINTES["profs_max_seances"].items():
+    print(f"{p}: {r}")
+
+
+# Transformer result en JSON
+result_json = json.dumps(result, ensure_ascii=False, indent=4)
+
+# Sauvegarder le JSON dans un fichier
+with open("emplois_du_temps.json", "w", encoding="utf-8") as file:
+    file.write(result_json)
+
+print("Les emplois du temps ont été sauvegardés dans 'emplois_du_temps.json'.")

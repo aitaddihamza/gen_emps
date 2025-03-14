@@ -1,7 +1,7 @@
 # Constantes
 
 # total de semaines par semettre 
-TOTAL_SEMAINES = 14
+TOTAL_SEMAINES = 15
 
 # TOTAL DE SÉANCES PAR SEMAINE 
 TOTAL_SEANCES_PAR_SEMAINE = 20
@@ -9,7 +9,7 @@ TOTAL_SEANCES_PAR_SEMAINE = 20
 # les salles
 # salle0 -> salle5
 NBR_SALLES = 6
-SALLES_TP = ["TP1", "TP2"]
+SALLES_TP = ["TP1", "TP2", "TP3", "TP4"]
 
 # variables de paramétrage pour l'algorithme génétique
 NBR_GENERATION = 10
