@@ -21,7 +21,7 @@
             ],
             "13:30-15:30": [
                 {
-                    "prof": "Pr.BOUHALI",
+                    "prof": "Pr.KAHKAHY",
                     "salle": null,
                     "module": "Français",
                     "semaine_debut": 1,
@@ -30,58 +30,37 @@
             ],
             "15:40-17:30": [
                 {
-                    "prof": "Pr.BEHJA",
+                    "prof": "Pr.FAIZ",
                     "salle": null,
-                    "module": "Economie de santé",
+                    "module": "Anglais",
                     "semaine_debut": 1,
-                    "semaine_fin": 14
+                    "semaine_fin": 12
                 }
             ]
         },
         "Mardi": {
             "08:30-10:30": [
                 {
-                    "prof": "Pr.SPAGETTI",
+                    "prof": "Pr.MERZOUQI",
                     "salle": null,
-                    "module": "Anglais",
+                    "module": "Bases de données Avancées",
                     "semaine_debut": 1,
-                    "semaine_fin": 12
+                    "semaine_fin": 14
                 }
             ],
             "10:40-12:30": [
                 {
-                    "prof": "Pr.EL MOUFID",
-                    "salle": "TP4",
-                    "module": "TP Robotiques médicales",
-                    "semaine_debut": 2,
-                    "semaine_fin": 3
-                },
-                {
-                    "prof": "Pr.AKKAOUI",
-                    "salle": "TP4",
-                    "module": "TP Bases de données Avancées",
-                    "semaine_debut": 4,
-                    "semaine_fin": 5
-                },
-                {
-                    "prof": "Pr.ACHIR",
-                    "salle": "TP4",
-                    "module": "TP Bases de Traitement d'images médicales",
-                    "semaine_debut": 6,
-                    "semaine_fin": 9
-                },
-                {
-                    "prof": "Pr.ACHIR",
-                    "salle": "TP4",
-                    "module": "TP Mini projet de Traitement d'image",
-                    "semaine_debut": 10,
-                    "semaine_fin": 13
+                    "prof": "Pr.MERZOUQI",
+                    "salle": null,
+                    "module": "Bases de données Avancées",
+                    "semaine_debut": 1,
+                    "semaine_fin": 14
                 }
             ],
             "13:30-15:30": [
                 {
-                    "prof": "Pr.ADDI",
-                    "salle": 4,
+                    "prof": "Pr.BANOUARAB",
+                    "salle": 5,
                     "module": "ESP",
                     "semaine_debut": 1,
                     "semaine_fin": 12
@@ -89,8 +68,8 @@
             ],
             "15:40-17:30": [
                 {
-                    "prof": "Pr.ADDI",
-                    "salle": 4,
+                    "prof": "Pr.BANOUARAB",
+                    "salle": 5,
                     "module": "ESP",
                     "semaine_debut": 1,
                     "semaine_fin": 12
@@ -100,34 +79,34 @@
         "Mercredi": {
             "08:30-10:30": [
                 {
-                    "prof": "Pr.HOUSBANE",
+                    "prof": "Pr.KHAY",
                     "salle": null,
-                    "module": "Bioinformatique",
+                    "module": "Organisation hospitalière",
                     "semaine_debut": 1,
                     "semaine_fin": 14
                 }
             ],
             "10:40-12:30": [
                 {
-                    "prof": "Pr.HOUSBANE",
+                    "prof": "Pr.KHAY",
                     "salle": null,
-                    "module": "Bioinformatique",
+                    "module": "Organisation hospitalière",
                     "semaine_debut": 1,
                     "semaine_fin": 14
                 }
             ],
             "13:30-15:30": [
                 {
-                    "prof": "Pr.MOUZOUN",
+                    "prof": "Pr.MERZOUQI",
                     "salle": null,
-                    "module": "Gestion de projet",
+                    "module": "Bases de Traitement d'images médicales",
                     "semaine_debut": 1,
                     "semaine_fin": 14
                 }
             ],
             "15:40-17:30": [
                 {
-                    "prof": "Pr.MOUZOUN",
+                    "prof": "Pr.MERZOUQI",
                     "salle": null,
                     "module": "Mini projet de Traitement d'image",
                     "semaine_debut": 1,
@@ -138,85 +117,88 @@
         "Jeudi": {
             "08:30-10:30": [
                 {
-                    "prof": "Pr.MOUZOUN",
+                    "prof": "Pr.MERZOUQI",
                     "salle": null,
-                    "module": "Bases de Traitement d'images médicales",
+                    "module": "Gestion de projet",
                     "semaine_debut": 1,
                     "semaine_fin": 14
                 }
             ],
             "10:40-12:30": [
                 {
+                    "prof": "Pr.MERZOUQI",
+                    "salle": null,
+                    "module": "Réalisation",
+                    "semaine_debut": 1,
+                    "semaine_fin": 14
+                }
+            ],
+            "13:30-15:30": [
+                {
                     "prof": "Pr.EL MOUFID",
-                    "salle": "TP4",
+                    "salle": "TP3",
                     "module": "TP Robotiques médicales",
                     "semaine_debut": 2,
                     "semaine_fin": 3
                 },
                 {
                     "prof": "Pr.AKKAOUI",
-                    "salle": "TP4",
+                    "salle": "TP3",
                     "module": "TP Bases de données Avancées",
                     "semaine_debut": 4,
                     "semaine_fin": 5
                 },
                 {
                     "prof": "Pr.ACHIR",
-                    "salle": "TP4",
+                    "salle": "TP3",
                     "module": "TP Bases de Traitement d'images médicales",
                     "semaine_debut": 6,
                     "semaine_fin": 9
                 },
                 {
                     "prof": "Pr.ACHIR",
-                    "salle": "TP4",
+                    "salle": "TP3",
                     "module": "TP Mini projet de Traitement d'image",
                     "semaine_debut": 10,
                     "semaine_fin": 13
                 }
             ],
-            "13:30-15:30": [
-                {
-                    "prof": "Pr.MERZOUQI",
-                    "salle": null,
-                    "module": "Bases de données Avancées",
-                    "semaine_debut": 1,
-                    "semaine_fin": 14
-                }
-            ],
             "15:40-17:30": [
                 {
-                    "prof": "Pr.MERZOUQI",
-                    "salle": null,
-                    "module": "Bases de données Avancées",
-                    "semaine_debut": 1,
-                    "semaine_fin": 14
+                    "prof": "Pr.EL MOUFID",
+                    "salle": "TP3",
+                    "module": "TP Robotiques médicales",
+                    "semaine_debut": 2,
+                    "semaine_fin": 3
+                },
+                {
+                    "prof": "Pr.AKKAOUI",
+                    "salle": "TP3",
+                    "module": "TP Bases de données Avancées",
+                    "semaine_debut": 4,
+                    "semaine_fin": 5
+                },
+                {
+                    "prof": "Pr.ACHIR",
+                    "salle": "TP3",
+                    "module": "TP Bases de Traitement d'images médicales",
+                    "semaine_debut": 6,
+                    "semaine_fin": 9
+                },
+                {
+                    "prof": "Pr.ACHIR",
+                    "salle": "TP3",
+                    "module": "TP Mini projet de Traitement d'image",
+                    "semaine_debut": 10,
+                    "semaine_fin": 13
                 }
             ]
         },
         "Vendredi": {
             "08:30-10:30": [
                 {
-                    "prof": "Pr.KHAY",
-                    "salle": null,
-                    "module": "Organisation hospitalière",
-                    "semaine_debut": 1,
-                    "semaine_fin": 14
-                }
-            ],
-            "10:40-12:30": [
-                {
-                    "prof": "Pr.KHAY",
-                    "salle": null,
-                    "module": "Organisation hospitalière",
-                    "semaine_debut": 1,
-                    "semaine_fin": 14
-                }
-            ],
-            "13:30-15:30": [
-                {
                     "prof": "Pr.BETTASS",
-                    "salle": "TP3",
+                    "salle": null,
                     "module": "Robotiques médicales",
                     "semaine_debut": 1,
                     "semaine_fin": 12
@@ -229,11 +211,29 @@
                     "semaine_fin": 15
                 }
             ],
+            "10:40-12:30": [
+                {
+                    "prof": "Pr.HOUSBANE",
+                    "salle": null,
+                    "module": "Bioinformatique",
+                    "semaine_debut": 1,
+                    "semaine_fin": 14
+                }
+            ],
+            "13:30-15:30": [
+                {
+                    "prof": "Pr.HOUSBANE",
+                    "salle": null,
+                    "module": "Bioinformatique",
+                    "semaine_debut": 1,
+                    "semaine_fin": 14
+                }
+            ],
             "15:40-17:30": [
                 {
-                    "prof": "Pr.MERZOUQI",
+                    "prof": "Pr.BEHJA",
                     "salle": null,
-                    "module": "Réalisation",
+                    "module": "Economie de santé",
                     "semaine_debut": 1,
                     "semaine_fin": 14
                 }
@@ -244,68 +244,59 @@
         "Lundi": {
             "08:30-10:30": [
                 {
-                    "prof": "Pr.AHMED",
-                    "salle": null,
-                    "module": "Français",
-                    "semaine_debut": 1,
-                    "semaine_fin": 12
-                },
-                {
-                    "prof": "Pr.AKKAOUI",
-                    "salle": "TP4",
-                    "module": "TP Bases de données Avancées",
-                    "semaine_debut": 13,
-                    "semaine_fin": 14
-                }
-            ],
-            "10:40-12:30": [
-                {
-                    "prof": "Pr.FAIZ",
+                    "prof": "Pr.SPAGETTI",
                     "salle": null,
                     "module": "Anglais",
                     "semaine_debut": 1,
                     "semaine_fin": 12
                 }
             ],
+            "10:40-12:30": [
+                {
+                    "prof": "Pr.BEHJA",
+                    "salle": null,
+                    "module": "Comptabilité",
+                    "semaine_debut": 1,
+                    "semaine_fin": 14
+                }
+            ],
             "13:30-15:30": [
                 {
-                    "prof": "Pr.BANOUARAB",
-                    "salle": 2,
-                    "module": "ESP",
+                    "prof": "Pr.BETTASS",
+                    "salle": null,
+                    "module": "Biostatistiques",
                     "semaine_debut": 1,
-                    "semaine_fin": 12
+                    "semaine_fin": 14
                 }
             ],
             "15:40-17:30": [
                 {
-                    "prof": "Pr.BANOUARAB",
-                    "salle": 2,
-                    "module": "ESP",
+                    "prof": "Pr.DEBBAGH",
+                    "salle": null,
+                    "module": "Physiologie",
                     "semaine_debut": 1,
-                    "semaine_fin": 12
+                    "semaine_fin": 14
                 }
             ]
         },
         "Mardi": {
             "08:30-10:30": [
                 {
-                    "prof": "Pr.MERZOUQI",
-                    "salle": null,
-                    "module": "Bases de données Avancées",
+                    "prof": "Pr.BOUHALI",
+                    "salle": "TP3",
+                    "module": "Français",
                     "semaine_debut": 1,
+                    "semaine_fin": 12
+                },
+                {
+                    "prof": "Pr.AKKAOUI",
+                    "salle": "TP3",
+                    "module": "TP Bases de données Avancées",
+                    "semaine_debut": 13,
                     "semaine_fin": 14
                 }
             ],
             "10:40-12:30": [
-                {
-                    "prof": "Pr.MERZOUQI",
-                    "salle": null,
-                    "module": "Bases de données Avancées",
-                    "semaine_debut": 1,
-                    "semaine_fin": 14
-                }
-            ],
-            "13:30-15:30": [
                 {
                     "prof": "Pr.ACHIR",
                     "salle": "TP1",
@@ -321,37 +312,28 @@
                     "semaine_fin": 9
                 }
             ],
+            "13:30-15:30": [
+                {
+                    "prof": "Pr.ADDI",
+                    "salle": 1,
+                    "module": "ESP",
+                    "semaine_debut": 1,
+                    "semaine_fin": 12
+                }
+            ],
             "15:40-17:30": [
                 {
-                    "prof": "Pr.DEBBAGH",
-                    "salle": null,
-                    "module": "Physiologie",
+                    "prof": "Pr.ADDI",
+                    "salle": 1,
+                    "module": "ESP",
                     "semaine_debut": 1,
-                    "semaine_fin": 14
+                    "semaine_fin": 12
                 }
             ]
         },
         "Mercredi": {
             "08:30-10:30": [
                 {
-                    "prof": "Pr.KHAY",
-                    "salle": null,
-                    "module": "Organisation hospitalière",
-                    "semaine_debut": 1,
-                    "semaine_fin": 14
-                }
-            ],
-            "10:40-12:30": [
-                {
-                    "prof": "Pr.KHAY",
-                    "salle": null,
-                    "module": "Organisation hospitalière",
-                    "semaine_debut": 1,
-                    "semaine_fin": 14
-                }
-            ],
-            "13:30-15:30": [
-                {
                     "prof": "Pr.HOUSBANE",
                     "salle": null,
                     "module": "Bioinformatique",
@@ -359,31 +341,11 @@
                     "semaine_fin": 14
                 }
             ],
-            "15:40-17:30": [
+            "10:40-12:30": [
                 {
                     "prof": "Pr.HOUSBANE",
                     "salle": null,
                     "module": "Bioinformatique",
-                    "semaine_debut": 1,
-                    "semaine_fin": 14
-                }
-            ]
-        },
-        "Jeudi": {
-            "08:30-10:30": [
-                {
-                    "prof": "Pr.MERZOUQI",
-                    "salle": null,
-                    "module": "Gestion de projet",
-                    "semaine_debut": 1,
-                    "semaine_fin": 14
-                }
-            ],
-            "10:40-12:30": [
-                {
-                    "prof": "Pr.MOUZOUN",
-                    "salle": null,
-                    "module": "Bases de Traitement d'images médicales",
                     "semaine_debut": 1,
                     "semaine_fin": 14
                 }
@@ -407,17 +369,46 @@
                 }
             ]
         },
-        "Vendredi": {
+        "Jeudi": {
             "08:30-10:30": [
                 {
-                    "prof": "Pr.BETTASS",
+                    "prof": "Pr.MOUZOUN",
                     "salle": null,
-                    "module": "Biostatistiques",
+                    "module": "Bases de Traitement d'images médicales",
                     "semaine_debut": 1,
                     "semaine_fin": 14
                 }
             ],
             "10:40-12:30": [
+                {
+                    "prof": "Pr.MOUZOUN",
+                    "salle": null,
+                    "module": "Gestion de projet",
+                    "semaine_debut": 1,
+                    "semaine_fin": 14
+                }
+            ],
+            "13:30-15:30": [
+                {
+                    "prof": "Pr.MERZOUQI",
+                    "salle": null,
+                    "module": "Bases de données Avancées",
+                    "semaine_debut": 1,
+                    "semaine_fin": 14
+                }
+            ],
+            "15:40-17:30": [
+                {
+                    "prof": "Pr.MERZOUQI",
+                    "salle": null,
+                    "module": "Bases de données Avancées",
+                    "semaine_debut": 1,
+                    "semaine_fin": 14
+                }
+            ]
+        },
+        "Vendredi": {
+            "08:30-10:30": [
                 {
                     "prof": "Pr.MERZOUQI",
                     "salle": null,
@@ -426,11 +417,20 @@
                     "semaine_fin": 14
                 }
             ],
+            "10:40-12:30": [
+                {
+                    "prof": "Pr.KHAY",
+                    "salle": null,
+                    "module": "Organisation hospitalière",
+                    "semaine_debut": 1,
+                    "semaine_fin": 14
+                }
+            ],
             "13:30-15:30": [
                 {
-                    "prof": "Pr.BEHJA",
+                    "prof": "Pr.KHAY",
                     "salle": null,
-                    "module": "Comptabilité",
+                    "module": "Organisation hospitalière",
                     "semaine_debut": 1,
                     "semaine_fin": 14
                 }
@@ -450,15 +450,24 @@
         "Lundi": {
             "08:30-10:30": [
                 {
-                    "prof": "Pr.KHALFAOUI",
+                    "prof": "Pr.FAIZ",
                     "salle": null,
-                    "module": "Recherche opérationnelle",
+                    "module": "Anglais",
                     "semaine_debut": 1,
                     "semaine_fin": 12
                 }
             ],
             "10:40-12:30": [
                 {
+                    "prof": "Pr.KAHKAHY",
+                    "salle": null,
+                    "module": "Français",
+                    "semaine_debut": 1,
+                    "semaine_fin": 12
+                }
+            ],
+            "13:30-15:30": [
+                {
                     "prof": "Pr.KHALFAOUI",
                     "salle": null,
                     "module": "Recherche opérationnelle",
@@ -466,20 +475,11 @@
                     "semaine_fin": 12
                 }
             ],
-            "13:30-15:30": [
-                {
-                    "prof": "Pr.ADDI",
-                    "salle": 0,
-                    "module": "ESP",
-                    "semaine_debut": 1,
-                    "semaine_fin": 12
-                }
-            ],
             "15:40-17:30": [
                 {
-                    "prof": "Pr.ADDI",
-                    "salle": 0,
-                    "module": "ESP",
+                    "prof": "Pr.KHALFAOUI",
+                    "salle": null,
+                    "module": "Recherche opérationnelle",
                     "semaine_debut": 1,
                     "semaine_fin": 12
                 }
@@ -497,6 +497,82 @@
             ],
             "10:40-12:30": [
                 {
+                    "prof": "Pr.DEBBAGH",
+                    "salle": null,
+                    "module": "Physiologie",
+                    "semaine_debut": 1,
+                    "semaine_fin": 14
+                }
+            ],
+            "13:30-15:30": [
+                {
+                    "prof": "Pr.ACHIR",
+                    "salle": "TP1",
+                    "module": "TP Physiologie",
+                    "semaine_debut": 2,
+                    "semaine_fin": 5
+                }
+            ],
+            "15:40-17:30": [
+                {
+                    "prof": "Pr.ANSARI",
+                    "salle": null,
+                    "module": "Gestion de l'entreprise et Marché public",
+                    "semaine_debut": 1,
+                    "semaine_fin": 12
+                }
+            ]
+        },
+        "Mercredi": {
+            "08:30-10:30": [
+                {
+                    "prof": "Pr.MOUMADI",
+                    "salle": null,
+                    "module": "Programmation Orienté Objet",
+                    "semaine_debut": 1,
+                    "semaine_fin": 12
+                }
+            ],
+            "10:40-12:30": [
+                {
+                    "prof": "Pr.SAWALMEH",
+                    "salle": null,
+                    "module": "Compétences culturelles et Artistiques",
+                    "semaine_debut": 1,
+                    "semaine_fin": 12
+                }
+            ],
+            "13:30-15:30": [
+                {
+                    "prof": "Pr.MEFADDEL",
+                    "salle": null,
+                    "module": "TOEIC",
+                    "semaine_debut": 1,
+                    "semaine_fin": 12
+                }
+            ],
+            "15:40-17:30": [
+                {
+                    "prof": "Pr.ERRABIH",
+                    "salle": null,
+                    "module": "Droit",
+                    "semaine_debut": 1,
+                    "semaine_fin": 12
+                }
+            ]
+        },
+        "Jeudi": {
+            "08:30-10:30": [
+                {
+                    "prof": "Pr.DEBBAGH",
+                    "salle": null,
+                    "module": "Physiologie",
+                    "semaine_debut": 1,
+                    "semaine_fin": 14
+                }
+            ],
+            "10:40-12:30": [
+                {
                     "prof": "Pr.AMEZIANE",
                     "salle": "TP3",
                     "module": "CAO-DAO",
@@ -504,7 +580,7 @@
                     "semaine_fin": 6
                 },
                 {
-                    "prof": "Pr.GOURAM",
+                    "prof": "Pr.SLALMI",
                     "salle": "TP3",
                     "module": "TP Traitement de signal",
                     "semaine_debut": 7,
@@ -520,64 +596,6 @@
             ],
             "13:30-15:30": [
                 {
-                    "prof": "Pr.AHMED",
-                    "salle": null,
-                    "module": "Français",
-                    "semaine_debut": 1,
-                    "semaine_fin": 12
-                }
-            ],
-            "15:40-17:30": [
-                {
-                    "prof": "Pr.MOUMADI",
-                    "salle": null,
-                    "module": "Programmation Orienté Objet",
-                    "semaine_debut": 1,
-                    "semaine_fin": 12
-                }
-            ]
-        },
-        "Mercredi": {
-            "08:30-10:30": [
-                {
-                    "prof": "Pr.MOUZOUN",
-                    "salle": null,
-                    "module": "Traitement de signal",
-                    "semaine_debut": 1,
-                    "semaine_fin": 12
-                }
-            ],
-            "10:40-12:30": [
-                {
-                    "prof": "Pr.SAWALMEH",
-                    "salle": null,
-                    "module": "Anglais",
-                    "semaine_debut": 1,
-                    "semaine_fin": 12
-                }
-            ],
-            "13:30-15:30": [
-                {
-                    "prof": "Pr.SAWALMEH",
-                    "salle": null,
-                    "module": "Compétences culturelles et Artistiques",
-                    "semaine_debut": 1,
-                    "semaine_fin": 12
-                }
-            ],
-            "15:40-17:30": [
-                {
-                    "prof": "Pr.MEFADDEL",
-                    "salle": null,
-                    "module": "TOEIC",
-                    "semaine_debut": 1,
-                    "semaine_fin": 12
-                }
-            ]
-        },
-        "Jeudi": {
-            "08:30-10:30": [
-                {
                     "prof": "Pr.ASRAOUI",
                     "salle": null,
                     "module": "Statistique et probabilité",
@@ -585,54 +603,27 @@
                     "semaine_fin": 12
                 }
             ],
-            "10:40-12:30": [
-                {
-                    "prof": "Pr.ANSARI",
-                    "salle": null,
-                    "module": "Gestion de l'entreprise et Marché public",
-                    "semaine_debut": 1,
-                    "semaine_fin": 12
-                }
-            ],
-            "13:30-15:30": [
-                {
-                    "prof": "Pr.ERRABIH",
-                    "salle": null,
-                    "module": "Droit",
-                    "semaine_debut": 1,
-                    "semaine_fin": 12
-                }
-            ],
             "15:40-17:30": [
                 {
-                    "prof": "Pr.DEBBAGH",
+                    "prof": "Pr.MOUZOUN",
                     "salle": null,
-                    "module": "Physiologie",
+                    "module": "Traitement de signal",
                     "semaine_debut": 1,
-                    "semaine_fin": 14
+                    "semaine_fin": 12
                 }
             ]
         },
         "Vendredi": {
             "08:30-10:30": [
                 {
-                    "prof": "Pr.DEBBAGH",
+                    "prof": "",
                     "salle": null,
-                    "module": "Physiologie",
+                    "module": "Pause",
                     "semaine_debut": 1,
-                    "semaine_fin": 14
+                    "semaine_fin": 15
                 }
             ],
             "10:40-12:30": [
-                {
-                    "prof": "Pr.ACHIR",
-                    "salle": "TP1",
-                    "module": "TP Physiologie",
-                    "semaine_debut": 2,
-                    "semaine_fin": 5
-                }
-            ],
-            "13:30-15:30": [
                 {
                     "prof": "Pr.MERZOUQI",
                     "salle": null,
@@ -641,13 +632,22 @@
                     "semaine_fin": 12
                 }
             ],
+            "13:30-15:30": [
+                {
+                    "prof": "Pr.ADDI",
+                    "salle": 0,
+                    "module": "ESP",
+                    "semaine_debut": 1,
+                    "semaine_fin": 12
+                }
+            ],
             "15:40-17:30": [
                 {
-                    "prof": "",
-                    "salle": null,
-                    "module": "Pause",
+                    "prof": "Pr.ADDI",
+                    "salle": 0,
+                    "module": "ESP",
                     "semaine_debut": 1,
-                    "semaine_fin": 15
+                    "semaine_fin": 12
                 }
             ]
         }
@@ -656,56 +656,56 @@
         "Lundi": {
             "08:30-10:30": [
                 {
-                    "prof": "Pr.SPAGETTI",
+                    "prof": "Pr.BOUHALI",
                     "salle": null,
-                    "module": "Anglais",
+                    "module": "Français",
                     "semaine_debut": 1,
                     "semaine_fin": 12
                 }
             ],
             "10:40-12:30": [
                 {
-                    "prof": "Pr.GOURAM",
-                    "salle": "TP4",
-                    "module": "TP Traitement de signal",
-                    "semaine_debut": 6,
-                    "semaine_fin": 13
-                }
-            ],
-            "13:30-15:30": [
-                {
-                    "prof": "Pr.DEBBAGH",
-                    "salle": null,
-                    "module": "Physiologie",
-                    "semaine_debut": 1,
-                    "semaine_fin": 14
-                }
-            ],
-            "15:40-17:30": [
-                {
-                    "prof": "Pr.DEBBAGH",
-                    "salle": null,
-                    "module": "Physiologie",
-                    "semaine_debut": 1,
-                    "semaine_fin": 14
-                }
-            ]
-        },
-        "Mardi": {
-            "08:30-10:30": [
-                {
                     "prof": "Pr.PHIRI",
-                    "salle": "TP4",
+                    "salle": "TP1",
                     "module": "TP Recherche opérationnelle",
                     "semaine_debut": 2,
                     "semaine_fin": 5
                 },
                 {
                     "prof": "Pr.ACHIR",
-                    "salle": "TP4",
+                    "salle": "TP1",
                     "module": "TP Physiologie",
                     "semaine_debut": 6,
                     "semaine_fin": 9
+                }
+            ],
+            "13:30-15:30": [
+                {
+                    "prof": "Pr.BANOUARAB",
+                    "salle": 4,
+                    "module": "ESP",
+                    "semaine_debut": 1,
+                    "semaine_fin": 12
+                }
+            ],
+            "15:40-17:30": [
+                {
+                    "prof": "Pr.BANOUARAB",
+                    "salle": 4,
+                    "module": "ESP",
+                    "semaine_debut": 1,
+                    "semaine_fin": 12
+                }
+            ]
+        },
+        "Mardi": {
+            "08:30-10:30": [
+                {
+                    "prof": "Pr.SPAGETTI",
+                    "salle": null,
+                    "module": "Anglais",
+                    "semaine_debut": 1,
+                    "semaine_fin": 12
                 }
             ],
             "10:40-12:30": [
@@ -719,25 +719,43 @@
             ],
             "13:30-15:30": [
                 {
-                    "prof": "Pr.MERZOUQI",
+                    "prof": "Pr.MOUMADI",
                     "salle": null,
-                    "module": "Bases de données",
+                    "module": "Programmation Orienté Objet",
                     "semaine_debut": 1,
-                    "semaine_fin": 12
+                    "semaine_fin": 14
                 }
             ],
             "15:40-17:30": [
                 {
-                    "prof": "Pr.ASRAOUI",
+                    "prof": "Pr.MOUMADI",
                     "salle": null,
-                    "module": "Statistique et probabilité",
+                    "module": "Programmation Orienté Objet",
                     "semaine_debut": 1,
-                    "semaine_fin": 12
+                    "semaine_fin": 14
                 }
             ]
         },
         "Mercredi": {
             "08:30-10:30": [
+                {
+                    "prof": "Pr.KHALFAOUI",
+                    "salle": null,
+                    "module": "Recherche opérationnelle",
+                    "semaine_debut": 1,
+                    "semaine_fin": 12
+                }
+            ],
+            "10:40-12:30": [
+                {
+                    "prof": "Pr.KHALFAOUI",
+                    "salle": null,
+                    "module": "Recherche opérationnelle",
+                    "semaine_debut": 1,
+                    "semaine_fin": 12
+                }
+            ],
+            "13:30-15:30": [
                 {
                     "prof": "Pr.SAWALMEH",
                     "salle": null,
@@ -746,29 +764,11 @@
                     "semaine_fin": 12
                 }
             ],
-            "10:40-12:30": [
-                {
-                    "prof": "Pr.MOUZOUN",
-                    "salle": null,
-                    "module": "Traitement de signal",
-                    "semaine_debut": 1,
-                    "semaine_fin": 12
-                }
-            ],
-            "13:30-15:30": [
+            "15:40-17:30": [
                 {
                     "prof": "Pr.MEFADDEL",
                     "salle": null,
                     "module": "TOEIC",
-                    "semaine_debut": 1,
-                    "semaine_fin": 12
-                }
-            ],
-            "15:40-17:30": [
-                {
-                    "prof": "Pr.AHMED",
-                    "salle": null,
-                    "module": "Français",
                     "semaine_debut": 1,
                     "semaine_fin": 12
                 }
@@ -777,52 +777,23 @@
         "Jeudi": {
             "08:30-10:30": [
                 {
-                    "prof": "Pr.MOUMADI",
-                    "salle": null,
-                    "module": "Programmation Orienté Objet",
-                    "semaine_debut": 1,
-                    "semaine_fin": 14
+                    "prof": "Pr.GOURAM",
+                    "salle": "TP1",
+                    "module": "TP Traitement de signal",
+                    "semaine_debut": 6,
+                    "semaine_fin": 13
                 }
             ],
             "10:40-12:30": [
                 {
-                    "prof": "Pr.MOUMADI",
+                    "prof": "Pr.ASRAOUI",
                     "salle": null,
-                    "module": "Programmation Orienté Objet",
+                    "module": "Statistique et probabilité",
                     "semaine_debut": 1,
-                    "semaine_fin": 14
+                    "semaine_fin": 12
                 }
             ],
             "13:30-15:30": [
-                {
-                    "prof": "Pr.ANSARI",
-                    "salle": null,
-                    "module": "Gestion de l'entreprise et Marché public",
-                    "semaine_debut": 1,
-                    "semaine_fin": 12
-                }
-            ],
-            "15:40-17:30": [
-                {
-                    "prof": "Pr.KHALFAOUI",
-                    "salle": null,
-                    "module": "Recherche opérationnelle",
-                    "semaine_debut": 1,
-                    "semaine_fin": 12
-                }
-            ]
-        },
-        "Vendredi": {
-            "08:30-10:30": [
-                {
-                    "prof": "Pr.KHALFAOUI",
-                    "salle": null,
-                    "module": "Recherche opérationnelle",
-                    "semaine_debut": 1,
-                    "semaine_fin": 12
-                }
-            ],
-            "10:40-12:30": [
                 {
                     "prof": "Pr.ERRABIH",
                     "salle": null,
@@ -831,20 +802,49 @@
                     "semaine_fin": 12
                 }
             ],
+            "15:40-17:30": [
+                {
+                    "prof": "Pr.ANSARI",
+                    "salle": null,
+                    "module": "Gestion de l'entreprise et Marché public",
+                    "semaine_debut": 1,
+                    "semaine_fin": 12
+                }
+            ]
+        },
+        "Vendredi": {
+            "08:30-10:30": [
+                {
+                    "prof": "Pr.DEBBAGH",
+                    "salle": null,
+                    "module": "Physiologie",
+                    "semaine_debut": 1,
+                    "semaine_fin": 14
+                }
+            ],
+            "10:40-12:30": [
+                {
+                    "prof": "Pr.DEBBAGH",
+                    "salle": null,
+                    "module": "Physiologie",
+                    "semaine_debut": 1,
+                    "semaine_fin": 14
+                }
+            ],
             "13:30-15:30": [
                 {
-                    "prof": "Pr.BANOUARAB",
-                    "salle": 1,
-                    "module": "ESP",
+                    "prof": "Pr.MOUZOUN",
+                    "salle": null,
+                    "module": "Traitement de signal",
                     "semaine_debut": 1,
                     "semaine_fin": 12
                 }
             ],
             "15:40-17:30": [
                 {
-                    "prof": "Pr.BANOUARAB",
-                    "salle": 1,
-                    "module": "ESP",
+                    "prof": "Pr.MERZOUQI",
+                    "salle": null,
+                    "module": "Bases de données",
                     "semaine_debut": 1,
                     "semaine_fin": 12
                 }
@@ -855,38 +855,38 @@
         "Lundi": {
             "08:30-10:30": [
                 {
-                    "prof": "Pr.ANSARI",
+                    "prof": "Pr.MERZOUQI",
                     "salle": null,
-                    "module": "Chimie de l'environnement",
+                    "module": "Bases de données",
                     "semaine_debut": 1,
-                    "semaine_fin": 14
+                    "semaine_fin": 12
                 }
             ],
             "10:40-12:30": [
                 {
                     "prof": "Pr.SAQAT",
-                    "salle": "TP1",
+                    "salle": "TP2",
                     "module": "TP Microbiologie de l'environnement",
                     "semaine_debut": 2,
                     "semaine_fin": 3
                 },
                 {
                     "prof": "Pr.ACHLIOUI",
-                    "salle": "TP1",
+                    "salle": "TP2",
                     "module": "TP Résistance des Matériaux",
                     "semaine_debut": 4,
                     "semaine_fin": 5
                 },
                 {
                     "prof": "Pr.SAQAT",
-                    "salle": "TP1",
+                    "salle": "TP2",
                     "module": "TP Chimie de l'environnement",
                     "semaine_debut": 6,
                     "semaine_fin": 9
                 },
                 {
                     "prof": "Pr.JOUICHA",
-                    "salle": "TP1",
+                    "salle": "TP2",
                     "module": "TP SIG et télédiction",
                     "semaine_debut": 10,
                     "semaine_fin": 13
@@ -894,39 +894,18 @@
             ],
             "13:30-15:30": [
                 {
-                    "prof": "Pr.SAQAT",
-                    "salle": "TP1",
-                    "module": "TP Microbiologie de l'environnement",
-                    "semaine_debut": 2,
-                    "semaine_fin": 3
-                },
-                {
-                    "prof": "Pr.ACHLIOUI",
-                    "salle": "TP1",
-                    "module": "TP Résistance des Matériaux",
-                    "semaine_debut": 4,
-                    "semaine_fin": 5
-                },
-                {
-                    "prof": "Pr.SAQAT",
-                    "salle": "TP1",
-                    "module": "TP Chimie de l'environnement",
-                    "semaine_debut": 6,
-                    "semaine_fin": 9
-                },
-                {
-                    "prof": "Pr.JOUICHA",
-                    "salle": "TP1",
-                    "module": "TP SIG et télédiction",
-                    "semaine_debut": 10,
-                    "semaine_fin": 13
+                    "prof": "Pr.ANSARI",
+                    "salle": null,
+                    "module": "Microbiologie de l'environnement",
+                    "semaine_debut": 1,
+                    "semaine_fin": 14
                 }
             ],
             "15:40-17:30": [
                 {
-                    "prof": "Pr.KHALFAOUI",
+                    "prof": "Pr.ANSARI",
                     "salle": null,
-                    "module": "Recherche opérationnelle",
+                    "module": "Chimie de l'environnement",
                     "semaine_debut": 1,
                     "semaine_fin": 14
                 }
@@ -935,26 +914,47 @@
         "Mardi": {
             "08:30-10:30": [
                 {
-                    "prof": "Pr.AHMED",
+                    "prof": "Pr.ASRAOUI",
                     "salle": null,
-                    "module": "Français",
+                    "module": "Statistique et probabilité",
                     "semaine_debut": 1,
                     "semaine_fin": 12
                 }
             ],
             "10:40-12:30": [
                 {
-                    "prof": "Pr.SPAGETTI",
-                    "salle": null,
-                    "module": "Anglais",
-                    "semaine_debut": 1,
-                    "semaine_fin": 12
+                    "prof": "Pr.SAQAT",
+                    "salle": "TP2",
+                    "module": "TP Microbiologie de l'environnement",
+                    "semaine_debut": 2,
+                    "semaine_fin": 3
+                },
+                {
+                    "prof": "Pr.ACHLIOUI",
+                    "salle": "TP2",
+                    "module": "TP Résistance des Matériaux",
+                    "semaine_debut": 4,
+                    "semaine_fin": 5
+                },
+                {
+                    "prof": "Pr.SAQAT",
+                    "salle": "TP2",
+                    "module": "TP Chimie de l'environnement",
+                    "semaine_debut": 6,
+                    "semaine_fin": 9
+                },
+                {
+                    "prof": "Pr.JOUICHA",
+                    "salle": "TP2",
+                    "module": "TP SIG et télédiction",
+                    "semaine_debut": 10,
+                    "semaine_fin": 13
                 }
             ],
             "13:30-15:30": [
                 {
-                    "prof": "Pr.BANOUARAB",
-                    "salle": 5,
+                    "prof": "Pr.ADDI",
+                    "salle": 3,
                     "module": "ESP",
                     "semaine_debut": 1,
                     "semaine_fin": 12
@@ -962,8 +962,8 @@
             ],
             "15:40-17:30": [
                 {
-                    "prof": "Pr.BANOUARAB",
-                    "salle": 5,
+                    "prof": "Pr.ADDI",
+                    "salle": 3,
                     "module": "ESP",
                     "semaine_debut": 1,
                     "semaine_fin": 12
@@ -973,94 +973,18 @@
         "Mercredi": {
             "08:30-10:30": [
                 {
-                    "prof": "Pr.MEFADDEL",
+                    "prof": "Pr.KAHKAHY",
                     "salle": null,
-                    "module": "TOEIC",
+                    "module": "Français",
                     "semaine_debut": 1,
                     "semaine_fin": 12
                 }
             ],
             "10:40-12:30": [
-                {
-                    "prof": "Pr.MERZOUQI",
-                    "salle": null,
-                    "module": "Bases de données",
-                    "semaine_debut": 1,
-                    "semaine_fin": 12
-                }
-            ],
-            "13:30-15:30": [
                 {
                     "prof": "Pr.ANSARI",
                     "salle": null,
                     "module": "Géophysique environnementale",
-                    "semaine_debut": 1,
-                    "semaine_fin": 14
-                }
-            ],
-            "15:40-17:30": [
-                {
-                    "prof": "Pr.SAWALMEH",
-                    "salle": null,
-                    "module": "Compétences culturelles et Artistiques",
-                    "semaine_debut": 1,
-                    "semaine_fin": 12
-                }
-            ]
-        },
-        "Jeudi": {
-            "08:30-10:30": [
-                {
-                    "prof": "Pr.JBAHI",
-                    "salle": null,
-                    "module": "Topographie",
-                    "semaine_debut": 1,
-                    "semaine_fin": 14
-                }
-            ],
-            "10:40-12:30": [
-                {
-                    "prof": "Pr.JBAHI",
-                    "salle": null,
-                    "module": "Analyses électrochimiques et spectrales",
-                    "semaine_debut": 1,
-                    "semaine_fin": 14
-                }
-            ],
-            "13:30-15:30": [
-                {
-                    "prof": "Pr.JBAHI",
-                    "salle": null,
-                    "module": "SIG et télédiction",
-                    "semaine_debut": 1,
-                    "semaine_fin": 14
-                }
-            ],
-            "15:40-17:30": [
-                {
-                    "prof": "Pr.ASRAOUI",
-                    "salle": null,
-                    "module": "Statistique et probabilité",
-                    "semaine_debut": 1,
-                    "semaine_fin": 12
-                }
-            ]
-        },
-        "Vendredi": {
-            "08:30-10:30": [
-                {
-                    "prof": "Pr.ANSARI",
-                    "salle": null,
-                    "module": "Microbiologie de l'environnement",
-                    "semaine_debut": 1,
-                    "semaine_fin": 14
-                }
-            ],
-            "10:40-12:30": [
-                {
-                    "prof": "Pr.MOUMADI",
-                    "salle": null,
-                    "module": "Programmation Orienté Objet",
                     "semaine_debut": 1,
                     "semaine_fin": 14
                 }
@@ -1076,9 +1000,85 @@
             ],
             "15:40-17:30": [
                 {
+                    "prof": "Pr.KHALFAOUI",
+                    "salle": null,
+                    "module": "Recherche opérationnelle",
+                    "semaine_debut": 1,
+                    "semaine_fin": 14
+                }
+            ]
+        },
+        "Jeudi": {
+            "08:30-10:30": [
+                {
+                    "prof": "Pr.MEFADDEL",
+                    "salle": null,
+                    "module": "TOEIC",
+                    "semaine_debut": 1,
+                    "semaine_fin": 12
+                }
+            ],
+            "10:40-12:30": [
+                {
                     "prof": "Pr.BETTASS",
                     "salle": null,
                     "module": "Résistance des Matériaux",
+                    "semaine_debut": 1,
+                    "semaine_fin": 14
+                }
+            ],
+            "13:30-15:30": [
+                {
+                    "prof": "Pr.JBAHI",
+                    "salle": null,
+                    "module": "Analyses électrochimiques et spectrales",
+                    "semaine_debut": 1,
+                    "semaine_fin": 14
+                }
+            ],
+            "15:40-17:30": [
+                {
+                    "prof": "Pr.JBAHI",
+                    "salle": null,
+                    "module": "SIG et télédiction",
+                    "semaine_debut": 1,
+                    "semaine_fin": 14
+                }
+            ]
+        },
+        "Vendredi": {
+            "08:30-10:30": [
+                {
+                    "prof": "Pr.FAIZ",
+                    "salle": null,
+                    "module": "Anglais",
+                    "semaine_debut": 1,
+                    "semaine_fin": 12
+                }
+            ],
+            "10:40-12:30": [
+                {
+                    "prof": "Pr.MOUMADI",
+                    "salle": null,
+                    "module": "Programmation Orienté Objet",
+                    "semaine_debut": 1,
+                    "semaine_fin": 14
+                }
+            ],
+            "13:30-15:30": [
+                {
+                    "prof": "Pr.SAWALMEH",
+                    "salle": null,
+                    "module": "Compétences culturelles et Artistiques",
+                    "semaine_debut": 1,
+                    "semaine_fin": 12
+                }
+            ],
+            "15:40-17:30": [
+                {
+                    "prof": "Pr.JBAHI",
+                    "salle": null,
+                    "module": "Topographie",
                     "semaine_debut": 1,
                     "semaine_fin": 14
                 }

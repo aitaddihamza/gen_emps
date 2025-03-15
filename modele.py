@@ -1,24 +1,13 @@
 import math
 import random
-import time
-# from data import *
 from collections import defaultdict
 import copy
 import json
 
 
-# Constantes
-
-# total de semaines par semettre 
 TOTAL_SEMAINES = 15
-
-# TOTAL DE SÉANCES PAR SEMAINE 
-TOTAL_SEANCES_PAR_SEMAINE = 20
-
-# les salles
-# salle0 -> salle5
 NBR_SALLES = 6
-SALLES_TP = ["TP1", "TP2", "TP3", "TP4"]
+SALLES_TP = ["TP1", "TP2", "TP3"]
 
 # charger les données à partir le fichier data.json
 with open('DATA.json', 'r', encoding='utf-8') as f:
@@ -29,7 +18,6 @@ JOURS = data["JOURS"]
 CLASSES = data["CLASSES"]
 PROFESSEURS = data["PROFESSEURS"]
 
-
 CONTRAINTES = {
     "salles_reserves": [],
     "salles_tps": {}, 
@@ -38,6 +26,7 @@ CONTRAINTES = {
     "non_disponibilites_profs": {}
 }
 
+# intialisation du contraintes des profs 
 for p, d in PROFESSEURS.items():
     if d["type"] == "permanent":
         CONTRAINTES["profs_max_seances"][p] = math.floor(d["max_heures"] / 2) 
@@ -45,13 +34,11 @@ for p, d in PROFESSEURS.items():
         CONTRAINTES["profs_max_seances"][p] = 1
 
 
-# la structure des emplois pour l'instant
-emplois = {classe: { jour: {creneau: [] for creneau in CRENEAUX } for jour in JOURS } for classe in CLASSES.keys() }
-
-
-# FONCTIONNES 
-
 def get_cours_infos(cours):
+    """ 
+        fonctionne pour récupérer les infos d'un cours comme le volume, tp_seances, etc.
+        il retourne une tuple(seances, semaines, seance_par_semaine, tp_seances).
+    """
     volume = cours["volume"]
     tp_seances = cours["tp_seances"]
     # Calcul du nombre total de séances pour le module
@@ -61,9 +48,11 @@ def get_cours_infos(cours):
     
     return seances, semaines, seance_par_semaine, tp_seances
 
-###################### Fonctionne pour intialiser les modules/matières ###############################
-# comme paramètre il prend un dict qui représente les infos d'une classe
 def prepare_modules(classe_info):
+    """ 
+        Comme paramètre il prend un dict qui représente les infos d'une classe
+        il retourne les modules (cours ou tp) : seance par semaines.
+    """
     # Initialisation des modules et des séances de TP
     modules = {}
     
@@ -78,10 +67,11 @@ def prepare_modules(classe_info):
             modules[f"TP {module}"] = 1
     return modules
 
-###################### Fonctionne pour intiali# "jour": {"8:30-10-30": "salle1"}ser les profs ###############################
-# comme paramètre il prend les modules d'une classe et qui retourne tous les profs avec les modules qui correspond de celles de la classe.
-# Note: prof est un prof permanent ou vacataire ou même un doctorant!
 def prepare_profs(classe_modules):
+    """ 
+        comme paramètre il prend les modules d'une classe et qui retourne tous les profs avec les modules qui correspond de celles de la classe.
+        Note: prof est un prof permanent ou vacataire ou même un doctorant!
+    """ 
     profs = {}
     for p, details in PROFESSEURS.items():
         prof_type = details["type"]
@@ -117,8 +107,10 @@ def prepare_profs(classe_modules):
     return profs
 
 
-###################### Fonctionne planifier le jour de sport ###############################
 def trouver_jour_et_prof_de_sport(profs):
+    """ 
+        planifier le jour de sport, il retourn le jour et le prof du sport.
+    """
     jour_de_sport = profs_vacataires = None
 
     # le choix du jour de sport
@@ -133,8 +125,10 @@ def trouver_jour_et_prof_de_sport(profs):
     prof_de_sport = random.choice(profs_de_sport)
     return jour_de_sport, prof_de_sport 
 
-###################### Fonctionne pour éliminer le sport après avoir le planifier ###############################
 def eliminer_sport(profs, classe_modules):
+    """ 
+        i have to add some doc here for this small func.
+    """ 
     del classe_modules["ESP"]
     profs_de_sport = [p for p, d in profs.items() if "ESP" in d["modules"]]
     for prof in profs_de_sport:
@@ -142,7 +136,6 @@ def eliminer_sport(profs, classe_modules):
         CONTRAINTES["profs_max_seances"][prof] -= 1
 
 
-###################### Fonctionne pour réserver une salle ###############################
 def reserver_salle_tp(jour, c):
     # les salles disponibles 
     salles_disponibles = [ salle for salle in SALLES_TP if salle not in CONTRAINTES["salles_tps"].get(jour, {}).get(c, set()) ]
@@ -353,9 +346,6 @@ def get_profs_of_other_moduels(profs_disponibles, profs, res):
 
     return profs_partages
 
-
-
-
 def trouver_semaines(classe, module, modules):
     if module.startswith("TP"):
         module = module[3:]
@@ -391,7 +381,6 @@ def equilibrer_charge_prof(profs_disponibles, nom_module, old_prof, jour, c):
         return old_prof, profs_disponibles[old_prof]
     nom_prof = sorted_profs[0]
     prof =  profs_disponibles[nom_prof]
-
 
     print(nom_prof)
 
@@ -565,30 +554,17 @@ def afficher_individu(individu, classe_name, salle, modules):
                 print(f"S{seance['semaine_debut']} - S{seance['semaine_fin']}")
         print()
 
-# fonctionne pour l'évaluation d'emploi de temps
 def evaluate(modules):
+    """ 
+        fonctionne pour l'évaluation d'emploi de temps
+    """
     score = 0
     for m, c in modules.items():
         if c > 0:
             score -= 1
 
 
-
     return score
-# je dois ajouter une fonctionne pour évaualtioin de l'emploi de temps en termes d'équilibre de charges pour les profs de même matières.
-# fonctionne fintness_score pour évaluer un individu
-def fitness_score(individu):
-    score = 0
-    for jour in individu:
-        x = ["08:30-10:30", "10:40-12:30"]
-        y = ["13:30-15:30", "15:40-17:30"]
-
-        for i in x:
-            for j in y:
-                if individu[jour][i]["module"] == individu[jour][j]["module"]:
-                    score -= 1
-    return score
-
 
 iter = 0
 result = dict()

@@ -88,196 +88,216 @@
   },
   "PROFESSEURS": {
     "Pr.JBAHI": {
-      "modules": ["SIG et télédiction", "Radioactivité", "Analyses électrochimiques et spectrales", "Topographie"],
-      "type": "vacataire",
-      "disponibilites": ["Mardi", "Jeudi"]
+        "modules": ["SIG et télédiction", "Radioactivité", "Analyses électrochimiques et spectrales", "Topographie"], 
+        "type": "vacataire", 
+        "disponibilites": {
+            "Mardi": ["08:30-10:30", "10:40-12:30"],
+            "Jeudi": ["13:30-15:30", "15:40-17:30"]
+        }
     },
     "Pr.FAIZ": {
-      "modules": ["Anglais"],
-      "max_heures": 40,
-      "type": "permanent"
+        "modules": ["Anglais"], 
+        "max_heures": 40, 
+        "type": "permanent"
     },
     "Pr.MOUMADI": {
-      "modules": ["Programmation Orienté Objet"],
-      "max_heures": 40,
-      "type": "permanent"
+        "modules": ["Programmation Orienté Objet"], 
+        "max_heures": 40, 
+        "type": "permanent"
     },
     "Pr.ASRAOUI": {
-      "modules": ["Statistique et probabilité"],
-      "max_heures": 40,
-      "type": "permanent"
+        "modules": ["Statistique et probabilité"], 
+        "max_heures": 40, 
+        "type": "permanent"
     },
     "Pr.ERRABIH": {
-      "modules": ["Droit"],
-      "max_heures": 40,
-      "type": "permanent"
+        "modules": ["Droit"], 
+        "max_heures": 40, 
+        "type": "permanent"
     },
     "Pr.KHALFAOUI": {
-      "modules": ["Recherche opérationnelle"],
-      "max_heures": 40,
-      "type": "permanent"
+        "modules": ["Recherche opérationnelle"], 
+        "max_heures": 40, 
+        "type": "permanent"
     },
     "Pr.AMEZIANE": {
-      "modules": ["CAO-DAO"],
-      "max_heures": 40,
-      "type": "permanent"
+        "modules": ["CAO-DAO"], 
+        "max_heures": 40, 
+        "type": "permanent"
     },
     "Pr.MERZOUQI": {
-      "modules": ["Bases de données", "Bases de données Avancées", "Réalisation", "Gestion de projet", "Bases de Traitement d'images médicales", "Mini projet de Traitement d'image"],
-      "max_heures": 40,
-      "type": "permanent"
+        "modules": ["Bases de données", "Bases de données Avancées", "Réalisation", "Gestion de projet", "Bases de Traitement d'images médicales", "Mini projet de Traitement d'image"], 
+        "max_heures": 40, 
+        "type": "permanent"
     },
     "Pr.BETTASS": {
-      "modules": ["Résistance des Matériaux", "Robotiques médicales", "Biostatistiques"],
-      "max_heures": 40,
-      "type": "permanent"
+        "modules": ["Résistance des Matériaux", "Robotiques médicales", "Biostatistiques"], 
+        "max_heures": 40, 
+        "type": "permanent"
     },
     "Pr.KAHKAHY": {
-      "modules": ["Français"],
-      "max_heures": 40,
-      "type": "permanent"
+        "modules": ["Français"], 
+        "max_heures": 40, 
+        "type": "permanent"
     },
     "Pr.BOUHALI": {
-      "modules": ["Français"],
-      "max_heures": 40,
-      "type": "permanent"
+        "modules": ["Français"], 
+        "max_heures": 40, 
+        "type": "permanent"
     },
     "Pr.ANSARI": {
-      "modules": ["Changement climatiques", "Chimie de l'environnement", "Géophysique environnementale", "Microbiologie de l'environnement", "Anatomie", "Gestion de l'entreprise et Marché public"],
-      "max_heures": 40,
-      "type": "permanent"
-    },
-    "Pr.AHMED": {
-      "modules": ["Français"],
-      "max_heures": 40,
-      "type": "permanent"
+        "modules": ["Changement climatiques", "Chimie de l'environnement", "Géophysique environnementale", "Microbiologie de l'environnement", "Anatomie", "Gestion de l'entreprise et Marché public"], 
+        "max_heures": 40, 
+        "type": "permanent"
     },
     "Pr.ERRAZI": {
-      "modules": ["Programmation"],
-      "max_heures": 40,
-      "type": "permanent"
+        "modules": ["Programmation"], 
+        "max_heures": 40, 
+        "type": "permanent"
     },
     "Pr.ADDI": {
-      "modules": ["ESP"],
-      "max_heures": 40,
-      "type": "permanent"
+        "modules": ["ESP"], 
+        "max_heures": 40, 
+        "type": "permanent"
     },
     "Pr.BANOUARAB": {
-      "modules": ["ESP"],
-      "max_heures": 40,
-      "type": "permanent"
+        "modules": ["ESP"], 
+        "max_heures": 40, 
+        "type": "permanent"
     },
     "Pr.DEBBAGH": {
-      "modules": ["Physiologie", "Biologie"],
-      "max_heures": 40,
-      "type": "permanent"
+        "modules": ["Physiologie", "Biologie"], 
+        "max_heures": 40, 
+        "type": "permanent"
     },
     "Pr.BEHJA": {
-      "modules": ["Economie de santé", "Comptabilité"],
-      "max_heures": 40,
-      "type": "permanent"
+        "modules": ["Economie de santé", "Comptabilité"], 
+        "max_heures": 40, 
+        "type": "permanent"
     },
     "Pr.SAWALMEH": {
-      "modules": ["Anglais", "Compétences culturelles et Artistiques"],
-      "type": "vacataire",
-      "disponibilites": ["Mercredi"]
+        "modules": ["Anglais", "Compétences culturelles et Artistiques"],
+        "type": "vacataire", 
+        "disponibilites": {
+            "Mercredi": ["10:40-12:30", "13:30-15:30"]
+        }
     },
     "Pr.SPAGETTI": {
-      "modules": ["Anglais"],
-      "max_heures": 40,
-      "type": "permanent"
+        "modules": ["Anglais"], 
+        "max_heures": 40, 
+        "type": "permanent"
     },
     "Pr.KHAY": {
-      "modules": ["Organisation hospitalière"],
-      "type": "vacataire",
-      "disponibilites": ["Mercredi", "Vendredi"]
+        "modules": ["Organisation hospitalière"], 
+        "type": "vacataire", 
+        "disponibilites": {
+            "Mercredi": ["08:30-10:30", "10:40-12:30"],
+            "Vendredi": ["13:30-15:30", "15:40-17:30"]
+        }
     },
     "Pr.MEFADDEL": {
-      "modules": ["TOEIC"],
-      "type": "vacataire",
-      "disponibilites": ["Jeudi", "Mercredi"]
+        "modules": ["TOEIC"], 
+        "type": "vacataire", 
+        "disponibilites": {
+            "Jeudi": ["08:30-10:30", "10:40-12:30"],
+            "Mercredi": ["13:30-15:30", "15:40-17:30"]
+        }
     },
     "Pr.MOHAMMED": {
-      "modules": ["Analyse numérique", "Mathématiques"],
-      "type": "vacataire",
-      "disponibilites": ["Jeudi", "Vendredi"]
+        "modules": ["Anaylse numérique", "Mathématiques"], 
+        "type": "vacataire", 
+        "disponibilites": {
+            "Jeudi": ["13:30-15:30", "15:40-17:30"],
+            "Vendredi": ["08:30-10:30", "10:40-12:30"]
+        }
     },
     "Pr.HOUSBANE": {
-      "modules": ["Bioinformatique"],
-      "type": "vacataire",
-      "disponibilites": ["Vendredi", "Mercredi"]
+        "modules": ["Bioinformatique"], 
+        "type": "vacataire", 
+        "disponibilites": {
+            "Vendredi": ["10:40-12:30", "13:30-15:30"],
+            "Mercredi": ["08:30-10:30", "10:40-12:30"]
+        }
     },
     "Pr.MOUZOUN": {
-      "modules": ["Imagerie Médicale", "Mini projet de Traitement d'image", "Bases de Traitement d'images médicales", "Gestion de projet", "Traitement de signal"],
-      "type": "vacataire",
-      "disponibilites": ["Jeudi", "Vendredi", "Mercredi"]
+        "modules": ["Imagerie Médicale", "Mini projet de Traitement d'image", "Bases de Traitement d'images médicales", "Gestion de projet", "Traitement de signal"], 
+        "type": "vacataire", 
+        "disponibilites": {
+            "Jeudi": ["08:30-10:30", "10:40-12:30"],
+            "Vendredi": ["13:30-15:30","15:40-17:30"],
+            "Mercredi": ["13:30-15:30", "15:40-17:30"]
+        }
     },
     "Pr.EL YANDOUZI": {
-      "modules": ["Machine learning", "Génie Logiciel"],
-      "type": "vacataire",
-      "disponibilites": ["Jeudi", "Mardi", "Lundi"]
+        "modules": ["Machine learning", "Génie Logicil"], 
+        "type": "vacataire", 
+        "disponibilites": {
+            "Jeudi": ["10:40-12:30", "13:30-15:30"],
+            "Mardi": ["13:30-15:30", "15:40-17:30"],
+            "Lundi": ["08:30-10:30", "10:40-12:30"]
+        }
     },
     "P7": {
-      "modules": ["Sécurité"],
-      "max_heures": 20,
-      "type": "permanent"
+        "modules": ["Sécurité"], 
+        "max_heures": 20, 
+        "type": "permanent"
     },
     "P8": {
-      "modules": ["Biologie"],
-      "max_heures": 20,
-      "type": "permanent"
+        "modules": ["Biologie"], 
+        "max_heures": 20, 
+        "type": "permanent"
     },
     "Pr.ACHIR": {
-      "modules": ["TP Bases de Traitement d'images médicales", "TP Imagerie Médicale", "TP Physiologie", "TP Mini projet de Traitement d'image"],
-      "type": "doctorant"
+        "modules": ["TP Bases de Traitement d'images médicales", "TP Imagerie Médicale", "TP Physiologie", "TP Mini projet de Traitement d'image"], 
+        "type": "doctorant"
     },
     "Pr.AYOUB": {
-      "modules": ["TP Biologie"],
-      "type": "doctorant"
+        "modules": ["TP Biologie"], 
+        "type": "doctorant"
     },
     "Pr.PHIRI": {
-      "modules": ["TP Recherche opérationnelle"],
-      "type": "doctorant"
+        "modules": ["TP Recherche opérationnelle"], 
+        "type": "doctorant"
     },
     "Pr.GOURAM": {
-      "modules": ["TP Traitement de signal"],
-      "type": "doctorant"
+        "modules": ["TP Traitement de signal"], 
+        "type": "doctorant"
     },
     "Pr.SLALMI": {
-      "modules": ["TP Traitement de signal"],
-      "type": "doctorant"
+        "modules": ["TP Traitement de signal"], 
+        "type": "doctorant"
     },
     "Pr.EL MOUFID": {
-      "modules": ["TP Robotiques médicales"],
-      "type": "doctorant"
+        "modules": ["TP Robotiques médicales"], 
+        "type": "doctorant"
     },
     "Pr.AKKAOUI": {
-      "modules": ["TP Machine learning", "TP Bases de données Avancées"],
-      "type": "doctorant"
+        "modules": ["TP Machine learning", "TP Bases de données Avancées"], 
+        "type": "doctorant"
     },
     "D4": {
-      "modules": ["TP Bioinformatique", "TP Biologie"],
-      "type": "doctorant"
+        "modules": ["TP Bioinformatique", "TP Biologie"], 
+        "type": "doctorant"
     },
     "Pr.ZOUBIR": {
-      "modules": ["TP Analyse numérique", "TP Programmation"],
-      "type": "doctorant"
+        "modules": ["TP Anaylse numérique", "TP Programmation"], 
+        "type": "doctorant"
     },
     "Pr.YANDOUZI": {
-      "modules": ["TP Programmation Orienté Objet", "Génie Logiciel"],
-      "type": "doctorant"
+        "modules": ["TP Programmation Orienté Objet", "Génie Logicil"], 
+        "type": "doctorant"
     },
     "Pr.JOUICHA": {
-      "modules": ["TP SIG et télédiction"],
-      "type": "doctorant"
+        "modules": ["TP SIG et télédiction"], 
+        "type": "doctorant"
     },
     "Pr.ACHLIOUI": {
-      "modules": ["TP Résistance des Matériaux"],
-      "type": "doctorant"
+        "modules": ["TP Résistance des Matériaux"], 
+        "type": "doctorant"
     },
     "Pr.SAQAT": {
-      "modules": ["TP Microbiologie de l'environnement", "TP Chimie de l'environnement"],
-      "type": "doctorant"
+        "modules": ["TP Microbiologie de l'environnement", "TP Chimie de l'environnement"], 
+        "type": "doctorant"
     }
   }
 }
