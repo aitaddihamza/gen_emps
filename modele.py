@@ -4,18 +4,17 @@ from collections import defaultdict
 import copy
 import json
 
-
-TOTAL_SEMAINES = 15
-NBR_SALLES = 6
-SALLES_TP = ["TP1", "TP2", "TP3"]
-
 # charger les données à partir le fichier data.json
 with open('DATA.json', 'r', encoding='utf-8') as f:
     data = json.load(f)
 
+TOTAL_SEMAINES = data["TOTAL_SEMAINES"]
+SALLES_COURS = data["SALLES_COURS"]
+SALLES_TP = data["SALLES_TP"]
 CRENEAUX = data["CRENEAUX"]
 JOURS = data["JOURS"]
 CLASSES = data["CLASSES"]
+CLASSES_EFFECTIF = data["CLASSES_EFFECTIF"]
 PROFESSEURS = data["PROFESSEURS"]
 
 CONTRAINTES = {
@@ -145,9 +144,9 @@ def reserver_salle_tp(jour, c):
     CONTRAINTES["salles_tps"].setdefault(jour, {}).setdefault(c, set()).add(salle)
     return salle
 
-def reserver_salle():
+def reserver_salle(classe_name):
     # les salles disponibles 
-    salles_disponibles = [salle for salle in range(NBR_SALLES) if salle not in CONTRAINTES["salles_reserves"]]
+    salles_disponibles = [salle for salle, n in SALLES_COURS.items() if salle not in CONTRAINTES["salles_reserves"] and n >= CLASSES_EFFECTIF[classe_name]]
     if len(salles_disponibles) == 0:
         raise Exception("y a pas assez des salles disponibles")
     salle = random.choice(salles_disponibles)
@@ -405,7 +404,7 @@ def generer_individu(classe_name):
     modules_fix = copy.deepcopy(modules)
     profs = prepare_profs(modules)
 
-    salle = reserver_salle()
+    salle = reserver_salle(classe_name)
     salle_fixe = salle
 
     # Planifier le sport
@@ -536,7 +535,7 @@ def afficher_individu(individu, classe_name, salle, modules):
     # print(modules)
     print("********************************************************")
     print("********************************************************")
-    print(f"******** Emploi de temps de {classe_name} - salle: salle {salle+1} ********")
+    print(f"******** Emploi de temps de {classe_name} - salle: salle {salle} ********")
     for jour in individu:
         print(jour + ": ")
         for c in individu[jour]:

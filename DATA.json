@@ -1,6 +1,22 @@
 {
   "CRENEAUX": ["08:30-10:30", "10:40-12:30", "13:30-15:30", "15:40-17:30"],
   "JOURS": ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"],
+  "TOTAL_SEMAINES": 15,
+  "SALLES_COURS" : {
+      "salle 1": 40,
+      "salle 2": 40,
+      "salle 3": 40,
+      "salle 4": 40,
+      "salle 5": 40
+  },
+  "SALLES_TP" : ["TP1", "TP2", "TP3"],
+  "CLASSES_EFFECTIF": {
+    "2A_GD": 30,
+    "2A_GB": 25,
+    "1A_GB": 28,
+    "1A_GD": 32,
+    "1A_EE": 27
+  },
   "CLASSES": {
     "2A_GD": {
       "Bases de Traitement d'images médicales": {"volume": 28, "tp_seances": 8},
