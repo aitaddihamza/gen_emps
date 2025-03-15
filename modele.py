@@ -1,11 +1,24 @@
 import math
 import random
 import time
-from constants import *
 # from data import *
 from collections import defaultdict
 import copy
 import json
+
+
+# Constantes
+
+# total de semaines par semettre 
+TOTAL_SEMAINES = 15
+
+# TOTAL DE SÉANCES PAR SEMAINE 
+TOTAL_SEANCES_PAR_SEMAINE = 20
+
+# les salles
+# salle0 -> salle5
+NBR_SALLES = 6
+SALLES_TP = ["TP1", "TP2", "TP3", "TP4"]
 
 # charger les données à partir le fichier data.json
 with open('DATA.json', 'r', encoding='utf-8') as f:
@@ -75,6 +88,8 @@ def prepare_profs(classe_modules):
         prof_info = dict()
         prof_info["modules"] = []
         prof_info["type"] = prof_type
+        
+        # Ajouter les modules appropriés
         for m in details["modules"]:
             tp = "TP " + m
             if m in classe_modules:
@@ -82,20 +97,24 @@ def prepare_profs(classe_modules):
             if details["type"] == "doctorant":
                 if tp in classe_modules:
                     prof_info["modules"].append(tp)
-
+        
         if len(prof_info["modules"]) > 0:
+            # Initialiser les disponibilités selon le type de professeur
             if prof_type == "doctorant" or prof_type == "permanent":
-                prof_info["disponibilites"] = JOURS
+                prof_info["disponibilites"] = {}
             
             if prof_type == "doctorant" or prof_type == "vacataire":
                 prof_info["count"] = 1
                 if prof_type == "vacataire":
+                    # Pour les vacataires, copier la structure de disponibilités mise à jour
                     prof_info["disponibilites"] = details["disponibilites"]
-
+            
             if prof_type == "permanent":
-                prof_info["count"] = math.floor(details["max_heures"] / 2) 
-            profs[p] =  prof_info
-    return profs 
+                prof_info["count"] = math.floor(details["max_heures"] / 2)
+            
+            profs[p] = prof_info
+    
+    return profs
 
 
 ###################### Fonctionne planifier le jour de sport ###############################
@@ -103,9 +122,10 @@ def trouver_jour_et_prof_de_sport(profs):
     jour_de_sport = profs_vacataires = None
 
     # le choix du jour de sport
-    while jour_de_sport is None or profs_vacataires is None or len(profs_vacataires) > 1 or CONTRAINTES['jour_de_sport'][jour_de_sport] > 1:
+    while jour_de_sport is None or profs_vacataires is None or len(profs_vacataires) > 1 or CONTRAINTES['jour_de_sport'][jour_de_sport] > 4:
         jour_de_sport = random.choice(JOURS)
-        profs_vacataires = [p for p in profs.values() if jour_de_sport in p["disponibilites"] and p["type"] == "vacataire"]
+        # Note il faut changer ce code
+        profs_vacataires = [p for p in profs.values() if p["disponibilites"].get(jour_de_sport, None) and p["type"] == "vacataire"]
 
     # le choit du prof du sport
     # Note: on suppose que les profs du sports sont des profs permanents, sinon il faut changer le comportement de ceette fonctionne.
@@ -200,10 +220,10 @@ def get_shared_modules(classe_name, modules):
     tps_cours = [[m for m in modules.keys() if modules[m] == 1]]
     tps_partages = regrouper(classe_name, modules, tps_cours)
     seances_optimises = sum(len(groupe) - 1 for groupe in tps_partages)  
-    print(f"nombre des seances optimisés: {seances_optimises}")
+    # print(f"nombre des seances optimisés: {seances_optimises}")
     total_seances_modules = sum(modules.values())
     rest = total_seances_modules - seances_optimises
-    print(f"The rest is: {rest}")
+    # print(f"The rest is: {rest}")
     if rest > 20:
         # Filtrer les TP à une seule séance
         modules = {m: 2 if c == 1 and "TP " in m and (trouver_semaines(classe_name, m, modules)[1] - trouver_semaines(classe_name, m, modules)[0] + 1) % 2 == 0 else c for m, c in modules.items()}
@@ -214,8 +234,8 @@ def get_shared_modules(classe_name, modules):
         tps_cours = [tps1] + [tps2]
         tps_partages = regrouper(classe_name, modules, tps_cours)
         seances_optimises = sum(len(groupe) - 1 if modules[groupe[0]] == 1 else len(groupe) - 2 for groupe in tps_partages)  
-        print(f"The rest is: {rest}")
-    print(f"Les TP partageables : {tps_partages}")
+        # print(f"The rest is: {rest}")
+    # print(f"Les TP partageables : {tps_partages}")
     return tps_partages, modules
     
 
@@ -277,23 +297,38 @@ def affecter_groupe_seances(classe_name, individu, jour, c, infos, modules, grou
 
 def choisir_prof(names_of_profs_disponibles, profs, jour, c):
     # la priorité est de profs vacataires 
-    profs_vacataires = [p for p, d in names_of_profs_disponibles.items() if jour in d["disponibilites"] and d["type"] == "vacataire"]
-    # si on a des profs vacataires disponible ce jour on va les prioriser
+    profs_vacataires = []
+    for p, d in names_of_profs_disponibles.items():
+        if d["type"] == "vacataire":
+            # Vérifier si le professeur est disponible dans ce créneau spécifique
+            if jour in d["disponibilites"] and c in d["disponibilites"][jour]:
+                profs_vacataires.append(p)
+                
+    # si on a des profs vacataires disponible ce jour et ce créneau on va les prioriser
     if len(profs_vacataires) > 0:
         nom_prof = random.choice(profs_vacataires)
     else:
         sorted_profs = sorted(names_of_profs_disponibles.items(), key=lambda p: CONTRAINTES["profs_max_seances"][p[0]], reverse=True)
         nom_prof = random.choice([p[0] for p in sorted_profs])
+    
     prof = profs[nom_prof]
     attempt = 0
-    while (jour not in prof["disponibilites"] or CONTRAINTES["profs_max_seances"][nom_prof] <= 0) and attempt < 200:
+    
+    # Pour les vacataires, vérifier la disponibilité spécifique au créneau
+    while attempt < 200:
+        if prof["type"] == "vacataire":
+            if jour in prof["disponibilites"] and c in prof["disponibilites"][jour]:
+                break
+        else:
+            # Pour les autres types, la vérification reste simple
+            if CONTRAINTES["profs_max_seances"][nom_prof] > 0:
+                break
+        
         attempt += 1
         sorted_profs = sorted(names_of_profs_disponibles.items(), key=lambda p: CONTRAINTES["profs_max_seances"][p[0]], reverse=True)
         nom_prof = random.choice([p[0] for p in sorted_profs])
         prof = profs[nom_prof]
     
-    update_prof_dispo(nom_prof, jour, c)
-
     return nom_prof, prof
 
 def get_profs_of_other_moduels(profs_disponibles, profs, res):
@@ -344,6 +379,23 @@ def trouver_semaines(classe, module, modules):
 
     return  semaine_debut , semaine_fin
 
+def equilibrer_charge_prof(profs_disponibles, nom_module, old_prof, jour, c):
+    module_profs = [p for p, d in profs_disponibles.items() if nom_module in d["modules"]]
+    sorted_profs = sorted(module_profs, key=lambda p: CONTRAINTES["profs_max_seances"][p], reverse=True)
+    if nom_module =="Français":
+        print(module_profs)
+        print(sorted_profs)
+        for p in module_profs:
+            print(p, CONTRAINTES["profs_max_seances"][p])
+    if len(sorted_profs) <= 1:
+        return old_prof, profs_disponibles[old_prof]
+    nom_prof = sorted_profs[0]
+    prof =  profs_disponibles[nom_prof]
+
+
+    print(nom_prof)
+
+    return nom_prof, prof
 
 def generer_individu(classe_name):
     classe_info = CLASSES[classe_name]
@@ -388,6 +440,7 @@ def generer_individu(classe_name):
 
             profs_disponibles = {p: d for p, d in profs.items() if
                                  p not in CONTRAINTES['non_disponibilites_profs'].get(jour, {}).get(c, [])}
+            
             if len(profs_disponibles) > 0:
                 # 1. Choisir un professeur
                 nom_prof, prof = choisir_prof(profs_disponibles, profs, jour, c)
@@ -399,6 +452,8 @@ def generer_individu(classe_name):
                 else:
                     nom_module = random.choice(prof["modules"])
 
+                nom_prof, prof = equilibrer_charge_prof(profs_disponibles, nom_module, nom_prof, jour, c)
+
                 groupe = is_module_partage(tps_partages, nom_module)
                 iter = 0
                 while groupe and iter <= 200:
@@ -406,20 +461,24 @@ def generer_individu(classe_name):
                     groupe_profs = get_profs_of_other_moduels(profs_disponibles, profs, groupe)
                     c1 = 0
                     if len(prof["modules"]) > 1:
-                        while groupe and len(groupe_profs) != len(groupe) and c1 <= 20:
+                        while groupe and len(groupe_profs) != len(groupe) and c1 <= 50:
                             c1 += 1
                             nom_module = random.choice(prof["modules"])
                             groupe = is_module_partage(tps_partages, nom_module)
                             groupe_profs = get_profs_of_other_moduels(profs_disponibles, profs, groupe)
 
+                    if c1 == 50:
+                        Exception("something happens here !")
                     if groupe and len(groupe_profs) != len(groupe):
                         nom_prof, prof = choisir_prof(profs_disponibles, profs, jour, c)
                         nom_module = random.choice(prof["modules"])
+                        nom_porf, prof = equilibrer_charge_prof(profs_disponibles, nom_module, nom_prof, jour, c)
                         groupe = is_module_partage(tps_partages, nom_module)
                         groupe_profs = get_profs_of_other_moduels(profs_disponibles, profs, groupe)
                     else:
                         break
 
+                update_prof_dispo(nom_prof, jour, c)
                 # Si le module a deux séances ou plus, vérifier les créneaux consécutifs
                 if modules[nom_module] >= 2:
                     if c == "08:30-10:30" or c == "13:30-15:30":
@@ -445,8 +504,8 @@ def generer_individu(classe_name):
                                 modules[nom_module] -= 1
 
                             # Réserver le créneau suivant
-                            CONTRAINTES["non_disponibilites_profs"].setdefault(jour, {}).setdefault(c_suivante, []).append(
-                                nom_prof)
+                            CONTRAINTES["non_disponibilites_profs"].setdefault(jour, {}).setdefault(c_suivante, []).append(nom_prof)
+
                             creneaux_reserves.add(c_suivante)
 
                 # Mettre à jour le nombre de séances restantes pour le module
@@ -485,7 +544,7 @@ def generer_individu(classe_name):
 
 
 def afficher_individu(individu, classe_name, salle, modules):
-    print(modules)
+    # print(modules)
     print("********************************************************")
     print("********************************************************")
     print(f"******** Emploi de temps de {classe_name} - salle: salle {salle+1} ********")
@@ -512,6 +571,9 @@ def evaluate(modules):
     for m, c in modules.items():
         if c > 0:
             score -= 1
+
+
+
     return score
 # je dois ajouter une fonctionne pour évaualtioin de l'emploi de temps en termes d'équilibre de charges pour les profs de même matières.
 # fonctionne fintness_score pour évaluer un individu
@@ -528,18 +590,6 @@ def fitness_score(individu):
     return score
 
 
-# Génie Digital et IA en santé
-# individu, salle, modules = generer_individu("1A_EE")
-# score = evaluate(modules)
-# afficher_individu(individu, "1A_EE", salle, modules)
-# print(f"score: {score}")
-# exit()
-# # Génie Biomédicale
-# individu, salle, modules = generer_individu("2A_GD")
-# score = evaluate(modules)
-# afficher_individu(individu, "2A_GD", salle, modules)
-# print(f"score: {score}")
-# exit()
 iter = 0
 result = dict()
 for classe in CLASSES:
@@ -558,6 +608,7 @@ print(f" this took {iter} iterations ")
 
 for p, r in CONTRAINTES["profs_max_seances"].items():
     print(f"{p}: {r}")
+
 
 
 # Transformer result en JSON
