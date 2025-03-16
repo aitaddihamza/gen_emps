@@ -13,6 +13,18 @@
             Ajouter un Professeur
         </a>
 
+        <div id="warning-message"
+            class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-2 rounded relative mb-8" role="alert">
+            <strong class="font-bold">Note:</strong>
+            <span class="block sm:inline">tu peux voir les disponibilités d'un professeur vacataire en cliquant sur son
+                nom.</span>
+            <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
+                <svg class="fill-current h-6 w-6 text-yellow-500 cursor-pointer" role="button"
+                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" onclick="closeMessage('warning-message')">
+                </svg>
+            </span>
+        </div>
+
         <!-- Tableau des professeurs -->
         <div class="bg-white shadow-md rounded-lg overflow-hidden">
             <table class="min-w-full">
@@ -38,10 +50,14 @@
                         <tr>
                             <!-- Nom du professeur -->
                             <td class="px-6 py-4">
-                                <a href="{{ route('professeurs.show', $professeur) }}"
-                                    class="text-indigo-600 hover:text-indigo-900">
+                                @if ($professeur->type_prof == 'VACATAIRE')
+                                    <a href="{{ route('professeurs.show', $professeur) }}"
+                                        class="text-indigo-600 hover:text-indigo-900">
+                                        {{ $professeur->nom }}
+                                    </a>
+                                @else
                                     {{ $professeur->nom }}
-                                </a>
+                                @endif
                             </td>
 
                             <!-- Type de professeur -->

@@ -12,13 +12,10 @@ class ProfesseurController extends Controller
      */
     public function index()
     {
-        $professeurs = Professeur::latest()->paginate(10);
+        $professeurs = Professeur::latest('updated_at')->paginate(10);
         return view('professeurs.index', compact('professeurs'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         $professeur = new Professeur();
@@ -54,17 +51,11 @@ class ProfesseurController extends Controller
         return redirect()->route('professeurs.index')->with('success', 'Professeur créé avec succès.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show(Professeur $professeur)
     {
-        //
+        return view('professeurs.show', compact('professeur'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Professeur $professeur)
     {
         return view('professeurs.form', compact('professeur'));
@@ -98,9 +89,6 @@ class ProfesseurController extends Controller
         return redirect()->route('professeurs.index')->with('info', 'Professeur mis à jour avec succès.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Professeur $professeur)
     {
 
