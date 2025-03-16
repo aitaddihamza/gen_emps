@@ -9,6 +9,9 @@ use App\Models\Module;
 class Professeur extends Model
 {
     protected $fillable = ['nom', 'type_prof', 'max_heures', 'disponibilites'];
+    protected $casts = [
+        'disponibilites' => 'array', // Cast la colonne JSON en array
+    ];
 
     public function modules()
     {

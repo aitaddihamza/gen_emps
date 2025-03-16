@@ -14,7 +14,7 @@ return new class () extends Migration {
             $table->id();
             $table->string('nom');
             $table->string('type_prof'); // 'PERMANENT', 'VACATAIRE', 'DOCTORANT'
-            $table->integer('max_heures')->nullable();
+            $table->integer('max_heures')->default(20);
             $table->json('disponibilites')->nullable();
             $table->timestamps();
         });

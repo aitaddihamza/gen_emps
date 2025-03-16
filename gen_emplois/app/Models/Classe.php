@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Mdoule;
+use App\Models\Module;
 
 class Classe extends Model
 {
