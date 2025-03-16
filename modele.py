@@ -256,7 +256,7 @@ def affecter_groupe_seances(classe_name, individu, jour, c, infos, modules, grou
 
     seance = {
         "prof": groupe_profs[0],
-        "salle": infos["salle"] if "TP " in groupe[0] else None,
+        "salle": infos["salle"] if "TP " in groupe[0] else infos["salle"],
         "module": groupe[0],
         "salle": infos["salle"],
         "semaine_debut": sd,
@@ -478,7 +478,7 @@ def generer_individu(classe_name):
                             if nom_module.startswith("TP "):
                                 salle = reserver_salle_tp(jour, c_suivante)
                             else:
-                                salle = None
+                                salle = salle_fixe
 
                             # Affecter les séances consécutives
                             if groupe:
@@ -508,7 +508,7 @@ def generer_individu(classe_name):
             if nom_module.startswith("TP "):
                 salle = reserver_salle_tp(jour, c)
             else:
-                salle = None
+                salle = salle_fixe
 
             if groupe:
                 affecter_groupe_seances(classe_name, individu, jour, c, {"nom_prof": nom_prof, "salle": salle}, modules,
