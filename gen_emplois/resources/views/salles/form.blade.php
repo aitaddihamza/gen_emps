@@ -34,17 +34,12 @@
                 <label for="type_salle" class="block text-sm font-medium text-gray-700">Type de Salle</label>
                 <select name="type_salle" id="type_salle"
                     class="mt-1 block w-full rounded-md border-2 h-[50px] p-2 border-black shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                    <option value="Amphithéâtre"
-                        {{ old('type_salle', $salle->type_salle) === 'Amphithéâtre' ? 'selected' : '' }}>Amphithéâtre
-                    </option>
                     <option value="Salle de cours"
                         {{ old('type_salle', $salle->type_salle) === 'Salle de cours' ? 'selected' : '' }}>Salle de cours
                     </option>
-                    <option value="Laboratoire"
-                        {{ old('type_salle', $salle->type_salle) === 'Laboratoire' ? 'selected' : '' }}>Laboratoire</option>
-                    <option value="Salle de réunion"
-                        {{ old('type_salle', $salle->type_salle) === 'Salle de réunion' ? 'selected' : '' }}>Salle de
-                        réunion</option>
+                    <option value="Salle de tp"
+                        {{ old('type_salle', $salle->type_salle) === 'Salle de tp' ? 'selected' : '' }}>Salle de tp
+                    </option>
                 </select>
                 @error('type_salle')
                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>

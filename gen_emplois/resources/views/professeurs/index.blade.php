@@ -50,7 +50,7 @@
                         <tr>
                             <!-- Nom du professeur -->
                             <td class="px-6 py-4">
-                                @if ($professeur->type_prof == 'VACATAIRE')
+                                @if ($professeur->type_prof == 'vacataire')
                                     <a href="{{ route('professeurs.show', $professeur) }}"
                                         class="text-indigo-600 hover:text-indigo-900">
                                         {{ $professeur->nom }}
@@ -62,14 +62,14 @@
 
                             <!-- Type de professeur -->
                             <td class="px-6 py-4">
-                                @if ($professeur->type_prof === 'PERMANENT')
+                                @if ($professeur->type_prof === 'permanent')
                                     <span
-                                        class="px-2 py-1 text-sm bg-green-100 text-green-800 rounded-full">Permanent</span>
-                                @elseif ($professeur->type_prof === 'VACATAIRE')
+                                        class="px-2 py-1 text-sm bg-green-100 text-green-800 rounded-full">permanent</span>
+                                @elseif ($professeur->type_prof === 'vacataire')
                                     <span
-                                        class="px-2 py-1 text-sm bg-yellow-100 text-yellow-800 rounded-full">Vacataire</span>
+                                        class="px-2 py-1 text-sm bg-yellow-100 text-yellow-800 rounded-full">vacataire</span>
                                 @else
-                                    <span class="px-2 py-1 text-sm bg-blue-100 text-blue-800 rounded-full">Doctorant</span>
+                                    <span class="px-2 py-1 text-sm bg-blue-100 text-blue-800 rounded-full">doctorant</span>
                                 @endif
                             </td>
 

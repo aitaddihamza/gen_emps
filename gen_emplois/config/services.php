@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+    'python_api' => [
+        'url' => env('PYTHON_API_URL', 'http://localhost:5000/generate_timetables'), // Valeur par défaut si la variable d'environnement n'est pas définie
+    ],
+
 ];

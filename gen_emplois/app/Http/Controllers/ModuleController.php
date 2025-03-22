@@ -116,7 +116,7 @@ class ModuleController extends Controller
 
     public function destroy(Module $module)
     {
-        $mdoule->delete();
+        $module->delete();
         return redirect()->route('modules.index')
             ->with('warning', 'Module supprimé avec succès.');
     }

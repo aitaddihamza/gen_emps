@@ -14,7 +14,10 @@ class CreateSeancesTable extends Migration
             $table->foreignId('salle_id')->constrained()->onDelete('cascade');
             $table->foreignId('creneau_id')->constrained()->onDelete('cascade');
             $table->foreignId('jour_id')->constrained()->onDelete('cascade');
-            $table->foreignId('classe_id')->constrained()->onDelete('cascade'); // Ajout de la classe
+            $table->foreignId('classe_id')->constrained()->onDelete('cascade'); // Classe associée
+            $table->foreignId('professeur_id')->constrained('professeurs')->onDelete('cascade'); // Professeur associé
+            $table->integer('semaine_debut'); // Semaine de début
+            $table->integer('semaine_fin');   // Semaine de fin
             $table->timestamps();
         });
     }

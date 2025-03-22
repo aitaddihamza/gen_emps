@@ -46,7 +46,7 @@
             <div>
                 <label for="professeurs" class="block text-sm font-medium text-gray-700">Professeurs</label>
                 <select name="professeurs[]" id="professeurs" multiple
-                    class="mt-1 block w-full rounded-md border-2 border-black shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                    class="mt-1 block w-full rounded-md border-2 border-black shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-4">
                     @foreach ($professeurs as $professeur)
                         <option value="{{ $professeur->id }}"
                             {{ in_array($professeur->id, old('professeurs', $module->professeurs->pluck('id')->toArray() ?? [])) ? 'selected' : '' }}>

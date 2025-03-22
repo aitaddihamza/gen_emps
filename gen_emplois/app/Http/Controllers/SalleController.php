@@ -24,8 +24,8 @@ class SalleController extends Controller
     {
         $request->validate([
             'nom' => 'required|string|max:255',
+            'type_salle' => 'required|string|in:Salle de cours,Salle de tp',
             'capacite' => 'required|integer|min:1',
-            'type_salle' => 'required|string|in:Amphithéâtre,Salle de cours,Laboratoire,Salle de réunion',
         ]);
 
         Salle::create($request->only('nom', 'capacite', 'type_salle'));
