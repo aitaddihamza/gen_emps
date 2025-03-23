@@ -20,5 +20,7 @@ Route::resource("salles", SalleController::class);
 
 Route::prefix('/dashboard')->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('admin.dashboard');
+    Route::get('/timetables', [AdminController::class, 'showTimeTables'])->name('admin.timetables');
     Route::post('/generate-timetable', [TimeTableController::class, 'generate'])->name('admin.generate');
+    Route::get('/timetables/export/{classe}', [AdminController::class, 'export'])->name('admin.timetables.export');
 });

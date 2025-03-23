@@ -99,8 +99,14 @@ class ModuleSeeder extends Seeder
         foreach ($modulesData as $classeNom => $modules) {
             $classe = Classe::where('nom', $classeNom)->first();
 
+            if (!$classe) {
+                echo "Classe not found: $classeNom\n";
+                continue; // Skip if no matching class
+            }
+
             foreach ($modules as $moduleData) {
                 $module = Module::create($moduleData);
+                $classe->modules()->attach($module->id);
                 $classe->modules()->attach($module->id);
             }
         }

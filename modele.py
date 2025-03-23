@@ -15,7 +15,12 @@ def home():
 @app.route('/generate_timetables', methods=["POST"])
 def generate_timetable():
     # Simuler la réception des données JSON envoyées par Laravel
-    data = request.get_json()
+    # data = request.get_json()
+    with open('DATA.json', 'r', encoding='utf-8') as f:
+        data = json.load(f)
+
+    print(data)
+
 
     # Afficher les données reçues pour vérification (optionnel)
     print("Données reçues :", data)

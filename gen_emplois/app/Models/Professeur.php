@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Disponibilite;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
 
@@ -12,6 +11,7 @@ class Professeur extends Model
     use HasFactory;
     use Notifiable;
 
+    protected $table  = "professeurs";
     protected $fillable = ['nom', 'type_prof', 'max_heures', 'disponibilites'];
     protected $casts = [
         'disponibilites' => 'array', // Cast la colonne JSON en array
@@ -22,8 +22,4 @@ class Professeur extends Model
         return $this->belongsToMany(Module::class, 'module_professeur');
     }
 
-    public function disponibilites()
-    {
-        return $this->hasMany(Disponibilite::class);
-    }
 }

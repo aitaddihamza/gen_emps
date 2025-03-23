@@ -2,7 +2,7 @@
 
 @extends('layouts.app')
 
-@section('title', 'Dashboard - Génération des Emplois du Temps')
+@section('title', 'Les Emplois du Temps')
 
 @section('content')
     <div class="container mx-auto px-4 py-8">
@@ -55,25 +55,6 @@
             <h2 class="text-xl font-bold mb-4">Emplois du Temps Générés</h2>
             <div id="timetableTable" class="overflow-x-auto">
                 <!-- Les emplois du temps seront injectés ici dynamiquement -->
-            </div>
-        </div>
-
-        <!-- Legend Section -->
-        <div class="mt-8">
-            <h2 class="text-lg font-semibold mb-4">Légende</h2>
-            <div class="flex flex-wrap gap-4">
-                <div class="flex items-center">
-                    <div class="w-6 h-6 rounded" style="background-color: #a8d5ff; border: 2px solid #0e4377;"></div>
-                    <span class="ml-2 text-sm">Cours</span>
-                </div>
-                <div class="flex items-center">
-                    <div class="w-6 h-6 rounded" style="background-color: #93d493; border: 2px solid #1e6e1e;"></div>
-                    <span class="ml-2 text-sm">TP</span>
-                </div>
-                <div class="flex items-center">
-                    <div class="w-6 h-6 rounded" style="background-color: #f5c875; border: 2px solid #8c5d00;"></div>
-                    <span class="ml-2 text-sm">Sport</span>
-                </div>
             </div>
         </div>
     </div>
@@ -169,7 +150,12 @@
                     bg: '#fdebd3',
                     text: '#8c5d00',
                     border: '#f5c875'
-                } // Sport
+                }, // Sport
+                Pause: {
+                    bg: '#f3f4f6',
+                    text: '#6b7280',
+                    border: '#9ca3af'
+                } // Pause
             };
 
             // Parcourir chaque classe
@@ -216,7 +202,9 @@
 
                 // Fonction pour déterminer la couleur du cours
                 function getModuleStyle(cours) {
-                    if (cours.salle && cours.salle.includes('TP')) {
+                    if (cours.module && cours.module.toLowerCase() === 'pause') {
+                        return moduleColors.Pause;
+                    } else if (cours.salle && cours.salle.includes('TP')) {
                         return moduleColors.TP;
                     } else if (cours.module && cours.module.toLowerCase().includes('esp')) {
                         return moduleColors.Sport;
@@ -302,7 +290,150 @@
                 table.appendChild(tbody);
                 classeSection.appendChild(table);
                 timetableTable.appendChild(classeSection);
+
             }
         }
     </script>
+
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-2xl font-bold mb-8">Emplois du Temps</h1>
+
+        @if (!empty($timetables))
+            @foreach ($timetables as $classe => $emploiDuTemps)
+                <div class="mb-12">
+                    <!-- Title for each class -->
+                    <h2 class="text-xl font-bold mb-4 bg-indigo-100 p-3 rounded-md shadow-sm border-l-4 border-indigo-500">
+                        Classe : {{ $classe }}
+                    </h2>
+
+                    <!-- Export as PDF Button -->
+                    <div class="mb-4">
+                        <a href="{{ route('admin.timetables.export', ['classe' => $classe]) }}"
+                            class="inline-block px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50">
+                            Exporter en PDF
+                        </a>
+                    </div>
+
+                    <!-- Timetable Table -->
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow-lg">
+                            <thead>
+                                <tr class="bg-gradient-to-r from-indigo-600 to-indigo-800 text-white">
+                                    <th class="py-3 px-4 border-b font-medium text-left">Jour</th>
+                                    <th class="py-3 px-4 border-b font-medium">08:30-10:30</th>
+                                    <th class="py-3 px-4 border-b font-medium">10:40-12:30</th>
+                                    <th class="py-3 px-4 border-b font-medium">13:30-15:30</th>
+                                    <th class="py-3 px-4 border-b font-medium">15:40-17:30</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @php
+                                    $jours = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi'];
+                                    $creneaux = ['08:30-10:30', '10:40-12:30', '13:30-15:30', '15:40-17:30'];
+                                    $moduleColors = [
+                                        'default' => ['bg' => '#e2f0fb', 'text' => '#0e4377', 'border' => '#a8d5ff'],
+                                        'TP' => ['bg' => '#e0f8e0', 'text' => '#1e6e1e', 'border' => '#93d493'],
+                                        'Sport' => ['bg' => '#fdebd3', 'text' => '#8c5d00', 'border' => '#f5c875'],
+                                        'Pause' => ['bg' => '#f3f4f6', 'text' => '#6b7280', 'border' => '#9ca3af'],
+                                    ];
+                                @endphp
+
+                                @foreach ($jours as $jour)
+                                    <tr class="{{ $loop->even ? 'bg-gray-50' : 'bg-white' }}">
+                                        <td class="py-3 px-4 border-b font-medium bg-gray-100">{{ $jour }}</td>
+                                        @foreach ($creneaux as $creneau)
+                                            <td class="py-2 px-3 border-b align-top">
+                                                @if (isset($emploiDuTemps[$jour][$creneau]))
+                                                    @foreach ($emploiDuTemps[$jour][$creneau] as $cours)
+                                                        @php
+                                                            $style = $moduleColors['default'];
+                                                            if (
+                                                                isset($cours['salle']) &&
+                                                                str_contains($cours['salle'], 'TP')
+                                                            ) {
+                                                                $style = $moduleColors['TP'];
+                                                            } elseif (
+                                                                isset($cours['module']) &&
+                                                                str_contains(strtolower($cours['module']), 'esp')
+                                                            ) {
+                                                                $style = $moduleColors['Sport'];
+                                                            } elseif (
+                                                                isset($cours['module']) &&
+                                                                strtolower($cours['module']) === 'pause'
+                                                            ) {
+                                                                $style = $moduleColors['Pause'];
+                                                            }
+                                                        @endphp
+                                                        <div class="p-2 rounded-md text-sm shadow-sm mb-2"
+                                                            style="background-color: {{ $style['bg'] }}; color: {{ $style['text'] }}; border-left: 4px solid {{ $style['border'] }};">
+                                                            <div class="font-bold text-base mb-1">{{ $cours['module'] }}
+                                                            </div>
+                                                            <div class="flex items-center">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1"
+                                                                    fill="none" viewBox="0 0 24 24"
+                                                                    stroke="currentColor">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                                        stroke-width="2"
+                                                                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                                                </svg>
+                                                                {{ $cours['prof'] }}
+                                                            </div>
+                                                            <div class="flex items-center">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1"
+                                                                    fill="none" viewBox="0 0 24 24"
+                                                                    stroke="currentColor">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                                        stroke-width="2"
+                                                                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                                                                </svg>
+                                                                {{ $cours['salle'] }}
+                                                            </div>
+                                                            <div class="mt-1">
+                                                                <span
+                                                                    class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-opacity-50"
+                                                                    style="background-color: {{ $style['border'] }}; color: {{ $style['text'] }};">
+                                                                    S{{ $cours['semaine_debut'] }}-S{{ $cours['semaine_fin'] }}
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                @else
+                                                    <span class="text-gray-400">-</span>
+                                                @endif
+                                            </td>
+                                        @endforeach
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            @endforeach
+        @else
+            <p class="text-gray-600">Aucun emploi du temps disponible.</p>
+        @endif
+
+        <!-- Legend Section -->
+        <div class="mt-8">
+            <h2 class="text-lg font-semibold mb-4">Légende</h2>
+            <div class="flex flex-wrap gap-4">
+                <div class="flex items-center">
+                    <div class="w-6 h-6 rounded" style="background-color: #a8d5ff; border: 2px solid #0e4377;"></div>
+                    <span class="ml-2 text-sm">Cours</span>
+                </div>
+                <div class="flex items-center">
+                    <div class="w-6 h-6 rounded" style="background-color: #93d493; border: 2px solid #1e6e1e;"></div>
+                    <span class="ml-2 text-sm">TP</span>
+                </div>
+                <div class="flex items-center">
+                    <div class="w-6 h-6 rounded" style="background-color: #f5c875; border: 2px solid #8c5d00;"></div>
+                    <span class="ml-2 text-sm">Sport</span>
+                </div>
+                <div class="flex items-center">
+                    <div class="w-6 h-6 rounded" style="background-color: #f3f4f6; border: 2px solid #9ca3af;"></div>
+                    <span class="ml-2 text-sm">Pause</span>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection

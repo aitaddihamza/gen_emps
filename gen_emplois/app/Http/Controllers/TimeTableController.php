@@ -7,7 +7,12 @@ use App\Models\Professeur;
 use App\Models\Salle;
 use App\Models\Classe;
 use App\Models\Module;
+use App\Models\Seance;
+use App\Models\Creneau; // Modèle pour les créneaux horaires
+use App\Models\Jour; // Modèle pour les jours
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class TimeTableController extends Controller
 {
@@ -28,6 +33,9 @@ class TimeTableController extends Controller
             // Vérifier la réponse de l'API
             if ($response->successful()) {
                 $timetables = $response->json();
+
+                // // Stocker les données
+                $this->storeData($timetables["timetables"]);
 
                 return response()->json([
                     'success' => true,
@@ -101,5 +109,63 @@ class TimeTableController extends Controller
         }
 
         return $data;
+    }
+
+    public function storeData($timetables)
+    {
+        DB::table('seances')->truncate();
+        DB::beginTransaction();
+
+        try {
+            Log::info('Début de la sauvegarde des emplois du temps.');
+
+            // Vider la table 'seances' avant d'insérer les nouvelles données
+            Log::info('Table "seances" vidée.');
+
+            foreach ($timetables as $classe => $jours) {
+                Log::info("Traitement de la classe : $classe");
+
+                foreach ($jours as $jour => $creneaux) {
+                    Log::info("Traitement du jour : $jour");
+
+                    foreach ($creneaux as $creneau => $seances) {
+                        Log::info("Traitement du créneau : $creneau");
+
+                        foreach ($seances as $seance) {
+                            Log::info("Traitement de la séance : " . json_encode($seance));
+
+                            // Vérifier l'existence de la classe
+                            $classeModel = Classe::where('nom', $classe)->first();
+
+                            if (!$classeModel) {
+                                Log::error('Classe non trouvée : ' . $classe);
+                                throw new \Exception('Classe non trouvée : ' . $classe);
+                            }
+
+                            // Créer la séance
+                            Seance::create([
+                                'module_nom' => $seance["module"],
+                                'salle' => $seance["salle"],
+                                'creneau' => $creneau,
+                                'jour' => $jour,
+                                'classe_id' => $classeModel->id,
+                                'professeur_nom' => $seance["prof"],
+                                'semaine_debut' => $seance['semaine_debut'],
+                                'semaine_fin' => $seance['semaine_fin'],
+                            ]);
+
+                            Log::info('Séance créée avec succès.');
+                        }
+                    }
+                }
+            }
+
+            DB::commit();
+            Log::info('Sauvegarde des emplois du temps terminée avec succès.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Erreur lors de la sauvegarde des emplois du temps : ' . $e->getMessage());
+            throw $e;
+        }
     }
 }
