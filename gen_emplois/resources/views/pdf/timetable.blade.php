@@ -43,6 +43,19 @@
             font-size: 12px;
             color: #555;
         }
+        /* Colors for different types of modules */
+        .tp {
+            background-color: #e0f8e0;
+            border-left: 4px solid #1e6e1e;
+        }
+        .cours {
+            background-color: #e2f0fb;
+            border-left: 4px solid #0e4377;
+        }
+        .sport {
+            background-color: #fdebd3;
+            border-left: 4px solid #8c5d00;
+        }
     </style>
 </head>
 <body>
@@ -72,10 +85,22 @@
                         <td>
                             @if (isset($timetable[$jour][$creneau]))
                                 @foreach ($timetable[$jour][$creneau] as $cours)
-                                    <div class="module">{{ $cours['module'] }}</div>
-                                    <div class="prof">Prof: {{ $cours['prof'] }}</div>
-                                    <div class="salle">Salle: {{ $cours['salle'] }}</div>
-                                    <div class="semaine">Semaines: S{{ $cours['semaine_debut'] }}-S{{ $cours['semaine_fin'] }}</div>
+                                    @php
+                                        $class = '';
+                                        if (str_contains(strtolower($cours['module']), 'tp')) {
+                                            $class = 'tp';
+                                        } elseif (str_contains(strtolower($cours['module']), 'esp')) {
+                                            $class = 'sport';
+                                        } else {
+                                            $class = 'cours';
+                                        }
+                                    @endphp
+                                    <div class="{{ $class }}">
+                                        <div class="module">{{ $cours['module'] }}</div>
+                                        <div class="prof">Prof: {{ $cours['prof'] }}</div>
+                                        <div class="salle">Salle: {{ $cours['salle'] }}</div>
+                                        <div class="semaine">Semaines: S{{ $cours['semaine_debut'] }}-S{{ $cours['semaine_fin'] }}</div>
+                                    </div>
                                     <hr>
                                 @endforeach
                             @else

@@ -45,11 +45,8 @@
                     @foreach ($modules as $module)
                         <tr>
                             <!-- Nom du module -->
-                            <td class="px-6 py-4">
-                                <a href="{{ route('modules.show', $module) }}"
-                                    class="text-indigo-600 hover:text-indigo-900">
-                                    {{ $module->nom }}
-                                </a>
+                            <td class="px-6 py-4 text-indigo-600 hover:text-indigo-900">
+                                {{ $module->nom }}
                             </td>
 
                             <!-- Volume Horaire -->

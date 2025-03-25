@@ -27,7 +27,7 @@ class ProfesseurController extends Controller
         // Validation des données
         $request->validate([
             'nom' => 'required|string|max:255',
-            'type_prof' => 'required|in:PERMANENT,VACATAIRE,DOCTORANT',
+            'type_prof' => 'required|in:permanent,vacataire,doctorant',
             'max_heures' => 'nullable|integer',
             'disponibilites' => 'nullable|array',
             'disponibilites.*' => 'array',
@@ -66,7 +66,7 @@ class ProfesseurController extends Controller
         // Validation des données
         $request->validate([
             'nom' => 'required|string|max:255',
-            'type_prof' => 'required|in:PERMANENT,VACATAIRE,DOCTORANT',
+            'type_prof' => 'required|in:permanent,vacataire,doctorant',
             'max_heures' => 'nullable|integer',
             'disponibilites.*' => 'array',
             'disponibilites.*.*' => 'string|in:08:30-10:30,10:40-12:30,13:30-15:30,15:40-17:30',
@@ -95,4 +95,5 @@ class ProfesseurController extends Controller
         $professeur->delete();
         return redirect()->route('professeurs.index')->with('warning', 'Professeur supprimé avec succès.');
     }
+
 }

@@ -25,12 +25,12 @@
                 <label for="type_prof" class="block text-sm font-medium text-gray-700">Type</label>
                 <select name="type_prof" id="type_prof"
                     class="mt-1 block w-full rounded-md border-2 h-[50px] p-2 border-black shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                    <option value="PERMANENT"
-                        {{ old('type_prof', $professeur->type_prof) === 'PERMANENT' ? 'selected' : '' }}>Permanent</option>
-                    <option value="VACATAIRE"
-                        {{ old('type_prof', $professeur->type_prof) === 'VACATAIRE' ? 'selected' : '' }}>Vacataire</option>
-                    <option value="DOCTORANT"
-                        {{ old('type_prof', $professeur->type_prof) === 'DOCTORANT' ? 'selected' : '' }}>Doctorant</option>
+                    <option value="permanent"
+                        {{ old('type_prof', $professeur->type_prof) === 'permanent' ? 'selected' : '' }}>Permanent</option>
+                    <option value="vacataire"
+                        {{ old('type_prof', $professeur->type_prof) === 'vacataire' ? 'selected' : '' }}>Vacataire</option>
+                    <option value="doctorant"
+                        {{ old('type_prof', $professeur->type_prof) === 'doctorant' ? 'selected' : '' }}>Doctorant</option>
                 </select>
                 @error('type_prof')
                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -39,7 +39,7 @@
 
             <!-- Heures Max (uniquement pour les permanents et doctorants) -->
             <div id="max_heures_field"
-                class="{{ old('type_prof', $professeur->type_prof) === 'VACATAIRE' ? 'hidden' : '' }}">
+                class="{{ old('type_prof', $professeur->type_prof) === 'vacataire' ? 'hidden' : '' }}">
                 <label for="max_heures" class="block text-sm font-medium text-gray-700">Heures Max</label>
                 <input type="number" name="max_heures" id="max_heures"
                     value="{{ old('max_heures', $professeur->max_heures) }}"
@@ -51,7 +51,7 @@
 
             <!-- Disponibilités (uniquement pour les vacataires) -->
             <div id="disponibilites_field"
-                class="{{ old('type_prof', $professeur->type_prof) === 'VACATAIRE' ? '' : 'hidden' }}">
+                class="{{ old('type_prof', $professeur->type_prof) === 'vacataire' ? '' : 'hidden' }}">
                 <label class="block text-sm font-medium text-gray-700">Disponibilités</label>
                 <div class="mt-2 space-y-4">
                     @foreach (['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi'] as $jour)
@@ -93,7 +93,7 @@
             const maxHeuresField = document.getElementById('max_heures_field');
             const disponibilitesField = document.getElementById('disponibilites_field');
 
-            if (type === 'VACATAIRE') {
+            if (type === 'vacataire') {
                 maxHeuresField.classList.add('hidden');
                 disponibilitesField.classList.remove('hidden');
             } else {
@@ -108,7 +108,7 @@
             const maxHeuresField = document.getElementById('max_heures_field');
             const disponibilitesField = document.getElementById('disponibilites_field');
 
-            if (type === 'VACATAIRE') {
+            if (type === 'vacataire') {
                 maxHeuresField.classList.add('hidden');
                 disponibilitesField.classList.remove('hidden');
             } else {

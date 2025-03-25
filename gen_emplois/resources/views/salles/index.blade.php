@@ -37,10 +37,8 @@
                     @foreach ($salles as $salle)
                         <tr>
                             <!-- Nom de la salle -->
-                            <td class="px-6 py-4">
-                                <a href="{{ route('salles.show', $salle) }}" class="text-indigo-600 hover:text-indigo-900">
-                                    {{ $salle->nom }}
-                                </a>
+                            <td class="px-6 py-4 text-indigo-600 hover:text-indigo-900">
+                                {{ $salle->nom }}
                             </td>
 
                             <!-- Capacité de la salle -->
