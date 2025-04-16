@@ -19,7 +19,6 @@
             </div>
 
             <!-- Bouton pour lancer la génération -->
-            <!-- Bouton pour lancer la génération -->
             <button type="submit"
                 class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50">
                 Générer les Emplois du Temps
@@ -50,30 +49,17 @@
             <p id="notificationMessage"></p>
         </div>
 
+        <!-- Rapport d'analyse -->
+        <div id="analysisReport" class="hidden bg-white shadow-md rounded-lg p-6 mb-8">
+            <h2 class="text-xl font-bold mb-4">Rapport d'Analyse</h2>
+            <pre id="analysisContent" class="bg-gray-100 p-4 rounded-md overflow-auto text-sm text-gray-800"></pre>
+        </div>
+
         <!-- Tableau des emplois du temps générés -->
         <div id="timetableResults" class="hidden">
             <h2 class="text-xl font-bold mb-4">Emplois du Temps Générés</h2>
             <div id="timetableTable" class="overflow-x-auto">
                 <!-- Les emplois du temps seront injectés ici dynamiquement -->
-            </div>
-        </div>
-
-        <!-- Legend Section -->
-        <div class="mt-8">
-            <h2 class="text-lg font-semibold mb-4">Légende</h2>
-            <div class="flex flex-wrap gap-4">
-                <div class="flex items-center">
-                    <div class="w-6 h-6 rounded" style="background-color: #a8d5ff; border: 2px solid #0e4377;"></div>
-                    <span class="ml-2 text-sm">Cours</span>
-                </div>
-                <div class="flex items-center">
-                    <div class="w-6 h-6 rounded" style="background-color: #93d493; border: 2px solid #1e6e1e;"></div>
-                    <span class="ml-2 text-sm">TP</span>
-                </div>
-                <div class="flex items-center">
-                    <div class="w-6 h-6 rounded" style="background-color: #f5c875; border: 2px solid #8c5d00;"></div>
-                    <span class="ml-2 text-sm">Sport</span>
-                </div>
             </div>
         </div>
     </div>
@@ -87,6 +73,7 @@
             document.getElementById('loader').classList.remove('hidden');
             document.getElementById('notification').classList.add('hidden');
             document.getElementById('timetableResults').classList.add('hidden');
+            document.getElementById('analysisReport').classList.add('hidden');
 
             // Récupérer le nombre de semaines
             const weeks = document.getElementById('weeks').value;
@@ -125,6 +112,12 @@
                         notification.classList.remove('bg-red-100', 'border-red-500', 'text-red-700');
                         document.getElementById('timetableResults').classList.remove('hidden');
                         renderTimetable(data.timetables);
+
+                        // Afficher le rapport d'analyse
+                        const analysisReport = document.getElementById('analysisReport');
+                        const analysisContent = document.getElementById('analysisContent');
+                        analysisContent.textContent = data.analysis || 'Aucun rapport d\'analyse disponible.';
+                        analysisReport.classList.remove('hidden');
                     } else {
                         notification.classList.add('bg-red-100', 'border-red-500', 'text-red-700');
                         notification.classList.remove('bg-green-100', 'border-green-500', 'text-green-700');
@@ -147,34 +140,20 @@
             const timetableTable = document.getElementById('timetableTable');
             timetableTable.innerHTML = ''; // Vider le contenu précédent
 
+            // Vérifier si les emplois du temps sont définis
+            if (!timetables || Object.keys(timetables).length === 0) {
+                timetableTable.innerHTML = '<p class="text-gray-600">Aucun emploi du temps disponible.</p>';
+                return;
+            }
+
             // Créneaux horaires fixes
             const creneaux = ["08:30-10:30", "10:40-12:30", "13:30-15:30", "15:40-17:30"];
 
             // Jours de la semaine
             const jours = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"];
 
-            // Couleurs pour les différents types de modules (palette pastel adaptée pour lisibilité)
-            const moduleColors = {
-                default: {
-                    bg: '#e2f0fb',
-                    text: '#0e4377',
-                    border: '#a8d5ff'
-                }, // Cours réguliers
-                TP: {
-                    bg: '#e0f8e0',
-                    text: '#1e6e1e',
-                    border: '#93d493'
-                }, // Travaux pratiques
-                Sport: {
-                    bg: '#fdebd3',
-                    text: '#8c5d00',
-                    border: '#f5c875'
-                } // Sport
-            };
-
             // Parcourir chaque classe
-            for (const [classe, emploiDuTemps] of Object.entries(timetables.timetables)) {
-
+            for (const [classe, emploiDuTemps] of Object.entries(timetables)) {
                 const classeSection = document.createElement('div');
                 classeSection.className = 'mb-12';
 
@@ -214,17 +193,6 @@
                 // Corps du tableau
                 const tbody = document.createElement('tbody');
 
-                // Fonction pour déterminer la couleur du cours
-                function getModuleStyle(cours) {
-                    if (cours.salle && cours.salle.includes('TP')) {
-                        return moduleColors.TP;
-                    } else if (cours.module && cours.module.toLowerCase().includes('esp')) {
-                        return moduleColors.Sport;
-                    } else {
-                        return moduleColors.default;
-                    }
-                }
-
                 // Créer les lignes des jours
                 jours.forEach((jour, index) => {
                     const row = document.createElement('tr');
@@ -248,14 +216,12 @@
 
                             // Parcourir chaque cours dans ce créneau
                             for (const cours of emploiDuTemps[jour][creneau]) {
-                                const moduleStyle = getModuleStyle(cours);
-
                                 const coursDiv = document.createElement('div');
                                 coursDiv.className =
                                     'p-2 rounded-md text-sm shadow-sm transition-transform hover:scale-[1.02]';
-                                coursDiv.style.backgroundColor = moduleStyle.bg;
-                                coursDiv.style.color = moduleStyle.text;
-                                coursDiv.style.borderLeft = `4px solid ${moduleStyle.border}`;
+                                coursDiv.style.backgroundColor = '#e2f0fb';
+                                coursDiv.style.color = '#0e4377';
+                                coursDiv.style.borderLeft = '4px solid #a8d5ff';
 
                                 // Module (en plus grand et en gras)
                                 const module = document.createElement('div');
@@ -267,24 +233,24 @@
                                 const prof = document.createElement('div');
                                 prof.className = 'flex items-center';
                                 prof.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                        </svg> ${cours.prof}`;
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                </svg> ${cours.prof}`;
                                 coursDiv.appendChild(prof);
 
                                 // Salle
                                 const salle = document.createElement('div');
                                 salle.className = 'flex items-center';
                                 salle.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                        </svg> ${cours.salle}`;
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                                </svg> ${cours.salle}`;
                                 coursDiv.appendChild(salle);
 
                                 // Intervalle des semaines avec badge
                                 const semaines = document.createElement('div');
                                 semaines.className = 'mt-1';
-                                semaines.innerHTML = `<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-opacity-50" style="background-color: ${moduleStyle.border}; color: ${moduleStyle.text}">
-                            S${cours.semaine_debut}-S${cours.semaine_fin}
-                        </span>`;
+                                semaines.innerHTML = `<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-opacity-50" style="background-color: #a8d5ff; color: #0e4377">
+                                    S${cours.semaine_debut}-S${cours.semaine_fin}
+                                </span>`;
                                 coursDiv.appendChild(semaines);
 
                                 coursList.appendChild(coursDiv);

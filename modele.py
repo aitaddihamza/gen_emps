@@ -47,11 +47,11 @@ def generate_timetable():
 
 
 # intialisation du contraintes des profs 
-    for p, d in PROFESSEURS.items():
-        if d["type"] == "permanent":
-            CONTRAINTES["profs_max_seances"][p] = math.floor(d["max_heures"] / 2) 
-        else:
-            CONTRAINTES["profs_max_seances"][p] = 1
+for p, d in PROFESSEURS.items():
+    if d["type"] == "permanent":
+        CONTRAINTES["profs_max_seances"][p] = d["max_heures"]
+    else:
+        CONTRAINTES["profs_max_seances"][p] = 1
 
 
     def get_cours_infos(cours):
@@ -104,28 +104,21 @@ def generate_timetable():
                 tp = "TP " + m
                 if m in classe_modules:
                     prof_info["modules"].append(m)
-                if details["type"] == "doctorant":
-                    if tp in classe_modules:
-                        prof_info["modules"].append(tp)
+                if tp in classe_modules:
+                    prof_info["modules"].append(tp)
             
             if len(prof_info["modules"]) > 0:
                 # Initialiser les disponibilités selon le type de professeur
                 if prof_type == "doctorant" or prof_type == "permanent":
                     prof_info["disponibilites"] = {}
                 
-                if prof_type == "doctorant" or prof_type == "vacataire":
-                    prof_info["count"] = 1
-                    if prof_type == "vacataire":
-                        # Pour les vacataires, copier la structure de disponibilités mise à jour
-                        prof_info["disponibilites"] = details["disponibilites"]
-                
-                if prof_type == "permanent":
-                    prof_info["count"] = math.floor(details["max_heures"] / 2)
+                if prof_type == "vacataire":
+                    # Pour les vacataires, copier la structure de disponibilités mise à jour
+                    prof_info["disponibilites"] = details["disponibilites"]
                 
                 profs[p] = prof_info
         
         return profs
-
 
     def trouver_jour_et_prof_de_sport(profs):
         """ 
@@ -134,26 +127,39 @@ def generate_timetable():
         jour_de_sport = profs_vacataires = None
 
         # le choix du jour de sport
-        while jour_de_sport is None or profs_vacataires is None or len(profs_vacataires) > 1 or CONTRAINTES['jour_de_sport'][jour_de_sport] > 4:
-            jour_de_sport = random.choice(JOURS)
-            # Note il faut changer ce code
+        i = 0
+        while jour_de_sport is None or profs_vacataires is None or len(profs_vacataires) > 2 or CONTRAINTES['jour_de_sport'][jour_de_sport] >= 4 :
+            if i > 4:
+                raise Exception("Problème dans la partie trouver le jour de sport")
+            jour_de_sport = JOURS[i]
             profs_vacataires = [p for p in profs.values() if p["disponibilites"].get(jour_de_sport, None) and p["type"] == "vacataire"]
+            i += 1
 
         # le choit du prof du sport
         # Note: on suppose que les profs du sports sont des profs permanents, sinon il faut changer le comportement de ceette fonctionne.
-        profs_de_sport = [p for p, d in profs.items() if "ESP" in d["modules"]]
-        prof_de_sport = random.choice(profs_de_sport)
+        profs_de_sport = [p for p, d in profs.items() if "EPS" in d["modules"] and CONTRAINTES["profs_max_seances"][p] > 0]
+        sorted_profs = sorted(profs_de_sport, key=lambda p: CONTRAINTES["profs_max_seances"][p], reverse=True)
+        if sorted_profs:
+            prof_de_sport = sorted_profs[0]
+        else:
+            print(len(profs))
+            print(CONTRAINTES['profs_max_seances'])
+            raise Exception("There's no prof of sport")
+
         return jour_de_sport, prof_de_sport 
 
-    def eliminer_sport(profs, classe_modules):
+    def eliminer_sport(jour_de_sport, prof_sport, profs, classe_modules):
         """ 
             i have to add some doc here for this small func.
         """ 
-        del classe_modules["ESP"]
-        profs_de_sport = [p for p, d in profs.items() if "ESP" in d["modules"]]
+        del classe_modules["EPS"]
+        profs_de_sport = [p for p, d in profs.items() if "EPS" in d["modules"]]
+        if CONTRAINTES["jour_de_sport"].get(jour_de_sport, 0) <= 1:
+            CONTRAINTES["profs_max_seances"][prof_sport] -= 4
         for prof in profs_de_sport:
             del profs[prof]
-            CONTRAINTES["profs_max_seances"][prof] -= 1
+
+
 
 
     def reserver_salle_tp(jour, c):
@@ -264,7 +270,7 @@ def generate_timetable():
 
     def update_prof_dispo(nom_prof, jour, c):
         if PROFESSEURS[nom_prof]["type"] == "permanent":
-            CONTRAINTES["profs_max_seances"][nom_prof] -= 1
+            CONTRAINTES["profs_max_seances"][nom_prof] -= 2
 
         CONTRAINTES["non_disponibilites_profs"].setdefault(jour, {}).setdefault(c, []).append(nom_prof)
 
@@ -322,25 +328,9 @@ def generate_timetable():
             nom_prof = random.choice(profs_vacataires)
         else:
             sorted_profs = sorted(names_of_profs_disponibles.items(), key=lambda p: CONTRAINTES["profs_max_seances"][p[0]], reverse=True)
-            nom_prof = random.choice([p[0] for p in sorted_profs])
+            nom_prof = sorted_profs[0][0]
         
         prof = profs[nom_prof]
-        attempt = 0
-        
-        # Pour les vacataires, vérifier la disponibilité spécifique au créneau
-        while attempt < 200:
-            if prof["type"] == "vacataire":
-                if jour in prof["disponibilites"] and c in prof["disponibilites"][jour]:
-                    break
-            else:
-                # Pour les autres types, la vérification reste simple
-                if CONTRAINTES["profs_max_seances"][nom_prof] > 0:
-                    break
-            
-            attempt += 1
-            sorted_profs = sorted(names_of_profs_disponibles.items(), key=lambda p: CONTRAINTES["profs_max_seances"][p[0]], reverse=True)
-            nom_prof = random.choice([p[0] for p in sorted_profs])
-            prof = profs[nom_prof]
         
         return nom_prof, prof
 
@@ -392,17 +382,11 @@ def generate_timetable():
     def equilibrer_charge_prof(profs_disponibles, nom_module, old_prof, jour, c):
         module_profs = [p for p, d in profs_disponibles.items() if nom_module in d["modules"]]
         sorted_profs = sorted(module_profs, key=lambda p: CONTRAINTES["profs_max_seances"][p], reverse=True)
-        if nom_module =="Français":
-            print(module_profs)
-            print(sorted_profs)
-            for p in module_profs:
-                print(p, CONTRAINTES["profs_max_seances"][p])
         if len(sorted_profs) <= 1:
             return old_prof, profs_disponibles[old_prof]
         nom_prof = sorted_profs[0]
         prof =  profs_disponibles[nom_prof]
 
-        print(nom_prof)
 
         return nom_prof, prof
 
@@ -431,12 +415,12 @@ def generate_timetable():
         # Planifier le sport
         jour_de_sport, prof_de_sport = trouver_jour_et_prof_de_sport(profs)
         CONTRAINTES["jour_de_sport"][jour_de_sport] += 1
-        semaine_debut, semaine_fin = trouver_semaines(classe_name, "ESP", modules_fix)
+        semaine_debut, semaine_fin = trouver_semaines(classe_name, "EPS", modules_fix)
         affecter_seance(classe_name, individu, jour_de_sport, "13:30-15:30",
-                        {"nom_prof": prof_de_sport, "salle": salle_fixe, "nom_module": "ESP"}, modules_fix)
+                        {"nom_prof": prof_de_sport, "salle": salle_fixe, "nom_module": "EPS"}, modules_fix)
         affecter_seance(classe_name, individu, jour_de_sport, "15:40-17:30",
-                        {"nom_prof": prof_de_sport, "salle": salle_fixe, "nom_module": "ESP"}, modules_fix)
-        eliminer_sport(profs, modules)
+                        {"nom_prof": prof_de_sport, "salle": salle_fixe, "nom_module": "EPS"}, modules_fix)
+        eliminer_sport(jour_de_sport, prof_de_sport, profs, modules)
 
         # Planifier les modules à deux séances en premier
         for jour in JOURS:
@@ -458,10 +442,14 @@ def generate_timetable():
                     # 2. Choisir un module (prioriser les modules à deux séances)
                     if modules_deux_seances:
                         nom_module = random.choice(modules_deux_seances)
+                        # eliminer les autres profs de ce module
+                        for p in profs:
+                            if p != nom_prof and nom_module in profs[p]["modules"]:
+                                    profs[p]["modules"] = [m for m in profs[p]["modules"] if m != nom_module]
                     else:
                         nom_module = random.choice(prof["modules"])
 
-                    nom_prof, prof = equilibrer_charge_prof(profs_disponibles, nom_module, nom_prof, jour, c)
+                    # nom_prof, prof = equilibrer_charge_prof(profs_disponibles, nom_module, nom_prof, jour, c)
 
                     groupe = is_module_partage(tps_partages, nom_module)
                     iter = 0
@@ -481,7 +469,7 @@ def generate_timetable():
                         if groupe and len(groupe_profs) != len(groupe):
                             nom_prof, prof = choisir_prof(profs_disponibles, profs, jour, c)
                             nom_module = random.choice(prof["modules"])
-                            nom_porf, prof = equilibrer_charge_prof(profs_disponibles, nom_module, nom_prof, jour, c)
+                            # nom_porf, prof = equilibrer_charge_prof(profs_disponibles, nom_module, nom_prof, jour, c)
                             groupe = is_module_partage(tps_partages, nom_module)
                             groupe_profs = get_profs_of_other_moduels(profs_disponibles, profs, groupe)
                         else:

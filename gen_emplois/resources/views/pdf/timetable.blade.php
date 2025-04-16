@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,54 +11,69 @@
             margin: 0;
             padding: 0;
         }
+
         .header {
             text-align: center;
             margin-bottom: 20px;
         }
+
         .header img {
             max-height: 100px;
         }
+
         .header h1 {
             margin: 10px 0 0;
             font-size: 24px;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
         }
-        table th, table td {
+
+        table th,
+        table td {
             border: 1px solid #ddd;
             padding: 8px;
             text-align: center;
         }
+
         table th {
             background-color: #f4f4f4;
             font-weight: bold;
         }
+
         .module {
             font-weight: bold;
             color: #333;
         }
-        .prof, .salle, .semaine {
+
+        .prof,
+        .salle,
+        .semaine {
             font-size: 12px;
             color: #555;
         }
+
         /* Colors for different types of modules */
         .tp {
             background-color: #e0f8e0;
             border-left: 4px solid #1e6e1e;
         }
+
         .cours {
             background-color: #e2f0fb;
             border-left: 4px solid #0e4377;
         }
+
         .sport {
             background-color: #fdebd3;
             border-left: 4px solid #8c5d00;
         }
     </style>
 </head>
+
 <body>
     <div class="header">
         <img src="{{ $logo }}" alt="School Logo">
@@ -99,7 +115,8 @@
                                         <div class="module">{{ $cours['module'] }}</div>
                                         <div class="prof">Prof: {{ $cours['prof'] }}</div>
                                         <div class="salle">Salle: {{ $cours['salle'] }}</div>
-                                        <div class="semaine">Semaines: S{{ $cours['semaine_debut'] }}-S{{ $cours['semaine_fin'] }}</div>
+                                        <div class="semaine">Semaines:
+                                            S{{ $cours['semaine_debut'] }}-S{{ $cours['semaine_fin'] }}</div>
                                     </div>
                                     <hr>
                                 @endforeach
@@ -113,4 +130,5 @@
         </tbody>
     </table>
 </body>
+
 </html>

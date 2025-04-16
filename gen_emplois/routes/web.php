@@ -9,7 +9,10 @@ use App\Http\Controllers\SalleController;
 use App\Http\Controllers\TimeTableController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', [HomeController::class, 'index']);
+// Route::get('/', [HomeController::class, 'index']);
+Route::get('/', function () {
+    return redirect("/dashboard");
+});
 
 
 Route::resource("professeurs", ProfesseurController::class);

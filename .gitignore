@@ -9,3 +9,9 @@ rm
 test-1.0/
 test-model/
 copyy
+.venv/
+algos-genetics/
+app/
+classes.json
+dole.py
+plan.txt

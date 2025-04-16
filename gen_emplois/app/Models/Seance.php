@@ -20,7 +20,7 @@ class Seance extends Model
         'salle',
         'creneau',
         'jour',
-        'classe_id',
+        'classe',
         'professeur_nom',
         'semaine_debut',
         'semaine_fin',
@@ -28,9 +28,9 @@ class Seance extends Model
 
 
 
-    public function classe()
-    {
-        return $this->belongsTo(Classe::class);
-    }
+    // public function classe()
+    // {
+    //     return $this->belongsTo(Classe::class);
+    // }
 
 }

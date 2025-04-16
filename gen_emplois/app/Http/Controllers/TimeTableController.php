@@ -18,29 +18,24 @@ class TimeTableController extends Controller
 {
     public function generate(Request $request)
     {
-        // Valider les données
         $request->validate([
             'weeks' => 'required|integer|min:1',
         ]);
 
         try {
-            // Préparer les données
             $data = $this->prepareData($request->input('weeks'));
+            $response = Http::timeout(600)->post(config('services.python_api.url'), $data);
 
-            // Envoyer les données à l'API Python
-            $response = Http::timeout(30)->post(config('services.python_api.url'), $data);
-
-            // Vérifier la réponse de l'API
             if ($response->successful()) {
                 $timetables = $response->json();
 
-                // // Stocker les données
                 $this->storeData($timetables["timetables"]);
 
                 return response()->json([
                     'success' => true,
                     'message' => 'Les emplois du temps ont été générés avec succès.',
-                    'timetables' => $timetables,
+                    'timetables' => $timetables["timetables"],
+                    'analysis' => $timetables["analysis"] ?? null
                 ]);
             } else {
                 return response()->json([
@@ -49,7 +44,6 @@ class TimeTableController extends Controller
                 ], 500);
             }
         } catch (\Exception $e) {
-            // Gérer les exceptions
             return response()->json([
                 'success' => false,
                 'message' => 'Une erreur s\'est produite : ' . $e->getMessage(),
@@ -134,21 +128,12 @@ class TimeTableController extends Controller
                         foreach ($seances as $seance) {
                             Log::info("Traitement de la séance : " . json_encode($seance));
 
-                            // Vérifier l'existence de la classe
-                            $classeModel = Classe::where('nom', $classe)->first();
-
-                            if (!$classeModel) {
-                                Log::error('Classe non trouvée : ' . $classe);
-                                throw new \Exception('Classe non trouvée : ' . $classe);
-                            }
-
-                            // Créer la séance
                             Seance::create([
                                 'module_nom' => $seance["module"],
                                 'salle' => $seance["salle"],
                                 'creneau' => $creneau,
                                 'jour' => $jour,
-                                'classe_id' => $classeModel->id,
+                                'classe' => $classe,
                                 'professeur_nom' => $seance["prof"],
                                 'semaine_debut' => $seance['semaine_debut'],
                                 'semaine_fin' => $seance['semaine_fin'],
