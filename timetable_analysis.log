@@ -1,0 +1,68 @@
+INFO:__main__:Envoi chunk (687 tokens)
+INFO:httpx:HTTP Request: POST https://api.netmind.ai/inference-api/openai/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:__main__:Envoi chunk (652 tokens)
+INFO:httpx:HTTP Request: POST https://api.netmind.ai/inference-api/openai/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:__main__:Envoi chunk (768 tokens)
+INFO:httpx:HTTP Request: POST https://api.netmind.ai/inference-api/openai/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:__main__:Envoi chunk (632 tokens)
+INFO:httpx:HTTP Request: POST https://api.netmind.ai/inference-api/openai/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:__main__:Envoi chunk (698 tokens)
+INFO:httpx:HTTP Request: POST https://api.netmind.ai/inference-api/openai/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:__main__:Envoi chunk (621 tokens)
+INFO:httpx:HTTP Request: POST https://api.netmind.ai/inference-api/openai/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:__main__:Envoi chunk (640 tokens)
+INFO:httpx:HTTP Request: POST https://api.netmind.ai/inference-api/openai/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:__main__:Envoi chunk (628 tokens)
+INFO:httpx:HTTP Request: POST https://api.netmind.ai/inference-api/openai/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:__main__:Envoi chunk (620 tokens)
+INFO:httpx:HTTP Request: POST https://api.netmind.ai/inference-api/openai/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:__main__:Envoi chunk (613 tokens)
+INFO:httpx:HTTP Request: POST https://api.netmind.ai/inference-api/openai/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:__main__:Envoi chunk (610 tokens)
+INFO:httpx:HTTP Request: POST https://api.netmind.ai/inference-api/openai/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:__main__:Envoi chunk (608 tokens)
+INFO:httpx:HTTP Request: POST https://api.netmind.ai/inference-api/openai/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:werkzeug:127.0.0.1 - - [13/Apr/2025 12:01:48] "POST /generate_timetables HTTP/1.1" 200 -
+INFO:__main__:Envoi chunk (693 tokens)
+INFO:httpx:HTTP Request: POST https://api.netmind.ai/inference-api/openai/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:__main__:Envoi chunk (657 tokens)
+INFO:httpx:HTTP Request: POST https://api.netmind.ai/inference-api/openai/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:__main__:Envoi chunk (768 tokens)
+INFO:httpx:HTTP Request: POST https://api.netmind.ai/inference-api/openai/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:__main__:Envoi chunk (636 tokens)
+INFO:httpx:HTTP Request: POST https://api.netmind.ai/inference-api/openai/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:__main__:Envoi chunk (701 tokens)
+INFO:httpx:HTTP Request: POST https://api.netmind.ai/inference-api/openai/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:__main__:Envoi chunk (621 tokens)
+INFO:httpx:HTTP Request: POST https://api.netmind.ai/inference-api/openai/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:__main__:Envoi chunk (640 tokens)
+INFO:httpx:HTTP Request: POST https://api.netmind.ai/inference-api/openai/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:__main__:Envoi chunk (628 tokens)
+INFO:httpx:HTTP Request: POST https://api.netmind.ai/inference-api/openai/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:__main__:Envoi chunk (616 tokens)
+INFO:httpx:HTTP Request: POST https://api.netmind.ai/inference-api/openai/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:__main__:Envoi chunk (608 tokens)
+INFO:httpx:HTTP Request: POST https://api.netmind.ai/inference-api/openai/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:__main__:Envoi chunk (605 tokens)
+INFO:httpx:HTTP Request: POST https://api.netmind.ai/inference-api/openai/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:__main__:Envoi chunk (608 tokens)
+INFO:httpx:HTTP Request: POST https://api.netmind.ai/inference-api/openai/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:werkzeug:127.0.0.1 - - [13/Apr/2025 12:02:57] "POST /generate_timetables HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in '/home/hamzaad/Desktop/pfa-group-project/modele.py', reloading
+INFO:__main__:Envoi chunk (687 tokens)
+INFO:httpx:HTTP Request: POST https://api.netmind.ai/inference-api/openai/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:__main__:Envoi chunk (657 tokens)
+INFO:httpx:HTTP Request: POST https://api.netmind.ai/inference-api/openai/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:__main__:Envoi chunk (772 tokens)
+INFO:httpx:HTTP Request: POST https://api.netmind.ai/inference-api/openai/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:__main__:Envoi chunk (636 tokens)
+INFO:httpx:HTTP Request: POST https://api.netmind.ai/inference-api/openai/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:__main__:Envoi chunk (694 tokens)
+INFO:httpx:HTTP Request: POST https://api.netmind.ai/inference-api/openai/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:__main__:Envoi chunk (621 tokens)
+INFO:httpx:HTTP Request: POST https://api.netmind.ai/inference-api/openai/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:__main__:Envoi chunk (635 tokens)
+INFO:httpx:HTTP Request: POST https://api.netmind.ai/inference-api/openai/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:__main__:Envoi chunk (628 tokens)
+INFO:httpx:HTTP Request: POST https://api.netmind.ai/inference-api/openai/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:werkzeug:127.0.0.1 - - [13/Apr/2025 12:05:00] "POST /generate_timetables HTTP/1.1" 200 -

@@ -5,6 +5,7 @@ import copy
 import json
 from flask import Flask, request, jsonify
 import time
+from openai import OpenAI
 
 app = Flask(__name__)
 
@@ -46,12 +47,12 @@ def generate_timetable():
 
 
 
-# intialisation du contraintes des profs 
-for p, d in PROFESSEURS.items():
-    if d["type"] == "permanent":
-        CONTRAINTES["profs_max_seances"][p] = d["max_heures"]
-    else:
-        CONTRAINTES["profs_max_seances"][p] = 1
+    # intialisation du contraintes des profs 
+    for p, d in PROFESSEURS.items():
+        if d["type"] == "permanent":
+            CONTRAINTES["profs_max_seances"][p] = d["max_heures"]
+        else:
+            CONTRAINTES["profs_max_seances"][p] = 1
 
 
     def get_cours_infos(cours):
@@ -129,6 +130,8 @@ for p, d in PROFESSEURS.items():
         # le choix du jour de sport
         i = 0
         while jour_de_sport is None or profs_vacataires is None or len(profs_vacataires) > 2 or CONTRAINTES['jour_de_sport'][jour_de_sport] >= 4 :
+            if i == 2:
+                continue
             if i > 4:
                 raise Exception("Problème dans la partie trouver le jour de sport")
             jour_de_sport = JOURS[i]
@@ -158,8 +161,6 @@ for p, d in PROFESSEURS.items():
             CONTRAINTES["profs_max_seances"][prof_sport] -= 4
         for prof in profs_de_sport:
             del profs[prof]
-
-
 
 
     def reserver_salle_tp(jour, c):
@@ -574,38 +575,154 @@ for p, d in PROFESSEURS.items():
 
         return score
 
+    # NOTE: la partie OpenAI est à la fin de la fonction
+
+    def formatter_emploi_du_temps(individu, classe_name, salle):
+        """
+        Formate l'emploi du temps dans le format texte requis
+        """
+        resultat = f"******** Emploi de temps de {classe_name} - salle: salle {salle} ********\n"
+        
+        for jour in individu:
+            resultat += f"{jour}: \n"
+            for c in individu[jour]:
+                resultat += f"\t{c}: \n"
+                for seance in individu[jour][c]:
+                    resultat += f"\t\t{seance['module']} - "
+                    if seance["module"] != "EPS":
+                        if seance["salle"]:
+                            resultat += f"salle: {seance['salle']}- "
+                    resultat += f"{seance['prof']} semaines: S{seance['semaine_debut']} - S{seance['semaine_fin']}\n"
+            resultat += "\n"
+        
+        return resultat
+
+    # def envoyer_vers_api(emplois_du_temps, iter):
+    #     """
+    #     Envoie les emplois du temps formatés vers l'API
+    #     """
+    #     # Préparation des données pour l'API
+    #     formatted_data = "\n**\n".join(emplois_du_temps)
+    #     formatted_data += f"\n**\n this took {iter} iterations"
+    #
+    #     prompt = f"""
+    #     Analysez rigoureusement ces emplois du temps selon les règles suivantes :
+    #
+    #     === RÈGLES STRICTES ===
+    #     1. [SPORT] Jusqu'à 4 cours EPS autorisés en parallèle
+    #     2. [PROFS] Un enseignant ne peut avoir qu'un seul cours actif par créneau
+    #     - Exception : Si les semaines ne se chevauchent pas (S1-S3 vs S4-S6)
+    #     3. [SALLES] Une salle ne peut accueillir qu'un seul cours actif par créneau
+    #     - Exception : Si les semaines ne se chevauchent pas
+    #     4. [HORAIRES] Tous les cours doivent être entre 8h et 18h
+    #
+    #     === MÉTHODOLOGIE ===
+    #     Pour chaque vérification :
+    #     1. Comparer les plages de semaines (SX-SY)
+    #     2. Ignorer les créneaux "Pause"
+    #     3. Vérifier uniquement les conflits actifs (mêmes semaines)
+    #     4. les modules qui partgent le même créneau et la même semaine sont considérés comme un conflit.
+    #     cela n'est pas considéré comme un chauvechement: (S2-S3 vs S4-S5 vs S6-S9 vs S10-S13) poarce que la premier termine dans la semaine 3 et le suivante comment la semaine 4 et ainsi de suite donc pas de chauvechement.
+    #
+    #     === FORMAT DE RÉPONSE ===
+    #     [STATUT] [TYPE] : [DÉTAILS]
+    #
+    #     Où STATUT peut être :
+    #     ✅ Conforme
+    #     ⚠️ Avertissement (à vérifier)
+    #     ❌ Conflit (action requise)
+    #
+    #     Exemples :
+    #     ✅ PROF : Pr.DUPONT (S1-S3) ne chevauche pas Pr.DUPONT (S4-S6)
+    #     ❌ SALLE : TP3 utilisée par 2 cours (S5-S7 vs S6-S8)
+    #
+    #     === DONNÉES À ANALYSER ===
+    #     {formatted_data}
+    #
+    #     === ATTENTION SPÉCIALE ===
+    #     - Les regroupements dans un même créneau sont valides si les semaines sont distinctes
+    #     - Ignorer systématiquement les "Pause" dans l'analyse
+    #     - Mettre en avant les vrais conflits (même ressource + mêmes semaines)
+    #     """
+    #
+    #     client = OpenAI(
+    #         base_url="https://api.netmind.ai/inference-api/openai/v1",
+    #         api_key="da56e0822b5e4dadbc641d1cdd69a758",
+    #     )
+    #
+    #     print("sending les emplois du temps vers l'API")
+    #     response = client.chat.completions.create(
+    #         model="google/gemma-3-27b-it",
+    #         messages=[
+    #             {
+    #                 "role": "system", 
+    #                 "content": "Vous êtes un expert en analyse d'emplois du temps universitaires. Répondez exclusivement en français avec une analyse technique précise."
+    #             },
+    #             {
+    #                 "role": "user",
+    #                 "content": prompt
+    #             }
+    #         ],
+    #         temperature=0.2,  # Pour plus de précision
+    #         max_tokens=2000
+    #     )
+    #     print("we have a response from the API")
+    #
+    #     # Envoi des données
+    #     chat_completion_response = client.chat.completions.create(
+    #         model="google/gemma-3-27b-it",
+    #         messages=[
+    #             {"role": "system", "content": "Tu analyses des emplois du temps scolaires, la reponse en français."},
+    #             {"role": "user", "content": prompt}
+    #         ],
+    #         max_tokens=2048,  # Ajustez selon vos besoins
+    #         temperature=0.1  # Réponse factuelle
+    #     )
+    #
+    #     print(chat_completion_response.choices[0].message.content)
+    #     return chat_completion_response.choices[0].message.content
+    #
+    # Intégration dans le code principal
     iter = 0
     result = dict()
+    emplois_du_temps_formattes = []
+    scores = []
+
     for classe in CLASSES:
         OLD_CONTRAINTES = copy.deepcopy(CONTRAINTES)
         score = -1
         while score < 0 and iter < 30:
             iter += 1
+            print(iter)
             CONTRAINTES = copy.deepcopy(OLD_CONTRAINTES)
             individu, salle, modules = generer_individu(classe)
             result[classe] = individu
             score = evaluate(modules)
-        afficher_individu(individu, classe, salle, modules)
+        
+        # Formater l'emploi du temps pour cette classe
+        emploi_du_temps = formatter_emploi_du_temps(individu, classe, salle)
+        emplois_du_temps_formattes.append(emploi_du_temps)
+        scores.append(score)
+        
         print(f"score: {score}")
-
+        print(iter)
+        
     print(f" this took {iter} iterations ")
 
-    for p, r in CONTRAINTES["profs_max_seances"].items():
-        print(f"{p}: {r}")
-
-
+    # Envoyer tous les emplois du temps à l'API
+    # reponse_api = envoyer_vers_api(emplois_du_temps_formattes, iter)
+    # print("normalement we have a response here's it: ")
+    # print(reponse_api)
 
     response = {
         "success": True,
         "message": "Les emplois du temps ont été générés avec succès.",
-        "timetables": result
+        "timetables": result,
+        "analysis": None  # Ajout du rapport d'analyse
     }
 
-    # suspendre 2 secondes
-    time.sleep(2)
 
     # Retourner la réponse en JSON
     return jsonify(response)
-
 if __name__ == '__main__':
     app.run(debug=True)

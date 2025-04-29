@@ -18,5 +18,16 @@ class DatabaseSeeder extends Seeder
         $this->call(ModuleSeeder::class); // Doit être exécuté avant ProfesseurSeeder
         $this->call(ProfesseurSeeder::class);
 
+
+
+        // create admin
+        User::factory(1)->create([
+            'name' => 'admin',
+            'email' => 'admin@gmail.com',
+            'role' => 'admin',
+        ]);
+        // create 10 profs users
+        User::factory(10)->create();
+
     }
 }
