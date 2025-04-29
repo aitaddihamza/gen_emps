@@ -716,7 +716,7 @@ def generate_timetable():
 
     response = {
         "success": True,
-        "message": "Les emplois du temps ont été générés avec succès.",
+        "message":"Les emplois du temps ont été générés avec succès." if min(scores) < 0 else "les emplois  sont mal générés.",
         "timetables": result,
         "analysis": None  # Ajout du rapport d'analyse
     }
