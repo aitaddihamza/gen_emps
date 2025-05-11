@@ -4,13 +4,29 @@
 @extends('layouts.app')
 
 @section('content')
+    <style>
+        .action-button {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        .action-button:hover {
+            background-color: #00a5bb;
+        }
+        .action-link {
+            color: var(--primary-color);
+        }
+        .action-link:hover {
+            color: #00a5bb;
+        }
+    </style>
+
     <div class="container mx-auto px-4 mt-8">
         @include('shared.flush')
         <h1 class="text-2xl font-bold mb-4">Liste des Modules</h1>
 
         <!-- Bouton pour ajouter un nouveau module -->
         <a href="{{ route('modules.create') }}"
-            class="bg-blue-500 text-white px-4 py-2 rounded-md mb-8 inline-block hover:bg-blue-600">
+            class="action-button px-4 py-2 rounded-md mb-8 inline-block">
             Ajouter un Module
         </a>
 
@@ -88,7 +104,7 @@
                             <td class="px-6 py-4">
                                 <!-- Bouton Modifier -->
                                 <a href="{{ route('modules.edit', $module) }}"
-                                    class="text-indigo-600 hover:text-indigo-900 mr-2">
+                                    class="action-link mr-2">
                                     Modifier
                                 </a>
 

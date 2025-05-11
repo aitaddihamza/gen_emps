@@ -5,52 +5,104 @@
 @section('title', 'Dashboard - Génération des Emplois du Temps')
 
 @section('content')
-    <div class="container mx-auto px-4 py-8">
-        <h1 class="text-2xl font-bold mb-8">Génération des Emplois du Temps</h1>
+    <style>
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #00a5bb;
+        }
+        .btn-outline {
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+        .btn-outline:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
 
-        <!-- Formulaire de génération des emplois du temps -->
-        <form id="generateTimetableForm" class="bg-white shadow-md rounded-lg p-6 mb-8" action="" method="POST">
+        .form-container {
+            background: #f8fafc;
+            border-radius: 0.5rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid #e2e8f0;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .input-control {
+            border: 2px solid #e2e8f0;
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            transition: all 0.3s ease;
+        }
+
+        .input-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 188, 212, 0.1);
+        }
+
+        .btn-container {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+    </style>
+
+    <div class="w-full">
+        <h1 class="text-2xl font-bold mb-6 text-gray-800">Génération des Emplois du Temps</h1>
+
+        <form id="generateTimetableForm" class="form-container" method="POST">
             @csrf
-            <div class="mb-4 flex space-x-4">
-                <div class="flex-1">
-                    <label for="weeks" class="block text-sm font-medium text-gray-700">Nombre de semaines dans le semestre</label>
+            <div class="form-grid">
+                <div class="input-group">
+                    <label for="weeks" class="text-sm font-medium text-gray-700">Nombre de semaines</label>
                     <input type="number" name="weeks" id="weeks" min="1" required value="15"
-                        class="mt-1 block w-full rounded-md border-2 h-[50px] p-2 border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                        class="input-control">
                 </div>
-                <div class="flex-1">
-                    <label for="semestre" class="block text-sm font-medium text-gray-700">Semestre</label>
-                    <select name="semestre" id="semestre" required
-                        class="mt-1 block w-full rounded-md border-2 h-[50px] p-2 border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                <div class="input-group">
+                    <label for="semestre" class="text-sm font-medium text-gray-700">Semestre</label>
+                    <select name="semestre" id="semestre" required class="input-control">
                         <option value="1">Semestre 1</option>
                         <option value="2">Semestre 2</option>
                     </select>
                 </div>
             </div>
 
-            <!-- Bouton pour lancer la génération -->
-            <button type="submit"
-                class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50">
-                Générer les Emplois du Temps
-            </button>
-
-            <!-- Lien stylisé pour voir les emplois du temps -->
-            <a href="{{ route('admin.timetables') }}"
-                class="inline-block mt-4 px-6 py-2 text-indigo-600 bg-white border border-indigo-600 rounded-md hover:bg-indigo-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50">
-                Voir les emplois du temps
-            </a>
+            <div class="btn-container">
+                <button type="submit" class="btn-primary px-6 py-2 rounded-md">
+                    Générer les Emplois du Temps
+                </button>
+                <a href="{{ route('admin.timetables') }}" class="btn-outline px-6 py-2 rounded-md">
+                    Voir les emplois du temps
+                </a>
+            </div>
         </form>
 
         <!-- Loader (animation SVG) -->
         <div id="loader" class="hidden text-center">
-            <svg class="animate-spin h-12 w-12 text-indigo-600 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none"
+            <svg class="animate-spin h-12 w-12 mx-auto" style="color: var(--primary-color)" xmlns="http://www.w3.org/2000/svg" fill="none"
                 viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
-                </circle>
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path class="opacity-75" fill="currentColor"
                     d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
                 </path>
             </svg>
-            <p class="mt-2 text-gray-600">Génération des emplois du temps en cours...</p>
+            <p class="mt-2" style="color: var(--primary-color)">Génération des emplois du temps en cours...</p>
         </div>
 
         <!-- Notification -->
@@ -170,8 +222,9 @@
 
                 // Titre de la classe
                 const classeTitle = document.createElement('h3');
-                classeTitle.className =
-                    'text-lg font-semibold mb-4 bg-indigo-100 p-3 rounded-md shadow-sm border-l-4 border-indigo-500';
+                classeTitle.className = 'text-lg font-semibold mb-4 p-3 rounded-md shadow-sm';
+                classeTitle.style.backgroundColor = 'rgba(0, 188, 212, 0.1)';
+                classeTitle.style.borderLeft = '4px solid #00bcd4';
                 classeTitle.textContent = `Classe : ${classe}`;
                 classeSection.appendChild(classeTitle);
 
@@ -182,7 +235,8 @@
                 // En-tête du tableau (créneaux)
                 const thead = document.createElement('thead');
                 const headerRow = document.createElement('tr');
-                headerRow.className = 'bg-gradient-to-r from-indigo-600 to-indigo-800 text-white';
+                headerRow.style.backgroundColor = '#00bcd4';
+                headerRow.className = 'text-white';
 
                 // Cellule d'en-tête pour "Jour"
                 const headerJour = document.createElement('th');
@@ -230,9 +284,9 @@
                                 const coursDiv = document.createElement('div');
                                 coursDiv.className =
                                     'p-2 rounded-md text-sm shadow-sm transition-transform hover:scale-[1.02]';
-                                coursDiv.style.backgroundColor = '#e2f0fb';
-                                coursDiv.style.color = '#0e4377';
-                                coursDiv.style.borderLeft = '4px solid #a8d5ff';
+                                coursDiv.style.backgroundColor = 'rgba(0, 188, 212, 0.1)';
+                                coursDiv.style.color = '#00838f';
+                                coursDiv.style.borderLeft = '4px solid #00bcd4';
 
                                 // Module (en plus grand et en gras)
                                 const module = document.createElement('div');

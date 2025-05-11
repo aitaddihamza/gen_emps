@@ -3,13 +3,38 @@
 @extends('layouts.app')
 
 @section('content')
+    <style>
+        .badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+        }
+        .badge-primary {
+            background-color: rgba(0, 188, 212, 0.1);
+            color: var(--primary-color);
+        }
+        .action-link {
+            color: var(--primary-color);
+        }
+        .action-link:hover {
+            color: #00a5bb;
+        }
+        .action-button {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        .action-button:hover {
+            background-color: #00a5bb;
+        }
+    </style>
+
     <div class="container mx-auto px-4 mt-8">
         @include('shared.flush')
         <h1 class="text-2xl font-bold mb-4">Liste des Professeurs</h1>
 
         <!-- Bouton pour ajouter un nouveau professeur -->
         <a href="{{ route('professeurs.create') }}"
-            class="bg-blue-500 text-white px-4 py-2 rounded-md mb-8 inline-block hover:bg-blue-600">
+            class="action-button px-4 py-2 rounded-md mb-8 inline-block">
             Ajouter un Professeur
         </a>
 
@@ -62,15 +87,9 @@
 
                             <!-- Type de professeur -->
                             <td class="px-6 py-4">
-                                @if ($professeur->type_prof === 'permanent')
-                                    <span
-                                        class="px-2 py-1 text-sm bg-green-100 text-green-800 rounded-full">permanent</span>
-                                @elseif ($professeur->type_prof === 'vacataire')
-                                    <span
-                                        class="px-2 py-1 text-sm bg-yellow-100 text-yellow-800 rounded-full">vacataire</span>
-                                @else
-                                    <span class="px-2 py-1 text-sm bg-blue-100 text-blue-800 rounded-full">doctorant</span>
-                                @endif
+                                <span class="badge badge-primary">
+                                    {{ $professeur->type_prof }}
+                                </span>
                             </td>
 
                             <!-- Heures Max -->
@@ -82,7 +101,7 @@
                             <td class="px-6 py-4">
                                 <!-- Bouton Modifier -->
                                 <a href="{{ route('professeurs.edit', $professeur) }}"
-                                    class="text-indigo-600 hover:text-indigo-900 mr-2">
+                                    class="action-link mr-2">
                                     Modifier
                                 </a>
 

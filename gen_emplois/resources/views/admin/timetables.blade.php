@@ -3,6 +3,28 @@
 @section('title', 'Dashboard - Voir les Emplois du Temps')
 
 @section('content')
+    <style>
+        .select-primary {
+            border-color: var(--primary-color);
+        }
+        .select-primary:focus {
+            border-color: var(--primary-color);
+            ring-color: var(--primary-color);
+        }
+        .btn-export {
+            background-color: var(--primary-color);
+            color: white;
+            transition: all 0.3s ease;
+        }
+        .btn-export:hover {
+            background-color: #00a5bb;
+        }
+        .table-header {
+            background: var(--primary-color);
+            color: white;
+        }
+    </style>
+
     <div class="container mx-auto px-4 py-8">
         <h1 class="text-2xl font-bold mb-8">Voir les Emplois du Temps</h1>
 
@@ -10,7 +32,7 @@
         <form id="semesterForm" class="mb-8">
             <label for="semestre" class="block text-sm font-medium text-gray-700 mb-2">Choisir le Semestre</label>
             <select name="semestre" id="semestre" onchange="document.getElementById('semesterForm').submit()"
-                class="block w-1/4 rounded-md border-2 h-[50px] p-2 border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                class="select-primary block w-1/4 rounded-md h-[50px] p-2 shadow-sm focus:ring-2 focus:ring-primary sm:text-sm">
                 <option value="1" {{ request('semestre') == 1 ? 'selected' : '' }}>Semestre 1</option>
                 <option value="2" {{ request('semestre') == 2 ? 'selected' : '' }}>Semestre 2</option>
             </select>
@@ -26,7 +48,7 @@
                         <h3 class="text-lg font-semibold mb-4">Classe : {{ $classe }}</h3>
                         <table class="min-w-full bg-white border border-gray-200 rounded-lg overflow-hidden shadow-lg">
                             <thead>
-                                <tr class="bg-gray-100">
+                                <tr class="table-header">
                                     <th class="py-3 px-4 border-b font-medium text-left">Jour</th>
                                     <th class="py-3 px-4 border-b font-medium text-left">08:30-10:30</th>
                                     <th class="py-3 px-4 border-b font-medium text-left">10:40-12:30</th>
@@ -74,7 +96,7 @@
                         </table>
                         <!-- Bouton pour exporter en PDF -->
                         <a href="{{ route('admin.timetables.export', ['classe' => $classe]) }}"
-                            class="mt-4 inline-block px-6 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">
+                            class="btn-export mt-4 inline-block px-6 py-2 rounded-md shadow-md hover:shadow-lg">
                             Exporter en PDF
                         </a>
                     </div>
