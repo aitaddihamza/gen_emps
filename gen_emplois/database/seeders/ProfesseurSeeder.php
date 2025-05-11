@@ -5,6 +5,8 @@ namespace Database\Seeders;
 use App\Models\Professeur;
 use App\Models\Module;
 use Illuminate\Database\Seeder;
+use App\Models\User;
+use Illuminate\Support\Str;
 
 class ProfesseurSeeder extends Seeder
 {
@@ -324,6 +326,17 @@ class ProfesseurSeeder extends Seeder
                 'type_prof' => $profData['type_prof'],
                 'max_heures' => $profData['max_heures'],
                 'disponibilites' => $profData['disponibilites'],
+            ]);
+            $profName = str_replace('Pr.', '', $profData['nom']);
+            $profName = strtolower($profName);
+            User::factory()->create([
+                // supprimier Pr du nom de prof
+                'name' => $profName,
+                'email' => $profName . '@suptech.ma',
+                'email_verified_at' => now(),
+                'password' => bcrypt('password'), // Default password
+                'remember_token' => Str::random(10),
+                'role' => 'prof',
             ]);
 
             $professeur->modules()->attach(rand(1, 72));

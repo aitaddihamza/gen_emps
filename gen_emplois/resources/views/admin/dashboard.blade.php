@@ -11,11 +11,20 @@
         <!-- Formulaire de génération des emplois du temps -->
         <form id="generateTimetableForm" class="bg-white shadow-md rounded-lg p-6 mb-8" action="" method="POST">
             @csrf
-            <div class="mb-4">
-                <label for="weeks" class="block text-sm font-medium text-gray-700">Nombre de semaines dans le
-                    semestre</label>
-                <input type="number" name="weeks" id="weeks" min="1" required value="15"
-                    class="mt-1 block w-full rounded-md border-2 h-[50px] p-2 border-black shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+            <div class="mb-4 flex space-x-4">
+                <div class="flex-1">
+                    <label for="weeks" class="block text-sm font-medium text-gray-700">Nombre de semaines dans le semestre</label>
+                    <input type="number" name="weeks" id="weeks" min="1" required value="15"
+                        class="mt-1 block w-full rounded-md border-2 h-[50px] p-2 border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                </div>
+                <div class="flex-1">
+                    <label for="semestre" class="block text-sm font-medium text-gray-700">Semestre</label>
+                    <select name="semestre" id="semestre" required
+                        class="mt-1 block w-full rounded-md border-2 h-[50px] p-2 border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                        <option value="1">Semestre 1</option>
+                        <option value="2">Semestre 2</option>
+                    </select>
+                </div>
             </div>
 
             <!-- Bouton pour lancer la génération -->
@@ -77,6 +86,7 @@
 
             // Récupérer le nombre de semaines
             const weeks = document.getElementById('weeks').value;
+            const semestre = document.getElementById('semestre').value;
 
             // Envoyer les données à l'API Laravel
             fetch("{{ route('admin.generate') }}", {
@@ -87,7 +97,8 @@
                         'Accept': 'application/json',
                     },
                     body: JSON.stringify({
-                        weeks: weeks
+                        weeks: weeks,
+                        semestre: semestre,
                     })
                 })
                 .then(response => {

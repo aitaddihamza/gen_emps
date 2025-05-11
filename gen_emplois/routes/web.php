@@ -13,7 +13,16 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfController;
 
 Route::get('/', function () {
-    return view('welcome');
+    if(auth()->check()){
+        $userRole = auth()->user()->role;
+        if($userRole == 'admin'){
+            return redirect('/admin/dashboard');
+        } else {
+            return redirect('/prof');
+        }
+    }
+   return redirect('/login');
+    
 });
 
 Route::get('/dashboard', function () {
@@ -41,8 +50,7 @@ Route::prefix('/admin/dashboard')->middleware(['auth', 'verified', 'adminaccess'
 
 Route::prefix('/prof/')->controller(ProfController::class)->middleware(['auth', 'verified'])->group(function () {
     Route::get('/', 'index')->name('prof.index');
+    Route::get('/export/', 'export')->name('prof.timetable.export');
 });
-
-
 
 require __DIR__.'/auth.php';

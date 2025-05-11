@@ -15,7 +15,7 @@
     <header class="bg-white shadow-md">
         <div class="container mx-auto px-4 py-4 flex justify-between items-center">
             <!-- Logo ou lien vers le Dashboard -->
-            <a href="{{ route('admin.dashboard') }}" class="text-xl font-bold text-indigo-600">
+            <a href="{{ route(auth()->user()->role == 'admin' ? 'admin.dashboard' : 'prof.index') }}" class="text-xl font-bold text-indigo-600">
                 Gestion des Emplois du Temps
             </a>
 
@@ -36,7 +36,12 @@
                     <x-slot name="trigger">
                         <button
                             class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500   hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
-                            <div>{{ Auth::user()->name }}</div>
+                            @php 
+                            $userName = Auth::user()->name;
+                            $userName = strtoupper($userName[0]) . substr($userName, 1);
+                            $prefix =  Auth::user()->role == 'prof' ? 'Pr.' : 'M.El ';
+                            @endphp 
+                            <div>{{ $prefix . $userName }}</div>
 
                             <div class="ms-1">
                                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
@@ -50,9 +55,6 @@
                     </x-slot>
 
                     <x-slot name="content">
-                        <x-dropdown-link :href="route('profile.edit')">
-                            {{ __('Profile') }}
-                        </x-dropdown-link>
 
                         <!-- Authentication -->
                         <form method="POST" action="{{ route('logout') }}">
@@ -61,7 +63,7 @@
                             <x-dropdown-link :href="route('logout')"
                                 onclick="event.preventDefault();
                                                 this.closest('form').submit();">
-                                {{ __('Log Out') }}
+                                {{ __('Déconnecter') }}
                             </x-dropdown-link>
                         </form>
                     </x-slot>

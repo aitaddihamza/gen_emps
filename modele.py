@@ -5,7 +5,6 @@ import copy
 import json
 from flask import Flask, request, jsonify
 import time
-from openai import OpenAI
 
 app = Flask(__name__)
 
@@ -16,18 +15,22 @@ def home():
 @app.route('/generate_timetables', methods=["POST"])
 def generate_timetable():
     # Simuler la réception des données JSON envoyées par Laravel
-    # data = request.get_json()
+    weeks_and_semestre = request.get_json()
+    # print(weeks_and_semestre["TOTAL_SEMAINES"])
+    # exit()
     with open('DATA.json', 'r', encoding='utf-8') as f:
         data = json.load(f)
 
-    print(data)
+    print(f"semestre: {weeks_and_semestre}")
 
 
     # Afficher les données reçues pour vérification (optionnel)
-    print("Données reçues :", data)
+    # print("Données reçues :", data)
 
 
-    TOTAL_SEMAINES = int(data["TOTAL_SEMAINES"])
+    TOTAL_SEMAINES = int(weeks_and_semestre["TOTAL_SEMAINES"])
+    SEMESTRE = int(weeks_and_semestre["SEMESTRE"])
+    # TOTAL_SEMAINES = int(data["TOTAL_SEMAINES"])
     SALLES_COURS = data["SALLES_COURS"]
     SALLES_TP = data["SALLES_TP"]
     CRENEAUX = ["08:30-10:30", "10:40-12:30", "13:30-15:30", "15:40-17:30"]
@@ -47,10 +50,10 @@ def generate_timetable():
 
 
 
-    # intialisation du contraintes des profs 
+# intialisation du contraintes des profs 
     for p, d in PROFESSEURS.items():
         if d["type"] == "permanent":
-            CONTRAINTES["profs_max_seances"][p] = d["max_heures"]
+            CONTRAINTES["profs_max_seances"][p] = math.floor(d["max_heures"] / 2) 
         else:
             CONTRAINTES["profs_max_seances"][p] = 1
 
@@ -105,21 +108,28 @@ def generate_timetable():
                 tp = "TP " + m
                 if m in classe_modules:
                     prof_info["modules"].append(m)
-                if tp in classe_modules:
-                    prof_info["modules"].append(tp)
+                if details["type"] == "doctorant":
+                    if tp in classe_modules:
+                        prof_info["modules"].append(tp)
             
             if len(prof_info["modules"]) > 0:
                 # Initialiser les disponibilités selon le type de professeur
                 if prof_type == "doctorant" or prof_type == "permanent":
                     prof_info["disponibilites"] = {}
                 
-                if prof_type == "vacataire":
-                    # Pour les vacataires, copier la structure de disponibilités mise à jour
-                    prof_info["disponibilites"] = details["disponibilites"]
+                if prof_type == "doctorant" or prof_type == "vacataire":
+                    prof_info["count"] = 1
+                    if prof_type == "vacataire":
+                        # Pour les vacataires, copier la structure de disponibilités mise à jour
+                        prof_info["disponibilites"] = details["disponibilites"]
+                
+                if prof_type == "permanent":
+                    prof_info["count"] = math.floor(details["max_heures"] / 2)
                 
                 profs[p] = prof_info
         
         return profs
+
 
     def trouver_jour_et_prof_de_sport(profs):
         """ 
@@ -128,39 +138,26 @@ def generate_timetable():
         jour_de_sport = profs_vacataires = None
 
         # le choix du jour de sport
-        i = 0
-        while jour_de_sport is None or profs_vacataires is None or len(profs_vacataires) > 2 or CONTRAINTES['jour_de_sport'][jour_de_sport] >= 4 :
-            if i == 2:
-                continue
-            if i > 4:
-                raise Exception("Problème dans la partie trouver le jour de sport")
-            jour_de_sport = JOURS[i]
+        while jour_de_sport is None or profs_vacataires is None or len(profs_vacataires) > 1 or CONTRAINTES['jour_de_sport'][jour_de_sport] > 4:
+            jour_de_sport = random.choice(JOURS)
+            # Note il faut changer ce code
             profs_vacataires = [p for p in profs.values() if p["disponibilites"].get(jour_de_sport, None) and p["type"] == "vacataire"]
-            i += 1
 
         # le choit du prof du sport
         # Note: on suppose que les profs du sports sont des profs permanents, sinon il faut changer le comportement de ceette fonctionne.
-        profs_de_sport = [p for p, d in profs.items() if "EPS" in d["modules"] and CONTRAINTES["profs_max_seances"][p] > 0]
-        sorted_profs = sorted(profs_de_sport, key=lambda p: CONTRAINTES["profs_max_seances"][p], reverse=True)
-        if sorted_profs:
-            prof_de_sport = sorted_profs[0]
-        else:
-            print(len(profs))
-            print(CONTRAINTES['profs_max_seances'])
-            raise Exception("There's no prof of sport")
-
+        profs_de_sport = [p for p, d in profs.items() if "ESP" in d["modules"]]
+        prof_de_sport = random.choice(profs_de_sport)
         return jour_de_sport, prof_de_sport 
 
-    def eliminer_sport(jour_de_sport, prof_sport, profs, classe_modules):
+    def eliminer_sport(profs, classe_modules):
         """ 
             i have to add some doc here for this small func.
         """ 
-        del classe_modules["EPS"]
-        profs_de_sport = [p for p, d in profs.items() if "EPS" in d["modules"]]
-        if CONTRAINTES["jour_de_sport"].get(jour_de_sport, 0) <= 1:
-            CONTRAINTES["profs_max_seances"][prof_sport] -= 4
+        del classe_modules["ESP"]
+        profs_de_sport = [p for p, d in profs.items() if "ESP" in d["modules"]]
         for prof in profs_de_sport:
             del profs[prof]
+            CONTRAINTES["profs_max_seances"][prof] -= 1
 
 
     def reserver_salle_tp(jour, c):
@@ -183,6 +180,9 @@ def generate_timetable():
 
     def affecter_seance(classe_name, individu, jour, c, infos, modules):
         semaine_debut, semaine_fin = trouver_semaines(classe_name, infos["nom_module"], modules)
+        if(SEMESTRE == 2):
+            semaine_debut = semaine_debut + TOTAL_SEMAINES
+            semaine_fin = semaine_fin + TOTAL_SEMAINES
         individu[jour][c].append({
             "prof": infos["nom_prof"],
             "salle": infos["salle"],
@@ -271,12 +271,15 @@ def generate_timetable():
 
     def update_prof_dispo(nom_prof, jour, c):
         if PROFESSEURS[nom_prof]["type"] == "permanent":
-            CONTRAINTES["profs_max_seances"][nom_prof] -= 2
+            CONTRAINTES["profs_max_seances"][nom_prof] -= 1
 
         CONTRAINTES["non_disponibilites_profs"].setdefault(jour, {}).setdefault(c, []).append(nom_prof)
 
     def affecter_groupe_seances(classe_name, individu, jour, c, infos, modules, groupe, groupe_profs, modules_fix):
         sd, sf = trouver_semaines(classe_name, groupe[0], modules_fix)
+        if SEMESTRE == 2:
+            sd = sd + TOTAL_SEMAINES
+            sf = sf + TOTAL_SEMAINES
         update_prof_dispo(groupe_profs[0], jour, c)
         if "TP " in groupe[0]:
             if not infos["salle"]:
@@ -329,9 +332,25 @@ def generate_timetable():
             nom_prof = random.choice(profs_vacataires)
         else:
             sorted_profs = sorted(names_of_profs_disponibles.items(), key=lambda p: CONTRAINTES["profs_max_seances"][p[0]], reverse=True)
-            nom_prof = sorted_profs[0][0]
+            nom_prof = random.choice([p[0] for p in sorted_profs])
         
         prof = profs[nom_prof]
+        attempt = 0
+        
+        # Pour les vacataires, vérifier la disponibilité spécifique au créneau
+        while attempt < 200:
+            if prof["type"] == "vacataire":
+                if jour in prof["disponibilites"] and c in prof["disponibilites"][jour]:
+                    break
+            else:
+                # Pour les autres types, la vérification reste simple
+                if CONTRAINTES["profs_max_seances"][nom_prof] > 0:
+                    break
+            
+            attempt += 1
+            sorted_profs = sorted(names_of_profs_disponibles.items(), key=lambda p: CONTRAINTES["profs_max_seances"][p[0]], reverse=True)
+            nom_prof = random.choice([p[0] for p in sorted_profs])
+            prof = profs[nom_prof]
         
         return nom_prof, prof
 
@@ -383,11 +402,17 @@ def generate_timetable():
     def equilibrer_charge_prof(profs_disponibles, nom_module, old_prof, jour, c):
         module_profs = [p for p, d in profs_disponibles.items() if nom_module in d["modules"]]
         sorted_profs = sorted(module_profs, key=lambda p: CONTRAINTES["profs_max_seances"][p], reverse=True)
+        if nom_module =="Français":
+            print(module_profs)
+            print(sorted_profs)
+            for p in module_profs:
+                print(p, CONTRAINTES["profs_max_seances"][p])
         if len(sorted_profs) <= 1:
             return old_prof, profs_disponibles[old_prof]
         nom_prof = sorted_profs[0]
         prof =  profs_disponibles[nom_prof]
 
+        print(nom_prof)
 
         return nom_prof, prof
 
@@ -416,12 +441,12 @@ def generate_timetable():
         # Planifier le sport
         jour_de_sport, prof_de_sport = trouver_jour_et_prof_de_sport(profs)
         CONTRAINTES["jour_de_sport"][jour_de_sport] += 1
-        semaine_debut, semaine_fin = trouver_semaines(classe_name, "EPS", modules_fix)
+        semaine_debut, semaine_fin = trouver_semaines(classe_name, "ESP", modules_fix)
         affecter_seance(classe_name, individu, jour_de_sport, "13:30-15:30",
-                        {"nom_prof": prof_de_sport, "salle": salle_fixe, "nom_module": "EPS"}, modules_fix)
+                        {"nom_prof": prof_de_sport, "salle": salle_fixe, "nom_module": "ESP"}, modules_fix)
         affecter_seance(classe_name, individu, jour_de_sport, "15:40-17:30",
-                        {"nom_prof": prof_de_sport, "salle": salle_fixe, "nom_module": "EPS"}, modules_fix)
-        eliminer_sport(jour_de_sport, prof_de_sport, profs, modules)
+                        {"nom_prof": prof_de_sport, "salle": salle_fixe, "nom_module": "ESP"}, modules_fix)
+        eliminer_sport(profs, modules)
 
         # Planifier les modules à deux séances en premier
         for jour in JOURS:
@@ -443,14 +468,10 @@ def generate_timetable():
                     # 2. Choisir un module (prioriser les modules à deux séances)
                     if modules_deux_seances:
                         nom_module = random.choice(modules_deux_seances)
-                        # eliminer les autres profs de ce module
-                        for p in profs:
-                            if p != nom_prof and nom_module in profs[p]["modules"]:
-                                    profs[p]["modules"] = [m for m in profs[p]["modules"] if m != nom_module]
                     else:
                         nom_module = random.choice(prof["modules"])
 
-                    # nom_prof, prof = equilibrer_charge_prof(profs_disponibles, nom_module, nom_prof, jour, c)
+                    nom_prof, prof = equilibrer_charge_prof(profs_disponibles, nom_module, nom_prof, jour, c)
 
                     groupe = is_module_partage(tps_partages, nom_module)
                     iter = 0
@@ -470,7 +491,7 @@ def generate_timetable():
                         if groupe and len(groupe_profs) != len(groupe):
                             nom_prof, prof = choisir_prof(profs_disponibles, profs, jour, c)
                             nom_module = random.choice(prof["modules"])
-                            # nom_porf, prof = equilibrer_charge_prof(profs_disponibles, nom_module, nom_prof, jour, c)
+                            nom_porf, prof = equilibrer_charge_prof(profs_disponibles, nom_module, nom_prof, jour, c)
                             groupe = is_module_partage(tps_partages, nom_module)
                             groupe_profs = get_profs_of_other_moduels(profs_disponibles, profs, groupe)
                         else:
@@ -575,154 +596,38 @@ def generate_timetable():
 
         return score
 
-    # NOTE: la partie OpenAI est à la fin de la fonction
-
-    def formatter_emploi_du_temps(individu, classe_name, salle):
-        """
-        Formate l'emploi du temps dans le format texte requis
-        """
-        resultat = f"******** Emploi de temps de {classe_name} - salle: salle {salle} ********\n"
-        
-        for jour in individu:
-            resultat += f"{jour}: \n"
-            for c in individu[jour]:
-                resultat += f"\t{c}: \n"
-                for seance in individu[jour][c]:
-                    resultat += f"\t\t{seance['module']} - "
-                    if seance["module"] != "EPS":
-                        if seance["salle"]:
-                            resultat += f"salle: {seance['salle']}- "
-                    resultat += f"{seance['prof']} semaines: S{seance['semaine_debut']} - S{seance['semaine_fin']}\n"
-            resultat += "\n"
-        
-        return resultat
-
-    # def envoyer_vers_api(emplois_du_temps, iter):
-    #     """
-    #     Envoie les emplois du temps formatés vers l'API
-    #     """
-    #     # Préparation des données pour l'API
-    #     formatted_data = "\n**\n".join(emplois_du_temps)
-    #     formatted_data += f"\n**\n this took {iter} iterations"
-    #
-    #     prompt = f"""
-    #     Analysez rigoureusement ces emplois du temps selon les règles suivantes :
-    #
-    #     === RÈGLES STRICTES ===
-    #     1. [SPORT] Jusqu'à 4 cours EPS autorisés en parallèle
-    #     2. [PROFS] Un enseignant ne peut avoir qu'un seul cours actif par créneau
-    #     - Exception : Si les semaines ne se chevauchent pas (S1-S3 vs S4-S6)
-    #     3. [SALLES] Une salle ne peut accueillir qu'un seul cours actif par créneau
-    #     - Exception : Si les semaines ne se chevauchent pas
-    #     4. [HORAIRES] Tous les cours doivent être entre 8h et 18h
-    #
-    #     === MÉTHODOLOGIE ===
-    #     Pour chaque vérification :
-    #     1. Comparer les plages de semaines (SX-SY)
-    #     2. Ignorer les créneaux "Pause"
-    #     3. Vérifier uniquement les conflits actifs (mêmes semaines)
-    #     4. les modules qui partgent le même créneau et la même semaine sont considérés comme un conflit.
-    #     cela n'est pas considéré comme un chauvechement: (S2-S3 vs S4-S5 vs S6-S9 vs S10-S13) poarce que la premier termine dans la semaine 3 et le suivante comment la semaine 4 et ainsi de suite donc pas de chauvechement.
-    #
-    #     === FORMAT DE RÉPONSE ===
-    #     [STATUT] [TYPE] : [DÉTAILS]
-    #
-    #     Où STATUT peut être :
-    #     ✅ Conforme
-    #     ⚠️ Avertissement (à vérifier)
-    #     ❌ Conflit (action requise)
-    #
-    #     Exemples :
-    #     ✅ PROF : Pr.DUPONT (S1-S3) ne chevauche pas Pr.DUPONT (S4-S6)
-    #     ❌ SALLE : TP3 utilisée par 2 cours (S5-S7 vs S6-S8)
-    #
-    #     === DONNÉES À ANALYSER ===
-    #     {formatted_data}
-    #
-    #     === ATTENTION SPÉCIALE ===
-    #     - Les regroupements dans un même créneau sont valides si les semaines sont distinctes
-    #     - Ignorer systématiquement les "Pause" dans l'analyse
-    #     - Mettre en avant les vrais conflits (même ressource + mêmes semaines)
-    #     """
-    #
-    #     client = OpenAI(
-    #         base_url="https://api.netmind.ai/inference-api/openai/v1",
-    #         api_key="da56e0822b5e4dadbc641d1cdd69a758",
-    #     )
-    #
-    #     print("sending les emplois du temps vers l'API")
-    #     response = client.chat.completions.create(
-    #         model="google/gemma-3-27b-it",
-    #         messages=[
-    #             {
-    #                 "role": "system", 
-    #                 "content": "Vous êtes un expert en analyse d'emplois du temps universitaires. Répondez exclusivement en français avec une analyse technique précise."
-    #             },
-    #             {
-    #                 "role": "user",
-    #                 "content": prompt
-    #             }
-    #         ],
-    #         temperature=0.2,  # Pour plus de précision
-    #         max_tokens=2000
-    #     )
-    #     print("we have a response from the API")
-    #
-    #     # Envoi des données
-    #     chat_completion_response = client.chat.completions.create(
-    #         model="google/gemma-3-27b-it",
-    #         messages=[
-    #             {"role": "system", "content": "Tu analyses des emplois du temps scolaires, la reponse en français."},
-    #             {"role": "user", "content": prompt}
-    #         ],
-    #         max_tokens=2048,  # Ajustez selon vos besoins
-    #         temperature=0.1  # Réponse factuelle
-    #     )
-    #
-    #     print(chat_completion_response.choices[0].message.content)
-    #     return chat_completion_response.choices[0].message.content
-    #
-    # Intégration dans le code principal
     iter = 0
     result = dict()
-    emplois_du_temps_formattes = []
-    scores = []
-
     for classe in CLASSES:
         OLD_CONTRAINTES = copy.deepcopy(CONTRAINTES)
         score = -1
         while score < 0 and iter < 30:
             iter += 1
-            print(iter)
             CONTRAINTES = copy.deepcopy(OLD_CONTRAINTES)
             individu, salle, modules = generer_individu(classe)
             result[classe] = individu
             score = evaluate(modules)
-        
-        # Formater l'emploi du temps pour cette classe
-        emploi_du_temps = formatter_emploi_du_temps(individu, classe, salle)
-        emplois_du_temps_formattes.append(emploi_du_temps)
-        scores.append(score)
-        
+        afficher_individu(individu, classe, salle, modules)
         print(f"score: {score}")
-        print(iter)
-        
+
     print(f" this took {iter} iterations ")
 
-    # Envoyer tous les emplois du temps à l'API
-    # reponse_api = envoyer_vers_api(emplois_du_temps_formattes, iter)
-    # print("normalement we have a response here's it: ")
-    # print(reponse_api)
+    for p, r in CONTRAINTES["profs_max_seances"].items():
+        print(f"{p}: {r}")
+
+
 
     response = {
         "success": True,
-        "message":"Les emplois du temps ont été générés avec succès." if min(scores) < 0 else "les emplois  sont mal générés.",
-        "timetables": result,
-        "analysis": None  # Ajout du rapport d'analyse
+        "message": "Les emplois du temps ont été générés avec succès.",
+        "timetables": result
     }
 
+    # suspendre 2 secondes
+    time.sleep(2)
 
     # Retourner la réponse en JSON
     return jsonify(response)
+
 if __name__ == '__main__':
     app.run(debug=True)

@@ -24,6 +24,7 @@ class Seance extends Model
         'professeur_nom',
         'semaine_debut',
         'semaine_fin',
+        'semestre',
     ];
 
 

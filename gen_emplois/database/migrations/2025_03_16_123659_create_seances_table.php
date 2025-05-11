@@ -19,6 +19,7 @@ class CreateSeancesTable extends Migration
             $table->string('professeur_nom'); // Store professor name instead of professeur_id
             $table->integer('semaine_debut'); // Semaine de début
             $table->integer('semaine_fin');   // Semaine de fin
+            $table->integer('semestre'); // Semestre de l'année scolaire
             $table->timestamps();
         });
     }

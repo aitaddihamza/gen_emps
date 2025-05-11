@@ -22,12 +22,12 @@ class DatabaseSeeder extends Seeder
 
         // create admin
         User::factory(1)->create([
-            'name' => 'admin',
-            'email' => 'admin@gmail.com',
+            'name' => 'moufid',
+            'email' => 'moufid@suptech.ma',
             'role' => 'admin',
         ]);
         // create 10 profs users
-        User::factory(10)->create();
+        // User::factory(10)->create();
 
     }
 }

@@ -1,43 +1,54 @@
 {
   "TOTAL_SEMAINES": 15,
   "SALLES_COURS" : {
-      "salle 1": 50,
-      "salle 2": 50,
-      "salle 3": 50,
-      "salle 4": 50,
-      "salle 5": 50,
-      "salle 6": 50,
-      "salle 7": 50,
-      "salle 8": 50,
-      "salle 9": 50,
-      "salle 10": 50,
-      "salle 11": 50,
-      "salle 12": 50,
-      "salle 13": 50,
-      "salle 14": 50,
-      "salle 15": 50
+      "salle 1": 40,
+      "salle 2": 40,
+      "salle 3": 40,
+      "salle 4": 40,
+      "salle 5": 40
   },
-  "SALLES_TP" : ["TP1", "TP2", "TP3", "TP4"],
+  "SALLES_TP" : ["TP1", "TP2", "TP3"],
   "CLASSES_EFFECTIF": {
     "2 année génie digital et AI en santé": 30,
     "2 année génie biomédical": 25,
     "1 année génie biomédical": 28,
     "1 année génie digital et AI en santé": 32,
-    "1 année génie de l'eau et environnement": 27,
-    "2 année licence maintenance médicale": 26,
-    "2 année licence génie industriel et logistique hospitalière": 24,
-    "2 année licence sciences de gestion": 22,
-    "1 année CP G1": 40,
-    "1 année CP G2": 38,
-    "1 année CP G3": 35,
-    "1 année CP G4": 35,
-    "2 année CP Groupe 1": 30,
-    "2 année CP Groupe 2": 30,
-    "2 année CP Groupe 3": 30
+    "1 année génie environnement": 27
   },
   "CLASSES": {
+    "2 année génie digital et AI en santé": {
+      "Bases de Traitement d'images médicales": {"volume": 28, "tp_seances": 8},
+      "Mini projet de Traitement d'image": {"volume": 28, "tp_seances": 8},
+      "Robotiques médicales": {"volume": 24, "tp_seances": 4},
+      "Gestion de projet": {"volume": 28, "tp_seances": 0},
+      "Réalisation": {"volume": 28, "tp_seances": 0},
+      "Organisation hospitalière": {"volume": 56, "tp_seances": 0},
+      "Bioinformatique": {"volume": 56, "tp_seances": 0},
+      "Bases de données Avancées": {"volume": 56, "tp_seances": 4},
+      "Machine learning": {"volume": 48, "tp_seances": 3},
+      "Economie de santé": {"volume": 28, "tp_seances": 0},
+      "ESP": {"volume": 48, "tp_seances": 0},
+      "Français": {"volume": 24, "tp_seances": 0},
+      "Anglais": {"volume": 24, "tp_seances": 0}
+    },
+    "2 année génie biomédical": {
+      "Imagerie Médicale": {"volume": 28, "tp_seances": 4},
+      "Bases de Traitement d'images médicales": {"volume": 28, "tp_seances": 4},
+      "Mini projet de Traitement d'image": {"volume": 28, "tp_seances": 0},
+      "Biostatistiques": {"volume": 28, "tp_seances": 0},
+      "Bioinformatique": {"volume": 56, "tp_seances": 0},
+      "Gestion de projet": {"volume": 28, "tp_seances": 0},
+      "Réalisation": {"volume": 28, "tp_seances": 0},
+      "Organisation hospitalière": {"volume": 56, "tp_seances": 0},
+      "Bases de données Avancées": {"volume": 56, "tp_seances": 2},
+      "Physiologie": {"volume": 28, "tp_seances": 0},
+      "Comptabilité": {"volume": 28, "tp_seances": 0},
+      "ESP": {"volume": 48, "tp_seances": 0},
+      "Français": {"volume": 24, "tp_seances": 0},
+      "Anglais": {"volume": 24, "tp_seances": 0}
+    },
     "1 année génie biomédical": {
-      "Radioactivité": {"volume": 24, "tp_seances": 2},
+      "Radioactivité": {"volume": 24, "tp_seances": 0},
       "Traitement de signal": {"volume": 24, "tp_seances": 4},
       "Recherche opérationnelle": {"volume": 48, "tp_seances": 4},
       "Bases de données": {"volume": 24, "tp_seances": 0},
@@ -49,598 +60,256 @@
       "Physiologie": {"volume": 56, "tp_seances": 4},
       "Gestion de l'entreprise et Marché public": {"volume": 24, "tp_seances": 0},
       "Compétences culturelles et Artistiques": {"volume": 24, "tp_seances": 0},
-      "EPS": {"volume": 48, "tp_seances": 0},
+      "ESP": {"volume": 48, "tp_seances": 0},
       "Français": {"volume": 24, "tp_seances": 0},
       "Anglais": {"volume": 24, "tp_seances": 0}
     },
     "1 année génie digital et AI en santé": {
       "Radioactivité": {"volume": 24, "tp_seances": 0},
-      "Traitement de signal": {"volume": 24, "tp_seances": 10},
-      "Recherche opérationnelle": {"volume": 48, "tp_seances": 6},
+      "Traitement de signal": {"volume": 24, "tp_seances": 4},
+      "Recherche opérationnelle": {"volume": 48, "tp_seances": 4},
       "Bases de données": {"volume": 24, "tp_seances": 0},
       "Droit": {"volume": 24, "tp_seances": 0},
       "TOEIC": {"volume": 24, "tp_seances": 0},
-      "Programmation Orienté Objet": {"volume": 48, "tp_seances": 0},
+      "Programmation Orienté Objet": {"volume": 56, "tp_seances": 0},
       "Statistique et probabilité": {"volume": 24, "tp_seances": 0},
-      "Physiologie": {"volume": 56, "tp_seances": 6},
+      "Physiologie": {"volume": 56, "tp_seances": 4},
       "Gestion de l'entreprise et Marché public": {"volume": 24, "tp_seances": 0},
       "Compétences culturelles et Artistiques": {"volume": 24, "tp_seances": 0},
-      "EPS": {"volume": 48, "tp_seances": 0},
+      "ESP": {"volume": 48, "tp_seances": 0},
       "Français": {"volume": 24, "tp_seances": 0},
       "Anglais": {"volume": 24, "tp_seances": 0}
     },
-    "1 année génie de l'eau et environnement": {
+    "1 année génie environnement": {
       "Microbiologie de l'environnement": {"volume": 28, "tp_seances": 4},
       "Géophysique environnementale": {"volume": 28, "tp_seances": 0},
-      "Changement climatique": {"volume": 28, "tp_seances": 0},
+      "Changement climatiques": {"volume": 28, "tp_seances": 0},
       "Chimie de l'environnement": {"volume": 28, "tp_seances": 8},
       "Analyses électrochimiques et spectrales": {"volume": 28, "tp_seances": 0},
       "Résistance des Matériaux": {"volume": 28, "tp_seances": 4},
       "Topographie": {"volume": 28, "tp_seances": 0},
-      "SIG et télédétection": {"volume": 28, "tp_seances": 8},
+      "SIG et télédiction": {"volume": 28, "tp_seances": 8},
       "Bases de données": {"volume": 24, "tp_seances": 0},
       "Statistique et probabilité": {"volume": 24, "tp_seances": 0},
       "Programmation Orienté Objet": {"volume": 28, "tp_seances": 0},
       "Recherche opérationnelle": {"volume": 28, "tp_seances": 0},
       "TOEIC": {"volume": 24, "tp_seances": 0},
       "Compétences culturelles et Artistiques": {"volume": 24, "tp_seances": 0},
-      "EPS": {"volume": 48, "tp_seances": 0},
+      "ESP": {"volume": 48, "tp_seances": 0},
       "Français": {"volume": 24, "tp_seances": 0},
       "Anglais": {"volume": 24, "tp_seances": 0}
-    },
-    "2 année génie biomédical": {
-      "Bases de Traitement d'images médicales": {"volume": 28, "tp_seances": 4},
-      "Dispositifs Médicaux": {"volume": 28, "tp_seances": 0},
-      "Mini projet de traitement d'image": {"volume": 28, "tp_seances": 0},
-      "Organisation du système de santé": {"volume": 28, "tp_seances": 0},
-      "Technologie des appareils de stérilisation": {"volume": 14, "tp_seances": 0},
-      "Technologie des appareils du bloc opératoire": {"volume": 14, "tp_seances": 0},
-      "Exploration fonctionnelle": {"volume": 28, "tp_seances": 2},
-      "Diagnostic Financier": {"volume": 28, "tp_seances": 0},
-      "Informatique Médicale": {"volume": 28, "tp_seances": 0},
-      "Télémédecine": {"volume": 28, "tp_seances": 0},
-      "Ingénierie Financière": {"volume": 28, "tp_seances": 0},
-      "Endoscopie": {"volume": 28, "tp_seances": 2},
-      "Gestion de Projet": {"volume": 28, "tp_seances": 0},
-      "Réalisation": {"volume": 28, "tp_seances": 0},
-      "Français": {"volume": 24, "tp_seances": 0},
-      "Anglais": {"volume": 24, "tp_seances": 0},
-      "EPS": {"volume": 48, "tp_seances": 0}
-    },
-    "2 année licence maintenance médicale": {
-      "Maintenance et gestion des équipements lourds": {"volume": 28, "tp_seances": 2},
-      "Équipements Médicaux": {"volume": 28, "tp_seances": 0},
-      "Dispositifs Médicaux": {"volume": 28, "tp_seances": 0},
-      "IRM et Rayons X": {"volume": 28, "tp_seances": 0},
-      "Optimisation Industrielle": {"volume": 28, "tp_seances": 0},
-      "Organisation du système de santé": {"volume": 28, "tp_seances": 0},
-      "Qualité Dispositifs Médicaux": {"volume": 28, "tp_seances": 0},
-      "Technologie Biomédicale": {"volume": 28, "tp_seances": 0},
-      "Imagerie par Ultrasons": {"volume": 28, "tp_seances": 0},
-      "CAO/FABLAB": {"volume": 16, "tp_seances": 0},
-      "Radiologie Médicale (IRM, ULS, RX)": {"volume": 4, "tp_seances": 0},
-      "Anglais": {"volume": 24, "tp_seances": 0},
-      "EPS": {"volume": 48, "tp_seances": 0}
-    },
-    "2 année licence génie industriel et logistique hospitalière": {
-      "Transport des patients": {"volume": 56, "tp_seances": 0},
-      "Optimisation en théorie des graphes et logistique": {"volume": 56, "tp_seances": 4},
-      "Développement personnel": {"volume": 28, "tp_seances": 0},
-      "Economie et comptabilité de l'entreprise": {"volume": 56, "tp_seances": 0},
-      "Qualité et sécurité de l'environnement": {"volume": 56, "tp_seances": 0},
-      "Organisation du système de santé": {"volume": 28, "tp_seances": 0},
-      "Simulation des systèmes industriels": {"volume": 28, "tp_seances": 4},
-      "Initiation à l'Entreprenariat": {"volume": 28, "tp_seances": 0},
-      "Anglais": {"volume": 24, "tp_seances": 0},
-      "Français": {"volume": 24, "tp_seances": 0},
-      "EPS": {"volume": 48, "tp_seances": 0}
-    },
-    "2 année licence sciences de gestion": {
-      "Informatique de gestion des entreprises": {"volume": 28, "tp_seances": 0},
-      "Gestion et contrôle budgétaire en santé": {"volume": 28, "tp_seances": 0},
-      "Développement personnel": {"volume": 28, "tp_seances": 0},
-      "Economie monétaire et financière en santé": {"volume": 28, "tp_seances": 0},
-      "Optimisation Industrielle": {"volume": 28, "tp_seances": 0},
-      "Organisation du système de santé": {"volume": 28, "tp_seances": 0},
-      "Gestion financière 1": {"volume": 56, "tp_seances": 0},
-      "Fiscalité de l'entreprise 2": {"volume": 56, "tp_seances": 0},
-      "Initiation à l'Entreprenariat": {"volume": 28, "tp_seances": 0},
-      "Dispositifs Médicaux": {"volume": 28, "tp_seances": 0},
-      "Anglais": {"volume": 24, "tp_seances": 0},
-      "Droit": {"volume": 24, "tp_seances": 0},
-      "Français": {"volume": 24, "tp_seances": 0},
-      "EPS": {"volume": 48, "tp_seances": 0}
-    },
-    "1 année CP G1": {
-      "Etude des systèmes": {"volume": 28, "tp_seances": 0},
-      "FabLab": {"volume": 28, "tp_seances": 0},
-      "Electromagnétisme et Electrocinétique des courants alternatifs": {"volume": 56, "tp_seances": 8},
-      "Thermodynamique générale": {"volume": 56, "tp_seances": 6},
-      "Algèbre 2": {"volume": 28, "tp_seances": 0},
-      "Analyse 2": {"volume": 28, "tp_seances": 0},
-      "Français": {"volume": 28, "tp_seances": 0},
-      "Informatique 1": {"volume": 28, "tp_seances": 0},
-      "Anglais": {"volume": 28, "tp_seances": 0},
-      "Culture Digitale": {"volume": 28, "tp_seances": 0},
-      "EPS": {"volume": 48, "tp_seances": 0}
-    },
-    "1 année CP G2": {
-      "Anglais": {"volume": 28, "tp_seances": 0},
-      "Etude des systèmes": {"volume": 28, "tp_seances": 0},
-      "Thermodynamique générale": {"volume": 28, "tp_seances": 0},
-      "Algèbre 2": {"volume": 28, "tp_seances": 0},
-      "Electromagnétisme et Electrocinétique des courants alternatifs": {"volume": 28, "tp_seances": 0},
-      "Analyse 2": {"volume": 28, "tp_seances": 0},
-      "FabLab": {"volume": 28, "tp_seances": 0},
-      "Français": {"volume": 28, "tp_seances": 0},
-      "Culture Digitale": {"volume": 28, "tp_seances": 0},
-      "Informatique 1": {"volume": 28, "tp_seances": 0},
-      "EPS": {"volume": 48, "tp_seances": 0}
-    },
-    "1 année CP G3": {
-      "Thermodynamique générale": {"volume": 28, "tp_seances": 0},
-      "Anglais": {"volume": 28, "tp_seances": 0},
-      "Etude des systèmes": {"volume": 28, "tp_seances": 0},
-      "Algèbre 2": {"volume": 28, "tp_seances": 0},
-      "Electromagnétisme et Electrocinétique des courants alternatifs": {"volume": 28, "tp_seances": 0},
-      "Analyse 2": {"volume": 28, "tp_seances": 0},
-      "FabLab": {"volume": 28, "tp_seances": 0},
-      "Culture Digitale": {"volume": 28, "tp_seances": 0},
-      "Français": {"volume": 28, "tp_seances": 0},
-      "EPS": {"volume": 48, "tp_seances": 0}
-    },
-    "1 année CP G4": {
-      "Français": {"volume": 28, "tp_seances": 0},
-      "Thermodynamique générale": {"volume": 28, "tp_seances": 0},
-      "Algèbre 2": {"volume": 28, "tp_seances": 0},
-      "Etude des systèmes": {"volume": 28, "tp_seances": 0},
-      "Analyse de base 1": {"volume": 28, "tp_seances": 0},
-      "FabLab": {"volume": 28, "tp_seances": 0},
-      "Informatique 1": {"volume": 28, "tp_seances": 0},
-      "Culture Digitale": {"volume": 28, "tp_seances": 0},
-      "Anglais": {"volume": 28, "tp_seances": 0},
-      "Electromagnétisme et Electrocinétique des courants alternatifs": {"volume": 28, "tp_seances": 0},
-      "EPS": {"volume": 48, "tp_seances": 0}
-    },
-    "2 année CP Groupe 1": {
-      "Optique géométrique, optique physique et laser": {"volume": 28, "tp_seances": 4},
-      "Electromagnétisme": {"volume": 28, "tp_seances": 4},
-      "Topologie et Calcul différentiel": {"volume": 28, "tp_seances": 0},
-      "Informatique 2": {"volume": 28, "tp_seances": 0},
-      "Automatisme et Asservissement": {"volume": 28, "tp_seances": 4},
-      "Probabilité et statistique": {"volume": 28, "tp_seances": 0},
-      "Français": {"volume": 28, "tp_seances": 0},
-      "Anglais": {"volume": 28, "tp_seances": 0},
-      "EPS": {"volume": 48, "tp_seances": 0}
-    },
-    "2 année CP Groupe 2": {
-      "Probabilité et statistique": {"volume": 28, "tp_seances": 0},
-      "Topologie et Calcul différentiel": {"volume": 28, "tp_seances": 0},
-      "Optique géométrique, optique physique et laser": {"volume": 28, "tp_seances": 4},
-      "Electromagnétisme": {"volume": 28, "tp_seances": 4},
-      "Informatique 2": {"volume": 28, "tp_seances": 0},
-      "Français": {"volume": 28, "tp_seances": 0},
-      "Anglais": {"volume": 28, "tp_seances": 0},
-      "Automatisme et Asservissement": {"volume": 28, "tp_seances": 4},
-      "EPS": {"volume": 48, "tp_seances": 0}
-    },
-    "2 année CP Groupe 3": {
-      "Optique géométrique, optique physique et laser": {"volume": 28, "tp_seances": 4},
-      "Electromagnétisme": {"volume": 28, "tp_seances": 4},
-      "Probabilité et statistique": {"volume": 28, "tp_seances": 0},
-      "Topologie et Calcul différentiel": {"volume": 28, "tp_seances": 0},
-      "Informatique 2": {"volume": 28, "tp_seances": 0},
-      "Automatisme et Asservissement": {"volume": 28, "tp_seances": 4},
-      "Français": {"volume": 28, "tp_seances": 0},
-      "Anglais": {"volume": 28, "tp_seances": 0},
-      "EPS": {"volume": 48, "tp_seances": 0}
     }
   },
   "PROFESSEURS": {
     "Pr.JBAHI": {
-      "modules": ["SIG et télédétection", "Radioactivité", "Analyses électrochimiques et spectrales", "Topographie", "TP SIG et télédétection", "TP Radioactivité"],
-      "type": "vacataire",
-      "disponibilites": {
-        "Mardi": ["08:30-10:30", "10:40-12:30"],
-        "Jeudi": ["13:30-15:30", "15:40-17:30"]
-      }
+        "modules": ["SIG et télédiction", "Radioactivité", "Analyses électrochimiques et spectrales", "Topographie"], 
+        "type": "vacataire", 
+        "disponibilites": {
+            "Mardi": ["08:30-10:30", "10:40-12:30"],
+            "Jeudi": ["13:30-15:30", "15:40-17:30"]
+        }
     },
     "Pr.FAIZ": {
-      "modules": ["Anglais"],
-      "max_heures": 20,
-      "type": "permanent"
+        "modules": ["Anglais"], 
+        "max_heures": 40, 
+        "type": "permanent"
     },
     "Pr.MOUMADI": {
-      "modules": ["Programmation Orienté Objet"],
-      "max_heures": 20,
-      "type": "permanent"
+        "modules": ["Programmation Orienté Objet"], 
+        "max_heures": 40, 
+        "type": "permanent"
     },
     "Pr.ASRAOUI": {
-      "modules": ["Statistique et probabilité"],
-      "max_heures": 20,
-      "type": "permanent"
+        "modules": ["Statistique et probabilité"], 
+        "max_heures": 40, 
+        "type": "permanent"
     },
     "Pr.ERRABIH": {
-      "modules": ["Droit"],
-      "max_heures": 20,
-      "type": "permanent"
+        "modules": ["Droit"], 
+        "max_heures": 40, 
+        "type": "permanent"
     },
     "Pr.KHALFAOUI": {
-      "modules": ["Recherche opérationnelle", "TP Recherche opérationnelle"],
-      "max_heures": 20,
-      "type": "permanent"
+        "modules": ["Recherche opérationnelle"], 
+        "max_heures": 40, 
+        "type": "permanent"
     },
     "Pr.AMEZIANE": {
-      "modules": ["CAO-DAO"],
-      "max_heures": 20,
-      "type": "permanent"
+        "modules": ["CAO-DAO"], 
+        "max_heures": 40, 
+        "type": "permanent"
     },
     "Pr.MERZOUQI": {
-      "modules": ["Bases de données", "Bases de Données Avancées", "Réalisation", "Gestion de Projet", "Bases de Traitement d'images médicales", "Mini projet de traitement d'image", "TP Traitement d'images médicales"],
-      "max_heures": 20,
-      "type": "permanent"
+        "modules": ["Bases de données", "Bases de données Avancées", "Réalisation", "Gestion de projet", "Bases de Traitement d'images médicales", "Mini projet de Traitement d'image"], 
+        "max_heures": 40, 
+        "type": "permanent"
     },
     "Pr.BETTASS": {
-      "modules": ["Résistance des Matériaux", "Robotique Médicale", "TP Résistance des Matériaux"],
-      "max_heures": 20,
-      "type": "permanent"
+        "modules": ["Résistance des Matériaux", "Robotiques médicales", "Biostatistiques"], 
+        "max_heures": 40, 
+        "type": "permanent"
     },
     "Pr.KAHKAHY": {
-      "modules": ["Français"],
-      "max_heures": 20,
-      "type": "permanent"
+        "modules": ["Français"], 
+        "max_heures": 40, 
+        "type": "permanent"
     },
     "Pr.BOUHALI": {
-      "modules": ["Français"],
-      "max_heures": 20,
-      "type": "permanent"
+        "modules": ["Français"], 
+        "max_heures": 40, 
+        "type": "permanent"
     },
     "Pr.ANSARI": {
-      "modules": ["Changement climatique", "Chimie de l'environnement", "Géophysique environnementale", "Microbiologie de l'environnement", "Gestion de l'entreprise et Marché public", "TP Chimie de l'environnement", "TP Microbiologie de l'environnement", "TP Géophysique environnementale"],
-      "max_heures": 20,
-      "type": "permanent"
+        "modules": ["Changement climatiques", "Chimie de l'environnement", "Géophysique environnementale", "Microbiologie de l'environnement", "Anatomie", "Gestion de l'entreprise et Marché public"], 
+        "max_heures": 40, 
+        "type": "permanent"
     },
     "Pr.ERRAZI": {
-      "modules": ["Programmation Orienté Objet"],
-      "max_heures": 20,
-      "type": "permanent"
+        "modules": ["Programmation"], 
+        "max_heures": 40, 
+        "type": "permanent"
     },
     "Pr.ADDI": {
-      "modules": ["EPS"],
-      "max_heures": 20,
-      "type": "permanent"
+        "modules": ["ESP"], 
+        "max_heures": 40, 
+        "type": "permanent"
     },
     "Pr.BANOUARAB": {
-      "modules": ["EPS"],
-      "max_heures": 20,
-      "type": "permanent"
+        "modules": ["ESP"], 
+        "max_heures": 40, 
+        "type": "permanent"
     },
     "Pr.DEBBAGH": {
-      "modules": ["Physiologie", "TP Physiologie"],
-      "max_heures": 20,
-      "type": "permanent"
+        "modules": ["Physiologie", "Biologie"], "max_heures": 40, "type": "permanent"
     },
     "Pr.BEHJA": {
-      "modules": ["Economie de santé", "Diagnostic Financier", "Gestion et contrôle budgétaire en santé", "Ingénierie Financière", "Economie et comptabilité de l'entreprise", "Gestion financière 1"],
-      "max_heures": 20,
-      "type": "permanent"
+        "modules": ["Economie de santé", "Comptabilité"], 
+        "max_heures": 40, 
+        "type": "permanent"
     },
     "Pr.SAWALMEH": {
-      "modules": ["Anglais", "Compétences culturelles et Artistiques"],
-      "type": "vacataire",
-      "disponibilites": {
-        "Mercredi": ["10:40-12:30", "13:30-15:30"]
-      }
+        "modules": ["Anglais", "Compétences culturelles et Artistiques"],
+        "type": "vacataire", 
+        "disponibilites": {
+            "Mercredi": ["10:40-12:30", "13:30-15:30"]
+        }
     },
     "Pr.SPAGETTI": {
-      "modules": ["Anglais"],
-      "max_heures": 20,
-      "type": "permanent"
+        "modules": ["Anglais"], 
+        "max_heures": 40, 
+        "type": "permanent"
     },
     "Pr.KHAY": {
-      "modules": ["Organisation hospitalière"],
-      "type": "vacataire",
-      "disponibilites": {
-        "Mercredi": ["08:30-10:30", "10:40-12:30"],
-        "Vendredi": ["13:30-15:30", "15:40-17:30"]
-      }
+        "modules": ["Organisation hospitalière"], 
+        "type": "vacataire", 
+        "disponibilites": {
+            "Mercredi": ["08:30-10:30", "10:40-12:30"],
+            "Vendredi": ["13:30-15:30", "15:40-17:30"]
+        }
     },
     "Pr.MEFADDEL": {
-      "modules": ["TOEIC"],
-      "type": "vacataire",
-      "disponibilites": {
-        "Jeudi": ["08:30-10:30", "10:40-12:30"],
-        "Mercredi": ["13:30-15:30", "15:40-17:30"]
-      }
+        "modules": ["TOEIC"], 
+        "type": "vacataire", 
+        "disponibilites": {
+            "Jeudi": ["08:30-10:30", "10:40-12:30"],
+            "Mercredi": ["13:30-15:30", "15:40-17:30"]
+        }
     },
     "Pr.MOHAMMED": {
-      "modules": ["Analyse 2", "Analyse de base 1", "Topologie et Calcul différentiel"],
-      "type": "vacataire",
-      "disponibilites": {
-        "Jeudi": ["13:30-15:30", "15:40-17:30"],
-        "Vendredi": ["08:30-10:30", "10:40-12:30"]
-      }
+        "modules": ["Anaylse numérique", "Mathématiques"], 
+        "type": "vacataire", 
+        "disponibilites": {
+            "Jeudi": ["13:30-15:30", "15:40-17:30"],
+            "Vendredi": ["08:30-10:30", "10:40-12:30"]
+        }
     },
     "Pr.HOUSBANE": {
-      "modules": ["Bioinformatique"],
-      "type": "vacataire",
-      "disponibilites": {
-        "Vendredi": ["10:40-12:30", "13:30-15:30"],
-        "Mercredi": ["08:30-10:30", "10:40-12:30"]
-      }
+        "modules": ["Bioinformatique"], 
+        "type": "vacataire", 
+        "disponibilites": {
+            "Vendredi": ["10:40-12:30", "13:30-15:30"],
+            "Mercredi": ["08:30-10:30", "10:40-12:30"]
+        }
     },
     "Pr.MOUZOUN": {
-      "modules": ["Bases de Traitement d'images médicales", "Mini projet de traitement d'image", "Traitement de signal", "Télémédecine", "TP Traitement de signal", "TP Bases de Traitement d'images médicales"],
-      "type": "vacataire",
-      "disponibilites": {
-        "Jeudi": ["08:30-10:30", "10:40-12:30"],
-        "Vendredi": ["13:30-15:30", "15:40-17:30"],
-        "Mercredi": ["13:30-15:30", "15:40-17:30"]
-      }
+        "modules": ["Imagerie Médicale", "Mini projet de Traitement d'image", "Bases de Traitement d'images médicales", "Gestion de projet", "Traitement de signal"], 
+        "type": "vacataire", 
+        "disponibilites": {
+            "Jeudi": ["08:30-10:30", "10:40-12:30"],
+            "Vendredi": ["13:30-15:30","15:40-17:30"],
+            "Mercredi": ["13:30-15:30", "15:40-17:30"]
+        }
     },
     "Pr.EL YANDOUZI": {
-      "modules": ["Machine Learning", "TP Machine Learning"],
-      "type": "vacataire",
-      "disponibilites": {
-        "Jeudi": ["10:40-12:30", "13:30-15:30"],
-        "Mardi": ["13:30-15:30", "15:40-17:30"],
-        "Lundi": ["08:30-10:30", "10:40-12:30"]
-      }
+        "modules": ["Machine learning", "Génie Logicil"], 
+        "type": "vacataire", 
+        "disponibilites": {
+            "Jeudi": ["10:40-12:30", "13:30-15:30"],
+            "Mardi": ["13:30-15:30", "15:40-17:30"],
+            "Lundi": ["08:30-10:30", "10:40-12:30"]
+        }
     },
-    "Pr.ALAMI": {
-      "modules": ["Etude des systèmes", "Thermodynamique générale", "TP Thermodynamique générale"],
-      "type": "permanent",
-      "max_heures": 20
+    "P7": {
+        "modules": ["Sécurité"], 
+        "max_heures": 20, 
+        "type": "permanent"
     },
-    "Pr.ZAHIDI": {
-      "modules": ["Electromagnétisme et Electrocinétique des courants alternatifs", "Electromagnétisme", "TP Electromagnétisme", "TP Electromagnétisme et Electrocinétique des courants alternatifs"],
-      "type": "permanent",
-      "max_heures": 20
-    },
-    "Pr.QRICHI": {
-      "modules": ["Algèbre 2", "Probabilité et statistique"],
-      "type": "permanent",
-      "max_heures": 20
-    },
-    "Pr.SEMMAR": {
-      "modules": ["Thermodynamique générale", "TP Thermodynamique générale"],
-      "type": "permanent",
-      "max_heures": 20
-    },
-    "Pr.MALKI": {
-      "modules": ["Electromagnétisme et Electrocinétique des courants alternatifs", "TP Electromagnétisme"],
-      "type": "permanent",
-      "max_heures": 20
-    },
-    "Pr.RAJAB": {
-      "modules": ["Informatique 1"],
-      "type": "permanent",
-      "max_heures": 20
-    },
-    "Pr.ERRKIK": {
-      "modules": ["Culture Digitale"],
-      "type": "vacataire",
-      "disponibilites": {
-        "Lundi": ["08:30-10:30", "10:40-12:30"],
-        "Mercredi": ["13:30-15:30", "15:40-17:30"]
-      }
-    },
-    "Pr.BASKOUN": {
-      "modules": ["Optique géométrique, optique physique et laser", "TP Optique", "TP Optique géométrique, optique physique et laser"],
-      "type": "permanent",
-      "max_heures": 20
-    },
-    "Pr.SAHROURDI": {
-      "modules": ["Topologie et Calcul différentiel"],
-      "type": "permanent",
-      "max_heures": 20
-    },
-    "Pr.GZIRI": {
-      "modules": ["Automatisme et Asservissement", "Simulation des systèmes industriels", "TP Automatisme", "TP Simulation des systèmes industriels", "TP Automatisme et Asservissement"],
-      "type": "permanent",
-      "max_heures": 20
-    },
-    "Pr.ANBRI": {
-      "modules": ["Informatique 2", "Informatique Médicale", "Informatique de gestion des entreprises"],
-      "type": "permanent",
-      "max_heures": 20
-    },
-    "Pr.IRO CHAPION": {
-      "modules": ["TP Automatisme", "TP Electromagnétisme"],
-      "type": "doctorant"
-    },
-    "Pr.BAKARI SANI": {
-      "modules": ["TP Automatisme", "TP Electromagnétisme"],
-      "type": "doctorant"
-    },
-    "Pr.BOUJRAF": {
-      "modules": ["TP Optique"],
-      "type": "doctorant"
-    },
-    "Pr.ALLIOUM": {
-      "modules": ["TP Optique"],
-      "type": "doctorant"
-    },
-    "Pr.EL AMRI": {
-      "modules": ["TP Electromagnétisme"],
-      "type": "doctorant"
-    },
-    "Pr.SABIL": {
-      "modules": ["Analyse 2", "Fiscalité de l'entreprise 2"],
-      "type": "permanent",
-      "max_heures": 20
-    },
-    "Pr.MESSAOUDI": {
-      "modules": ["Analyse 2", "Analyse de base 1"],
-      "type": "permanent",
-      "max_heures": 20
-    },
-    "Pr.CHOUKAIRI": {
-      "modules": ["Transport des patients"],
-      "type": "permanent",
-      "max_heures": 20
-    },
-    "Pr.BERRADA": {
-      "modules": ["Optimisation Industrielle", "Développement personnel", "Optimisation en théorie des graphes et logistique", "TP Optimisation en théorie des graphes et logistique"],
-      "type": "permanent",
-      "max_heures": 20
-    },
-    "Pr.ZHAR": {
-      "modules": ["Economie monétaire et financière en santé", "Ingénierie Financière", "Economie et comptabilité de l'entreprise", "Gestion financière 1"],
-      "type": "permanent",
-      "max_heures": 20
-    },
-    "Pr.ZOUAHER": {
-      "modules": ["Initiation à l'Entreprenariat"],
-      "type": "permanent",
-      "max_heures": 20
-    },
-    "Pr.OUTTAS": {
-      "modules": ["Droit"],
-      "type": "permanent",
-      "max_heures": 20
-    },
-    "Pr.EL JAY": {
-      "modules": ["Dispositifs Médicaux"],
-      "type": "permanent",
-      "max_heures": 20
-    },
-    "Pr.EL HIR": {
-      "modules": ["Qualité Dispositifs Médicaux", "Qualité et sécurité de l'environnement"],
-      "type": "permanent",
-      "max_heures": 20
-    },
-    "Pr.EL ANSARI": {
-      "modules": ["Technologie Biomédicale", "Technologie des appareils de stérilisation"],
-      "type": "permanent",
-      "max_heures": 20
-    },
-    "Pr.EL IDRISSI": {
-      "modules": ["Équipements Médicaux", "Technologie des appareils du bloc opératoire"],
-      "type": "permanent",
-      "max_heures": 20
-    },
-    "Pr.BESSEGHIEUR": {
-      "modules": ["Organisation du système de santé"],
-      "type": "permanent",
-      "max_heures": 20
-    },
-    "Pr.ILYAS": {
-      "modules": ["Français"],
-      "type": "permanent",
-      "max_heures": 20
+    "P8": {
+        "modules": ["Biologie"], 
+        "max_heures": 20, 
+        "type": "permanent"
     },
     "Pr.ACHIR": {
-      "modules": ["Physiologie", "TP Physiologie"],
-      "type": "vacataire",
-      "disponibilites": {
-        "Mercredi": ["13:30-15:30", "15:40-17:30"],
-        "Vendredi": ["13:30-15:30", "15:40-17:30"]
-      }
+        "modules": ["TP Bases de Traitement d'images médicales", "TP Imagerie Médicale", "TP Physiologie", "TP Mini projet de Traitement d'image"], 
+        "type": "doctorant"
     },
-    "Pr.KHABLI": {
-      "modules": ["Traitement de signal", "TP Traitement de signal"],
-      "type": "vacataire",
-      "disponibilites": {
-        "Jeudi": ["13:30-15:30", "15:40-17:30"],
-        "Vendredi": ["08:30-10:30", "10:40-12:30"]
-      }
-    },
-    "Pr.SLALMI": {
-      "modules": ["Radioactivité", "TP Radioactivité"],
-      "type": "vacataire",
-      "disponibilites": {
-        "Lundi": ["13:30-15:30", "15:40-17:30"],
-        "Mardi": ["08:30-10:30", "10:40-12:30"]
-      }
+    "Pr.AYOUB": {
+        "modules": ["TP Biologie"], 
+        "type": "doctorant"
     },
     "Pr.PHIRI": {
-      "modules": ["Recherche opérationnelle", "TP Recherche opérationnelle"],
-      "type": "vacataire",
-      "disponibilites": {
-        "Mercredi": ["08:30-10:30", "10:40-12:30"],
-        "Vendredi": ["13:30-15:30", "15:40-17:30"]
-      }
+        "modules": ["TP Recherche opérationnelle"], 
+        "type": "doctorant"
     },
-    "Pr.BELHADDAOUI": {
-      "modules": ["Programmation Orienté Objet"],
-      "type": "permanent",
-      "max_heures": 20
+    "Pr.GOURAM": {
+        "modules": ["TP Traitement de signal"], 
+        "type": "doctorant"
     },
-    "Pr.DEBBARH": {
-      "modules": ["Physiologie"],
-      "type": "permanent",
-      "max_heures": 20
-    },
-    "Pr.ELJAI": {
-      "modules": ["Exploration fonctionnelle", "Endoscopie", "TP Exploration fonctionnelle", "TP Endoscopie"],
-      "type": "vacataire",
-      "disponibilites": {
-        "Vendredi": ["13:30-15:30", "15:40-17:30"],
-        "Lundi": ["08:30-10:30", "10:40-12:30"]
-      }
+    "Pr.SLALMI": {
+        "modules": ["TP Traitement de signal"], 
+        "type": "doctorant"
     },
     "Pr.EL MOUFID": {
-      "modules": ["Robotique Médicale", "TP Robotique Médicale"],
-      "type": "vacataire",
-      "disponibilites": {
-        "Vendredi": ["13:30-15:30", "15:40-17:30"],
-        "Mardi": ["08:30-10:30", "10:40-12:30"]
-      }
+        "modules": ["TP Robotiques médicales"], 
+        "type": "doctorant"
     },
     "Pr.AKKAOUI": {
-      "modules": ["Machine Learning", "TP Machine Learning"],
-      "type": "vacataire",
-      "disponibilites": {
-        "Jeudi": ["13:30-15:30", "15:40-17:30"],
-        "Vendredi": ["08:30-10:30", "10:40-12:30"]
-      }
+        "modules": ["TP Machine learning", "TP Bases de données Avancées"], 
+        "type": "doctorant"
+    },
+    "D4": {
+        "modules": ["TP Bioinformatique", "TP Biologie"], 
+        "type": "doctorant"
+    },
+    "Pr.ZOUBIR": {
+        "modules": ["TP Anaylse numérique", "TP Programmation"], 
+        "type": "doctorant"
+    },
+    "Pr.YANDOUZI": {
+        "modules": ["TP Programmation Orienté Objet", "Génie Logicil"], 
+        "type": "doctorant"
     },
     "Pr.JOUICHA": {
-      "modules": ["SIG et télédétection", "TP SIG et télédétection"],
-      "type": "vacataire",
-      "disponibilites": {
-        "Mercredi": ["13:30-15:30", "15:40-17:30"],
-        "Jeudi": ["08:30-10:30", "10:40-12:30"]
-      }
-    },
-    "Pr.SAQAT": {
-      "modules": ["Chimie de l'environnement", "Microbiologie de l'environnement", "TP Chimie de l'environnement", "TP Microbiologie de l'environnement"],
-      "type": "permanent",
-      "max_heures": 20
+        "modules": ["TP SIG et télédiction"], 
+        "type": "doctorant"
     },
     "Pr.ACHLIOUI": {
-      "modules": ["Résistance des Matériaux", "Géophysique environnementale", "TP Résistance des Matériaux", "TP Géophysique environnementale"],
-      "type": "vacataire",
-      "disponibilites": {
-        "Lundi": ["13:30-15:30", "15:40-17:30"],
-        "Mardi": ["08:30-10:30", "10:40-12:30"]
-      }
+        "modules": ["TP Résistance des Matériaux"], 
+        "type": "doctorant"
     },
-    "Pr.AZIZ": {
-      "modules": ["IRM et Rayons X", "Imagerie par Ultrasons", "Radiologie Médicale (IRM, ULS, RX)"],
-      "type": "vacataire",
-      "disponibilites": {
-        "Mardi": ["13:30-15:30", "15:40-17:30"],
-        "Jeudi": ["08:30-10:30", "10:40-12:30"]
-      }
-    },
-    "Pr.HATIMI": {
-      "modules": ["CAO/FABLAB", "FabLab", "CAO-DAO"],
-      "type": "permanent",
-      "max_heures": 20
-    },
-    "Pr.NASSIM": {
-      "modules": ["Maintenance et gestion des équipements lourds", "TP Maintenance et gestion des équipements lourds"],
-      "type": "vacataire",
-      "disponibilites": {
-        "Lundi": ["13:30-15:30", "15:40-17:30"],
-        "Mardi": ["08:30-10:30", "10:40-12:30"]
-      }
-    },
-    "Pr.BENZAOUIA": {
-      "modules": ["TP Optimisation en théorie des graphes et logistique", "TP Simulation des systèmes industriels"],
-      "type": "doctorant"
+    "Pr.SAQAT": {
+        "modules": ["TP Microbiologie de l'environnement", "TP Chimie de l'environnement"], 
+        "type": "doctorant"
     }
   }
 }

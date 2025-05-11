@@ -14,10 +14,13 @@ class AdminController extends Controller
         return view('admin.dashboard');
     }
 
-    public function showTimeTables()
+    public function showTimeTables(Request $request)
     {
-        // Fetch all seances from the database
-        $seances = Seance::all();
+        // Récupérer le semestre sélectionné (par défaut Semestre 1)
+        $semestre = $request->input('semestre', 1);
+
+        // Fetch seances for the selected semester
+        $seances = Seance::where('semestre', $semestre)->get();
 
         // Organize the data into a structured format
         $timetables = [];
@@ -31,8 +34,11 @@ class AdminController extends Controller
             ];
         }
 
-        // Pass the timetables to the view
-        return view('admin.timetables', ['timetables' => $timetables]);
+        // Pass the timetables and the selected semester to the view
+        return view('admin.timetables', [
+            'timetables' => $timetables,
+            'semestre' => $semestre,
+        ]);
     }
 
     public function export(string $classe)

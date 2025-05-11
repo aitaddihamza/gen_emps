@@ -11,7 +11,6 @@ use App\Models\Seance;
 use App\Models\Creneau; // Modèle pour les créneaux horaires
 use App\Models\Jour; // Modèle pour les jours
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class TimeTableController extends Controller
@@ -23,13 +22,13 @@ class TimeTableController extends Controller
         ]);
 
         try {
-            $data = $this->prepareData($request->input('weeks'));
+            $data = $this->prepareData($request->input('weeks'), $request->input('semestre'));
             $response = Http::timeout(600)->post(config('services.python_api.url'), $data);
 
             if ($response->successful()) {
                 $timetables = $response->json();
 
-                $this->storeData($timetables["timetables"]);
+                $this->storeData($timetables["timetables"], $data['SEMESTRE']);
 
                 return response()->json([
                     'success' => true,
@@ -51,12 +50,15 @@ class TimeTableController extends Controller
         }
     }
 
-    private function prepareData($weeks)
+    private function prepareData($weeks, $semestre)
     {
         // Données de base
         $data = [
             'TOTAL_SEMAINES' => $weeks,
+            'SEMESTRE' => $semestre,
         ];
+
+        return $data;
 
         // Récupérer les salles de cours
         $sallesCours = Salle::where('type_salle', 'cours')->pluck('capacite', 'nom')->toArray();
@@ -105,10 +107,9 @@ class TimeTableController extends Controller
         return $data;
     }
 
-    public function storeData($timetables)
+    public function storeData($timetables, $semestre)
     {
-        DB::table('seances')->truncate();
-        DB::beginTransaction();
+        Seance::where('semestre', $semestre)->delete();
 
         try {
             Log::info('Début de la sauvegarde des emplois du temps.');
@@ -137,6 +138,7 @@ class TimeTableController extends Controller
                                 'professeur_nom' => $seance["prof"],
                                 'semaine_debut' => $seance['semaine_debut'],
                                 'semaine_fin' => $seance['semaine_fin'],
+                                'semestre' => $semestre,
                             ]);
 
                             Log::info('Séance créée avec succès.');
@@ -145,10 +147,8 @@ class TimeTableController extends Controller
                 }
             }
 
-            DB::commit();
             Log::info('Sauvegarde des emplois du temps terminée avec succès.');
         } catch (\Exception $e) {
-            DB::rollBack();
             Log::error('Erreur lors de la sauvegarde des emplois du temps : ' . $e->getMessage());
             throw $e;
         }
