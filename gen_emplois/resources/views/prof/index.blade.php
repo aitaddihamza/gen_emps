@@ -7,6 +7,17 @@
         <div class="bg-white shadow-md rounded-lg p-6 mb-8">
             <h1 class="text-2xl font-bold mb-4">Emploi du Temps - {{ $professeur->nom }}</h1>
             <p class="text-gray-600">Consultez votre emploi du temps pour toutes vos classes.</p>
+
+            <!-- Sélection du semestre -->
+            <form id="semesterForm" class="mb-4">
+                <label for="semestre" class="block text-sm font-medium text-gray-700 mb-2">Choisir le Semestre</label>
+                <select name="semestre" id="semestre" onchange="document.getElementById('semesterForm').submit()"
+                    class="block w-1/4 rounded-md border-2 h-[50px] p-2 border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                    <option value="1" {{ request('semestre') == 1 ? 'selected' : '' }}>Semestre 1</option>
+                    <option value="2" {{ request('semestre') == 2 ? 'selected' : '' }}>Semestre 2</option>
+                </select>
+            </form>
+
             <a href="{{ route('prof.timetable.export') }}"
                 class="mt-4 inline-block px-6 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">
                 Exporter en PDF
@@ -20,7 +31,7 @@
         @endif
         @if (empty($timetable))
             <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-8" role="alert">
-                <p>Aucun cours n'est planifié pour le moment.</p>
+                <p>Aucun cours n'est planifié pour le semestre sélectionné.</p>
             </div>
         @else
             <div class="overflow-x-auto">

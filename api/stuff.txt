@@ -1,2 +1,0 @@
-api base url: https://api.netmind.ai/inference-api/openai/v1
-
